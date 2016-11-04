@@ -1,0 +1,29 @@
+{
+  "name": "anchart3d",
+  "version": "1.0.0",
+  "description": "A library featuring 3D-Charts which is built with the help of the three.js library",
+  "main": "build/anchart3d.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deKilla/anchart3d.git"
+  },
+  "keywords": [
+    "charts",
+    "3d",
+    "threejs",
+    "anchart3d"
+  ],
+  "author": "Amar Bajric",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/deKilla/anchart3d/issues"
+  },
+  "homepage": "https://github.com/deKilla/anchart3d#readme"
+}
