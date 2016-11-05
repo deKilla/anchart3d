@@ -2,4 +2,4 @@
 node_modules
 
 #Ignore the specific idea settings
-.idea
+.idea/
