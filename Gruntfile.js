@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                     browserifyOptions: { debug: true }
                 },
                 files: {
-                    'build/anchart3d.js': ['src/*.js']
+                    'build/anchart3d.js': ['src/**/*.js']
                 }
             }
         },
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
          */
         watch: {
             scripts: {
-                files: ['src/*.js'],
+                files: ['src/**/*.js'],
                 tasks: ['browserify', 'eslint']
             }
         }
