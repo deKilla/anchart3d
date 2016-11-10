@@ -68,17 +68,51 @@ function init(){
     var groupedPieChart = create2DPieChart(data);
     scene.add(groupedPieChart);
 
+    //addEventListener for certain events
+    document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
+    //if window resizes
+    window.addEventListener( 'resize', onWindowResize, false );
 }
+
+
+
+//on click function
+function onDocumentMouseDown( event ) {
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+
+    event.preventDefault();
+
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects(scene.children[0].children); //children[0].children because scene has only one child the groupedPieChart which contains all sections
+    //print percentage of the clicked section
+    console.log("The value of this section has:", parseFloat(((intersects[0].object.geometry.parameters.thetaLength*100)/Math.PI)/2).toFixed(5),"%");
+}
+
+
 
 function animate(){
     requestAnimationFrame( animate );
+    render();
     controls.update();
 }
+
 
 function render(){
     renderer.render( scene, camera );
 }
+
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+
 
 
 /**
