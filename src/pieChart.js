@@ -59,13 +59,19 @@ function init(){
 
     scene = new THREE.Scene();
 
-
-    renderer = new THREE.WebGLRenderer();
+    //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
+    renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myThreeJsCanvas') , antialias: true});
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement);
 
+    //create an ambient light and add to scene (ambient light is good for whole scene to be illuminated)
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambientLight);
+
     //add grouped PieChart to scene
     var groupedPieChart = create2DPieChart(data);
+    //set the name of the object so it is easier to find in the scene again for the click function
+    groupedPieChart.name = "groupedPieChart";
     scene.add(groupedPieChart);
 
     //addEventListener for certain events
@@ -87,9 +93,12 @@ function onDocumentMouseDown( event ) {
     mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
     raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObjects(scene.children[0].children); //children[0].children because scene has only one child the groupedPieChart which contains all sections
-    //print percentage of the clicked section
-    console.log("The value of this section has:", parseFloat(((intersects[0].object.geometry.parameters.thetaLength*100)/Math.PI)/2).toFixed(5),"%");
+    var intersects = raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children); //search for our object by name which we declared before
+
+    if(intersects[0] !== undefined) {
+        //print percentage of the clicked section
+        console.log("The value of this section is:", parseFloat(((intersects[0].object.geometry.parameters.thetaLength * 100) / Math.PI) / 2).toFixed(5), "%");
+    }
 }
 
 
@@ -129,7 +138,7 @@ function create2DPieChart(jsonData) {
     //iterate over the jsonData and create for every data a new pie segment
     //data = one object in the json which holds the props "amount","percent" and "pieChartColor" in this case.
     for (var data in jsonData){
-        var newMesh = new THREE.Mesh(new THREE.CircleGeometry(5,30,lastThetaStart,(Math.PI*2)*(jsonData[data].percent/100)),new THREE.MeshBasicMaterial({
+        var newMesh = new THREE.Mesh(new THREE.CircleGeometry(5,30,lastThetaStart,(Math.PI*2)*(jsonData[data].percent/100)),new THREE.MeshLambertMaterial({
             color: jsonData[data].pieChartColor,
         }));
 
