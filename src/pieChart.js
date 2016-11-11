@@ -10,32 +10,38 @@ import * as THREE from "three/build/three";
 
 "use strict";
 
-var data = {
-    "age_0-10": {
+var data = [
+    {
+        "description": "Age(0-10)",
         "amount": 50123,
         "percent": 17.901071428571428571428571428571
     },
-    "age_11-20": {
+    {
+        "description": "Age(11-20)",
         "amount": 55000,
         "percent": 19.642857142857142857142857142857
     },
-    "age_21-35": {
+    {
+        "description": "Age(21-30)",
         "amount": 75000,
         "percent": 26.785714285714285714285714285714
     },
-    "age_36-50": {
+    {
+        "description": "Age(31-45)",
         "amount": 41000,
         "percent": 14.642857142857142857142857142857
     },
-    "age_51-65": {
+    {
+        "description": "Age(46-55)",
         "amount": 24236,
         "percent": 8.6557142857142857142857142857143
     },
-    "age_66-75": {
+    {
+        "description": "Age(56+)",
         "amount": 34641,
         "percent": 12.371785714285714285714285714286
     }
-}
+]
 
 
 
@@ -90,8 +96,8 @@ function onDocumentMouseDown( event ) {
     var intersects = raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children); //search for our object by name which we declared before
 
     if(intersects[0] !== undefined) {
-        //print percentage of the clicked section
-        console.log("The value of this section is:", parseFloat(((intersects[0].object.geometry.parameters.thetaLength * 100) / Math.PI) / 2).toFixed(5), "%");
+        //print percentage of the clicked section + the name of the object assigned in the 'createXPieChart' function
+        console.log(intersects[0].object.name, ":", parseFloat(((intersects[0].object.geometry.parameters.thetaLength * 100) / Math.PI) / 2).toFixed(5), "%");
     }
 }
 
@@ -136,18 +142,14 @@ function create2DPieChart(jsonData) {
             color: Math.random() * 0xffffff,
             side: THREE.DoubleSide
         }));
+        //assign the object the name from the description of the JSON
+        newMesh.name = jsonData[data].description;
 
         //set the lastThetaStart to the length of the last segment, in order to not overlap segments
         lastThetaStart = lastThetaStart + (Math.PI*2)*(jsonData[data].percent/100);
+
         //add new piece to the grouped pieChart
         pieChart.add(newMesh);
-
-        //this should demonstrate how to make one special piece invisible
-        /*
-        if(jsonData[data].amount === 41000){
-            newMesh.visible = false;
-        }
-        */
     }
     return pieChart;
 }
