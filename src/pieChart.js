@@ -76,6 +76,7 @@ function init(){
 
     //addEventListener for certain events
     document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+    document.addEventListener( 'mousemove', onDocumentMouseDown, false );
 
     //if window resizes
     window.addEventListener( 'resize', onWindowResize, false );
@@ -95,11 +96,16 @@ function onDocumentMouseDown( event ) {
     raycaster.setFromCamera( mouse, camera );
     var intersects = raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children); //search for our object by name which we declared before
 
-    if(intersects[0] !== undefined) {
+    if(intersects[0] !== undefined && event.type === "mousedown") {
         //print percentage of the clicked section + the name of the object assigned in the 'createXPieChart' function
+        //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
         console.log(intersects[0].object.name, ":", parseFloat(((intersects[0].object.geometry.parameters.thetaLength * 100) / Math.PI) / 2).toFixed(5), "%");
     }
+    else if (intersects[0] !== undefined && event.type == "mousemove"){//if the event type is a mouse move (hover)
+        //IMPLEMENT MOUSE HOVER ACTION HERE!
+    }
 }
+
 
 
 
