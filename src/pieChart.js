@@ -64,9 +64,16 @@ function init(){
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement);
 
-    //create an ambient light and add to scene (ambient light is good for whole scene to be illuminated)
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    //ambient light which is for the whole scene
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    ambientLight.castShadow = false;
     scene.add(ambientLight);
+
+    //spot light which is illuminating the chart directly
+    var spotLight = new THREE.SpotLight(0xffffff, 0.6);
+    spotLight.castShadow = true;
+    spotLight.position.set(0,50,0);
+    scene.add(spotLight);
 
     //add grouped PieChart to scene
     var groupedPieChart = create2DPieChart(data);
@@ -142,20 +149,23 @@ function create2DPieChart(jsonData) {
     var lastThetaStart = 0;
 
     //iterate over the jsonData and create for every data a new pie segment
-    //data = one object in the json which holds the props "amount","percent" and "pieChartColor" in this case.
+    //data = one object in the json which holds the props "amount","percent" in this case.
     for (var data in jsonData){
-        var newMesh = new THREE.Mesh(new THREE.CircleGeometry(5,30,lastThetaStart,(Math.PI*2)*(jsonData[data].percent/100)),new THREE.MeshLambertMaterial({
-            color: Math.random() * 0xffffff,
-            side: THREE.DoubleSide
-        }));
+        //Cylinder Geometry: (radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength)
+        var segment = new THREE.Mesh(new THREE.CylinderGeometry(5,5,1.5,50,50,false,lastThetaStart,(Math.PI*2)*(jsonData[data].percent/100)),
+            new THREE.MeshPhongMaterial({
+                ambient: 0x808080,
+                color: Math.random() * 0xffffff
+            }));
+
         //assign the object the name from the description of the JSON
-        newMesh.name = jsonData[data].description;
+        segment.name = jsonData[data].description;
 
         //set the lastThetaStart to the length of the last segment, in order to not overlap segments
         lastThetaStart = lastThetaStart + (Math.PI*2)*(jsonData[data].percent/100);
 
         //add new piece to the grouped pieChart
-        pieChart.add(newMesh);
+        pieChart.add(segment);
     }
     return pieChart;
 }
