@@ -71,9 +71,9 @@ function init(){
     scene.add(ambientLight);
 
     //spot light which is illuminating the chart directly
-    var spotLight = new THREE.SpotLight(0xffffff, 0.5);
+    var spotLight = new THREE.SpotLight(0xffffff, 0.75);
     spotLight.castShadow = true;
-    spotLight.position.set(0,50,0);
+    spotLight.position.set(0,40,10);
     scene.add(spotLight);
 
     //add grouped PieChart to scene
@@ -83,27 +83,36 @@ function init(){
     scene.add(groupedPieChart);
 
     //addEventListener for certain events
-    document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-    document.addEventListener( 'mousemove', onDocumentMouseDown, false );
+    document.addEventListener('mousedown', onDocumentMouseAction, false);
+    document.addEventListener('mousemove', onDocumentMouseAction, false);
+    document.ondblclick = onDocumentDblClick();
 
     //if window resizes
-    window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener('resize', onWindowResize, false);
 
+}
+
+
+//function which finds intersections with objects in the scene trough a casted ray
+function findIntersections(event){
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+    raycaster.setFromCamera( mouse, camera );
+     //search for our object by name which we declared before and return it
+    return raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children);
 }
 
 
 
 //on click function
-function onDocumentMouseDown( event ) {
-    var raycaster = new THREE.Raycaster();
-    var mouse = new THREE.Vector2();
-
+function onDocumentMouseAction(event) {
     event.preventDefault();
 
-    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-    raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children); //search for our object by name which we declared before
+    //call function which finds intersected objects
+    var intersects = findIntersections(event);
 
     if(intersects[0] !== undefined && event.type === "mousedown") {
         //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
@@ -115,6 +124,11 @@ function onDocumentMouseDown( event ) {
     }
 }
 
+
+//Double click event function
+ function onDocumentDblClick() {
+   //IMPLEMENT DOUBLE CLICK FUNCTION HERE
+}
 
 
 
@@ -139,8 +153,9 @@ function onWindowResize() {
 
 
 /**
+ * Creates a 3D pie chart which is at the end grouped together.
  * @input: JSON Object with data, scene object
- * @output: one ore more meshes which are then added to the scene (void)
+ * @output: multiple segments which are grouped together.
  */
 function create3DPieChart(jsonData) {
     //Group together all pieces
@@ -152,7 +167,11 @@ function create3DPieChart(jsonData) {
     //iterate over the jsonData and create for every data a new pie segment
     //data = one object in the json which holds the props "amount","percent" in this case.
     for (var data in jsonData){
+        //call function which creates one segment at a time
         var segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(jsonData[data].percent*3.6));
+
+        //set the lastThetaStart to the length of the last segment, in order to not overlap segments
+        lastThetaStart = lastThetaStart + THREE.Math.degToRad(jsonData[data].percent*3.6);
 
         //assign the object the name from the description of the JSON
         segment.name = jsonData[data].description;
@@ -163,9 +182,6 @@ function create3DPieChart(jsonData) {
             value: parseFloat(jsonData[data].percent).toFixed(3)
         });
 
-        //set the lastThetaStart to the length of the last segment, in order to not overlap segments
-        lastThetaStart = lastThetaStart + THREE.Math.degToRad(jsonData[data].percent*3.6);
-
         //add new piece to the grouped pieChart
         pieChart.add(segment);
     }
@@ -173,18 +189,24 @@ function create3DPieChart(jsonData) {
 }
 
 
-
+/**
+ * Creates a segment (of a pie chart) and returns one segment as a shape which is extruded.
+ * @param radius
+ * @param angleStart
+ * @param angleEnd
+ * @returns {Raycaster.params.Mesh|{}|SEA3D.Mesh|THREE.SEA3D.Mesh|*|Mesh}
+ */
 function createSegment(radius, angleStart, angleEnd) {
     var extrudeOptions = {
-        curveSegments: 32,
+        curveSegments: 50,
         steps: 1,
-        amount: 1,
+        amount: 1.1,
         bevelEnabled: false,
     };
 
     var shape = new THREE.Shape();
     shape.moveTo(0, 0);
-    shape.absarc(0, 0, radius, angleStart, angleEnd, false);//false to not go clockwise (otherwise it will fail)
+    shape.absarc(0, 0, radius, angleStart, angleEnd, false);//false: to not go clockwise (otherwise it will fail)
     shape.lineTo(0, 0);
     var segmentGeom = new THREE.ExtrudeGeometry(shape,extrudeOptions);
     var segmentMat = new THREE.MeshPhongMaterial({
@@ -193,7 +215,6 @@ function createSegment(radius, angleStart, angleEnd) {
         specular: 0xffffff,
         shininess: 3,
     });
-    var segment = new THREE.Mesh(segmentGeom, segmentMat);
-
-    return segment;
+    
+    return new THREE.Mesh(segmentGeom, segmentMat);
 }
