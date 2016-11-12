@@ -46,6 +46,8 @@ var data = [
 
 
 var camera, controls, scene, renderer;
+var mouse = new THREE.Vector2(), INTERSECTED;
+var raycaster = new THREE.Raycaster();
 
 init();
 animate();
@@ -71,7 +73,7 @@ function init(){
     scene.add(ambientLight);
 
     //spot light which is illuminating the chart directly
-    var spotLight = new THREE.SpotLight(0xffffff, 0.75);
+    var spotLight = new THREE.SpotLight(0xffffff, 0.55);
     spotLight.castShadow = true;
     spotLight.position.set(0,40,10);
     scene.add(spotLight);
@@ -93,35 +95,43 @@ function init(){
 }
 
 
-//function which finds intersections with objects in the scene trough a casted ray
-function findIntersections(event){
-    var raycaster = new THREE.Raycaster();
-    var mouse = new THREE.Vector2();
+
+//on click function
+function findIntersections(event) {
+
+    event.preventDefault();
 
     mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
     raycaster.setFromCamera( mouse, camera );
-     //search for our object by name which we declared before and return it
+    //search for our object by name which we declared before and return it
     return raycaster.intersectObjects(scene.getObjectByName("groupedPieChart", true).children);
 }
 
 
-
-//on click function
-function onDocumentMouseAction(event) {
-    event.preventDefault();
-
+function onDocumentMouseAction(event){
     //call function which finds intersected objects
     var intersects = findIntersections(event);
 
-    if(intersects[0] !== undefined && event.type === "mousedown") {
+    if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
         //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
         //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
         console.log(intersects[0].object.name, "has a value of:", intersects[0].object.data, "%");
     }
-    else if (intersects[0] !== undefined && event.type == "mousemove"){//if the event type is a mouse move (hover)
-        //IMPLEMENT MOUSE HOVER ACTION HERE!
+    else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
+
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            INTERSECTED = intersects[ 0 ].object;
+            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            INTERSECTED.material.emissive.setHex(0xa9a8a8);
+        }
     }
+        else {
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                INTERSECTED = null;
+        }
+
 }
 
 
@@ -213,8 +223,8 @@ function createSegment(radius, angleStart, angleEnd) {
         color: Math.random() * 0xffffff,
         shading: THREE.SmoothShading,
         specular: 0xffffff,
-        shininess: 3,
+        shininess: 1.5,
     });
-    
+
     return new THREE.Mesh(segmentGeom, segmentMat);
 }
