@@ -1,0 +1,44 @@
+[{ 
+    "data1": {
+        "values": [
+            {"value1": [{
+                "name":"Value1",
+                "value":200
+                }]
+            },
+            {"value2": [{
+                "name":"Value2",
+                "value":5
+                }]
+            }
+        ]
+    },
+    "data2": {
+        "values": [
+            {"value1": [{
+                "name":"Value1",
+                "value":500
+                }]
+            },
+            {"value2": [{
+                "name":"Value2",
+                "value":4
+                }]
+            }
+        ]
+    },
+    "data3": {
+        "values": [
+            {"value1": [{
+                "name":"Value1",
+                "value":100
+                }]
+            },
+            {"value2": [{
+                "name":"Value2",
+                "value":3
+                }]
+            }
+        ]
+    }
+}]
