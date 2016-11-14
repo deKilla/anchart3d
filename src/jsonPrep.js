@@ -34,8 +34,8 @@ function getJsonText(file)
 
 let json = JSON.parse(getJsonText("../src/data.json"));
 
-console.log(json[0]);
+console.log(json.aata1.values[0].value1[0].name);
 
-for (var data in json[0]) {
-	alert(data);
+for (var data in json) {
+    console.log(json[data]);
 }

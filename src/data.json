@@ -1,5 +1,5 @@
-[{ 
-    "data1": {
+{ 
+    "aata1": {
         "values": [
             {"value1": [{
                 "name":"Value1",
@@ -13,7 +13,7 @@
             }
         ]
     },
-    "data2": {
+    "bata2": {
         "values": [
             {"value1": [{
                 "name":"Value1",
@@ -27,7 +27,7 @@
             }
         ]
     },
-    "data3": {
+    "cata3": {
         "values": [
             {"value1": [{
                 "name":"Value1",
@@ -41,4 +41,4 @@
             }
         ]
     }
-}]
+}
