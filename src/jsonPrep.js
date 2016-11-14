@@ -34,8 +34,19 @@ function getJsonText(file)
 
 let json = JSON.parse(getJsonText("../src/data.json"));
 
-console.log(json.aata1.values[0].value1[0].name);
-
-for (var data in json) {
-    console.log(json[data]);
+var allsums = [];
+for (var i = 0; i < json[0].values.length; i++) {
+    var r = json.reduce(function(t,cv,ci) {
+        if (t[cv.values[i].name]) {
+            t[cv.values[i].name] += cv.values[i].value;
+        } else {
+            t[cv.values[i].name] = cv.values[i].value;
+        }
+        return t;
+    }, {});
+    allsums[i] = r;
 }
+
+
+
+console.log(allsums);
