@@ -51,6 +51,7 @@ function calcsums(json) {
 function calcpercent(json) {
     var output = ""; //temp
     var allsums = calcsums(json);
+    var pp_ordered = [];
     for (var elements in json) {
         var values = json[elements].values;
         var gname = json[elements].name;
@@ -62,13 +63,24 @@ function calcpercent(json) {
             var currentname = values[value].name; 
             
             var pp = currentval/(total/100);
-            var pr = (currentval/(total/100)).toFixed(2); 
+            var pr = (currentval/(total/100)).toFixed(2);
+
+            if (pp_ordered[values[value].name + "_" + gname]) {
+                pp_ordered[values[value].name + "_" + gname] += pp;
+            } else {
+                pp_ordered[values[value].name + "_" + gname] = pp;
+            }
 
             output = output.concat(genOutHTML(gname,total,currentval,currentname,pp,pr));
         }
     }
+    
+    //console.log(output);
     return output;
-    // return pp and pr??
+
+    //console.log(pp_ordered);
+    //return pp_ordered;
+    
 }
 
 //temp
