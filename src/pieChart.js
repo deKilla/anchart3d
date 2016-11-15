@@ -166,15 +166,16 @@ function create3DPieChart(jsonData) {
         //call function which creates one segment at a time
         var segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
 
-        //scale in z
-        segment.scale.z = (data2Percent/100)*3.6;
+        //scale in z (show second data set)
+        segment.scale.z = (data2Percent/10);
 
         //set the lastThetaStart to the length of the last segment, in order to not overlap segments
         lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent*3.6);
 
         //assign the object the name from the description of the JSON
         //TODO save data somewhere else
-        segment.name = jsonData[data].name + ": " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "\n" + jsonData[data].name + ": " + data2Name +"= " + data2Percent.toFixed(2) +"% ";
+        segment.name = jsonData[data].name + ": " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n"
+                     + jsonData[data].name + ": " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
 
         //define a new property for the segment to store the percent associated with it.
         //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
