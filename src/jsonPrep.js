@@ -71,10 +71,12 @@ function calcpercent(json) {
                 pp_ordered[values[value].name + "_" + gname] = pp;
             }
 
+            //temp
             output = output.concat(genOutHTML(gname,total,currentval,currentname,pp,pr));
         }
     }
     
+    //temp
     //console.log(output);
     return output;
 
