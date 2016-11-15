@@ -34,19 +34,53 @@ function getJsonText(file)
 
 let json = JSON.parse(getJsonText("../src/data.json"));
 
-var allsums = [];
-for (var i = 0; i < json[0].values.length; i++) {
-    var r = json.reduce(function(t,cv,ci) {
-        if (t[cv.values[i].name]) {
-            t[cv.values[i].name] += cv.values[i].value;
-        } else {
-            t[cv.values[i].name] = cv.values[i].value;
-        }
-        return t;
-    }, {});
-    allsums[i] = r;
+function calcsums(json) {
+    var allsums = [];
+    for (var i = 0; i < json[0].values.length; i++) {
+        var r = json.reduce(function(t,cv,ci) {
+            if (allsums[cv.values[i].name]) {
+                allsums[cv.values[i].name] += cv.values[i].value;
+            } else {
+                allsums[cv.values[i].name] = cv.values[i].value;
+            }
+        }, {});
+    }
+    return allsums;
 }
 
+function calcpercent(json) {
+    var output = ""; //temp
+    var allsums = calcsums(json);
+    for (var elements in json) {
+        var values = json[elements].values;
+        var gname = json[elements].name;
+       
+        for (var value in values) {
+          
+            var total = allsums[values[value].name];
+            var currentval = values[value].value;
+            var currentname = values[value].name; 
+            
+            var pp = currentval/(total/100);
+            var pr = (currentval/(total/100)).toFixed(2); 
 
+            output = output.concat(genOutHTML(gname,total,currentval,currentname,pp,pr));
+        }
+    }
+    return output;
+    // return pp and pr??
+}
 
-console.log(allsums);
+//temp
+function genOutHTML(gname,total,currentval,currentname,pp,pr) {
+    var str_total = currentval + " (total: " + total + ")";
+    var str_pp = "percent_precise: " + pp + "%";
+    var str_rp = "percent_rounded: " + pr + "%";
+
+    var singleout = "<h3>" + currentname + " " + gname + "</h3>" + str_total + "<br />" + str_pp + "<br />" + str_rp + "<br />"
+    return singleout;
+}
+
+var html = calcpercent(json)
+document.getElementById("pseudoconsole").innerHTML = html;
+
