@@ -3,46 +3,12 @@
  */
 
 /*
-import '../src/utils/TrackballControls';
-import * as THREE from "three/build/three";
+ import '../src/utils/TrackballControls';
+ import * as THREE from "three/build/three";
  import * as data from './data.json';
-*/
+ */
 
 "use strict";
-
-var data = [
-    {
-        "description": "Age(0-10)",
-        "amount": 50123,
-        "percent": 17.901071428571428571428571428571
-    },
-    {
-        "description": "Age(11-20)",
-        "amount": 55000,
-        "percent": 19.642857142857142857142857142857
-    },
-    {
-        "description": "Age(21-30)",
-        "amount": 75000,
-        "percent": 26.785714285714285714285714285714
-    },
-    {
-        "description": "Age(31-45)",
-        "amount": 41000,
-        "percent": 14.642857142857142857142857142857
-    },
-    {
-        "description": "Age(46-55)",
-        "amount": 24236,
-        "percent": 8.6557142857142857142857142857143
-    },
-    {
-        "description": "Age(56+)",
-        "amount": 34641,
-        "percent": 12.371785714285714285714285714286
-    }
-]
-
 
 
 var camera, controls, scene, renderer;
@@ -78,8 +44,11 @@ function init(){
     spotLight.position.set(0,40,10);
     scene.add(spotLight);
 
+    //get JSON with data
+    let jsonData = JSON.parse(getJsonText("../src/data.json"));
+
     //add grouped PieChart to scene
-    var groupedPieChart = create3DPieChart(data);
+    var groupedPieChart = create3DPieChart(jsonData);
     //set the name of the object so it is easier to find in the scene again for the click function
     groupedPieChart.name = "groupedPieChart";
     scene.add(groupedPieChart);
@@ -116,7 +85,7 @@ function onDocumentMouseAction(event){
     if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
         //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
         //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-        console.log(intersects[0].object.name, "has a value of:", intersects[0].object.data, "%");
+        console.log(intersects[0].object.name);
     }
     else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 
@@ -127,17 +96,17 @@ function onDocumentMouseAction(event){
             INTERSECTED.material.emissive.setHex(0xa9a8a8);
         }
     }
-        else {
-            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-                INTERSECTED = null;
-        }
+    else {
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+    }
 
 }
 
 
 //Double click event function
- function onDocumentDblClick() {
-   //IMPLEMENT DOUBLE CLICK FUNCTION HERE
+function onDocumentDblClick() {
+    //IMPLEMENT DOUBLE CLICK FUNCTION HERE
 }
 
 
@@ -168,6 +137,9 @@ function onWindowResize() {
  * @output: multiple segments which are grouped together.
  */
 function create3DPieChart(jsonData) {
+    //calculate percent of every data set in json first
+    var calculatedData = calcPercent(jsonData);
+
     //Group together all pieces
     var pieChart = new THREE.Group();
 
@@ -176,20 +148,38 @@ function create3DPieChart(jsonData) {
 
     //iterate over the jsonData and create for every data a new pie segment
     //data = one object in the json which holds the props "amount","percent" in this case.
-    for (var data in jsonData){
+    for (var data in jsonData) {
+        var values = jsonData[data].values;
+        for (var val in values){
+            //get first data set of the first object
+            if(val == 0){
+                var data1Name = values[val].name;
+                var data1Value = values[val].value;
+                var data1Percent = values[val].percent;
+            }
+            else if (val == 1){
+                var data2Name = values[val].name;
+                var data2Value = values[val].value;
+                var data2Percent = values[val].percent;
+            }
+        }
         //call function which creates one segment at a time
-        var segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(jsonData[data].percent*3.6));
+        var segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
+
+        //scale in z
+        segment.scale.z = (data2Percent/100)*3.6;
 
         //set the lastThetaStart to the length of the last segment, in order to not overlap segments
-        lastThetaStart = lastThetaStart + THREE.Math.degToRad(jsonData[data].percent*3.6);
+        lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent*3.6);
 
         //assign the object the name from the description of the JSON
-        segment.name = jsonData[data].description;
+        //TODO save data somewhere else
+        segment.name = jsonData[data].name + ": " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "\n" + jsonData[data].name + ": " + data2Name +"= " + data2Percent.toFixed(2) +"% ";
 
         //define a new property for the segment to store the percent associated with it.
         //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
-        Object.defineProperty(segment, 'data', {
-            value: parseFloat(jsonData[data].percent).toFixed(3)
+        Object.defineProperty(segment, 'percent', {
+            value: data1Percent.toFixed(2)
         });
 
         //add new piece to the grouped pieChart
@@ -228,3 +218,58 @@ function createSegment(radius, angleStart, angleEnd) {
 
     return new THREE.Mesh(segmentGeom, segmentMat);
 }
+
+
+
+function calcSums(json) {
+    var allsums = [];
+    for (var i = 0; i < json[0].values.length; i++) {
+        json.reduce(function(t,cv) {
+            if (allsums[cv.values[i].name]) {
+                allsums[cv.values[i].name] += cv.values[i].value;
+            } else {
+                allsums[cv.values[i].name] = cv.values[i].value;
+            }
+        }, {});
+    }
+    return allsums;
+}
+
+function calcPercent(json) {
+
+    var allSums = calcSums(json);
+
+    for (var elements in json) {
+        var values = json[elements].values;
+        for (var value in values) {
+
+            var total = allSums[values[value].name];
+            var percent = values[value].value/(total/100);
+
+            //set calculated percent and total to the corresponding dataset
+            json[elements].values[value]["percent"] = percent;
+            json[elements].values[value]["total"] = total;
+        }
+    }
+    return json;
+}
+
+
+function getJsonText(file)
+{
+    var rawFile = new XMLHttpRequest();
+    var allText;
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                allText = rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return allText;
+};
