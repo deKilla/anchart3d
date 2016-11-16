@@ -178,7 +178,7 @@ function create3DPieChart(jsonData) {
         //TODO save data somewhere else
         segment.name = jsonData[data].name + "\n" +
                        "Fläche: " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n" +
-                       "Höhe: " + jsonData[data].name + ": " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
+                       "Höhe: " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
 
         //define a new property for the segment to store the percent associated with it.
         //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
