@@ -52,6 +52,8 @@ function init(){
     //set the name of the object so it is easier to find in the scene again for the click function
     groupedPieChart.name = "groupedPieChart";
     scene.add(groupedPieChart);
+    //rotate to show pieChart from the side...else it is shown from the front side
+    groupedPieChart.rotation.x = 30;
 
     //addEventListener for certain events
     document.addEventListener('mousedown', onDocumentMouseAction, false);
@@ -174,8 +176,9 @@ function create3DPieChart(jsonData) {
 
         //assign the object the name from the description of the JSON
         //TODO save data somewhere else
-        segment.name = jsonData[data].name + ": " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n"
-                     + jsonData[data].name + ": " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
+        segment.name = jsonData[data].name + "\n" +
+                       "Fläche: " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n" +
+                       "Höhe: " + jsonData[data].name + ": " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
 
         //define a new property for the segment to store the percent associated with it.
         //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
