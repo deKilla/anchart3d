@@ -11,6 +11,83 @@
 "use strict";
 
 
+class JsonData {
+
+    constructor(rawText,sums,percentjson) {
+        this._rawText = rawText;
+        this._sums = sums;
+        this._percentjson = percentjson;
+    }
+
+    getParsedJson(file) {
+        JSON.parse(this.getJsonText(file));
+    }
+
+    getJsonText(file)
+    {
+        var rawFile = new XMLHttpRequest();
+        var rawText;
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === 4)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    rawText = rawFile.responseText;
+                }
+            }
+        }
+        rawFile.send(null);
+        this._rawText = rawText;
+    }
+
+    
+
+    getSums(rawText) {
+        var allsums = [];
+        for (var i = 0; i < rawText[0].values.length; i++) {
+            rawText.reduce(function(t,cv) {
+                if (allsums[cv.values[i].name]) {
+                    allsums[cv.values[i].name] += cv.values[i].value;
+                } else {
+                    allsums[cv.values[i].name] = cv.values[i].value;
+                }
+            }, {});
+        }
+        this._sums = allsums;
+    }
+
+    getPercent(json) {
+
+        var allSums = JsonData.getSums(this._rawText);
+
+        for (var elements in json) {
+            var values = json[elements].values;
+            for (var value in values) {
+
+                var total = allSums[values[value].name];
+                var percent = values[value].value/(total/100);
+
+                //set calculated percent and total to the corresponding dataset
+                json[elements].values[value]["percent"] = percent;
+                json[elements].values[value]["total"] = total;
+            }
+        }
+        this._percentjson = json;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 var camera, controls, scene, renderer;
 var mouse = new THREE.Vector2(), INTERSECTED;
 var raycaster = new THREE.Raycaster();
@@ -45,10 +122,10 @@ function init(){
     scene.add(spotLight);
 
     //get JSON with data
-    let jsonData = JSON.parse(getJsonText("../src/data.json"));
-
+    let jsonData = new JsonData;
+    let parsedJson = jsonData.getParsedJson("../src/data.json")
     //add grouped PieChart to scene
-    var groupedPieChart = create3DPieChart(jsonData);
+    var groupedPieChart = create3DPieChart(data);
     //set the name of the object so it is easier to find in the scene again for the click function
     groupedPieChart.name = "groupedPieChart";
     scene.add(groupedPieChart);
@@ -140,7 +217,7 @@ function onWindowResize() {
  */
 function create3DPieChart(jsonData) {
     //calculate percent of every data set in json first
-    var calculatedData = calcPercent(jsonData);
+    var calculatedData = jsonData.getSums(jsonData);
 
     //Group together all pieces
     var pieChart = new THREE.Group();
@@ -150,8 +227,8 @@ function create3DPieChart(jsonData) {
 
     //iterate over the jsonData and create for every data a new pie segment
     //data = one object in the json which holds the props "amount","percent" in this case.
-    for (var data in jsonData) {
-        var values = jsonData[data].values;
+    for (var data in calculatedData) {
+        var values = calculatedData[data].values;
         for (var val in values){
             //get first data set of the first object
             if(val == 0){
@@ -176,7 +253,7 @@ function create3DPieChart(jsonData) {
 
         //assign the object the name from the description of the JSON
         //TODO save data somewhere else
-        segment.name = jsonData[data].name + "\n" +
+        segment.name = calculatedData[data].name + "\n" +
                        "Fläche: " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n" +
                        "Höhe: " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
 
@@ -225,55 +302,5 @@ function createSegment(radius, angleStart, angleEnd) {
 
 
 
-function calcSums(json) {
-    var allsums = [];
-    for (var i = 0; i < json[0].values.length; i++) {
-        json.reduce(function(t,cv) {
-            if (allsums[cv.values[i].name]) {
-                allsums[cv.values[i].name] += cv.values[i].value;
-            } else {
-                allsums[cv.values[i].name] = cv.values[i].value;
-            }
-        }, {});
-    }
-    return allsums;
-}
-
-function calcPercent(json) {
-
-    var allSums = calcSums(json);
-
-    for (var elements in json) {
-        var values = json[elements].values;
-        for (var value in values) {
-
-            var total = allSums[values[value].name];
-            var percent = values[value].value/(total/100);
-
-            //set calculated percent and total to the corresponding dataset
-            json[elements].values[value]["percent"] = percent;
-            json[elements].values[value]["total"] = total;
-        }
-    }
-    return json;
-}
 
 
-function getJsonText(file)
-{
-    var rawFile = new XMLHttpRequest();
-    var allText;
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                allText = rawFile.responseText;
-            }
-        }
-    }
-    rawFile.send(null);
-    return allText;
-};
