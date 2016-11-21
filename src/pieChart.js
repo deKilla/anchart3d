@@ -210,7 +210,7 @@ function createSegment(radius, angleStart, angleEnd) {
 
     var shape = new THREE.Shape();
     shape.moveTo(0, 0);
-    shape.absarc(0, 0, radius, angleStart, angleEnd, false);//false: to not go clockwise (otherwise it will fail)
+    shape.absarc(0, 0, radius, angleStart, angleEnd, false); //false: to not go clockwise (otherwise it will fail)
     shape.lineTo(0, 0);
     var segmentGeom = new THREE.ExtrudeGeometry(shape,extrudeOptions);
     var segmentMat = new THREE.MeshPhongMaterial({
