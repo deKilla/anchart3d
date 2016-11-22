@@ -9,6 +9,7 @@
  */
 
 "use strict";
+var camera, renderer, scene, controls
 
 
 
@@ -108,25 +109,16 @@ class SceneInit {
         this.renderer = renderer;
         this.fov = fov;
 
-        this.initScene();
-        this.animate();
-
     }
 
-    add(object){
-        scene.add(object);
-    }
 
-    update(){
-        controls.update();
-    }
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
         this.camera.position.z = 15;
 
         this.controls = new THREE.TrackballControls( this.camera );
-        this.controls.addEventListener('change', this.renderScene);
+        //this.controls.addEventListener('change', this.renderScene);
 
         this.scene = new THREE.Scene();
 
@@ -146,6 +138,10 @@ class SceneInit {
         spotLight.castShadow = true;
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
+
+
+        //if window resizes
+        window.addEventListener('resize', this.onWindowResize, false);
     }
 
 
@@ -160,13 +156,20 @@ class SceneInit {
         this.renderer.render( this.scene, this.camera );
     }
 
+
+    onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
 }
 
 
 
 
 
-class pieChart {
+class PieChart {
 
     constructor(jsonData = jsonData, radius, angleStart, angleEnd){
         this.jsonData = jsonData;
@@ -176,19 +179,19 @@ class pieChart {
     }
 
         createSegment(radius, angleStart, angleEnd) {
-        var extrudeOptions = {
+        let extrudeOptions = {
             curveSegments: 50,
             steps: 1,
             amount: 1.1,
             bevelEnabled: false,
         };
 
-        var shape = new THREE.Shape();
+        let shape = new THREE.Shape();
         shape.moveTo(0, 0);
         shape.absarc(0, 0, radius, angleStart, angleEnd, false); //false: to not go clockwise (otherwise it will fail)
         shape.lineTo(0, 0);
-        var segmentGeom = new THREE.ExtrudeGeometry(shape,extrudeOptions);
-        var segmentMat = new THREE.MeshPhongMaterial({
+        let segmentGeom = new THREE.ExtrudeGeometry(shape,extrudeOptions);
+        let segmentMat = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
             specular: 0xffffff,
@@ -200,33 +203,33 @@ class pieChart {
 
         create3DPieChart(jsonData = this.jsonData) {
         //calculate percent of every data set in json first
-        var calculatedData = jsonData.percent;
+        const calculatedData = jsonData.percent;
 
         //Group together all pieces
-        var pieChart = new THREE.Group();
+        let pieChart = new THREE.Group();
 
         //variable holds last position of the inserted segment of the pie
-        var lastThetaStart = 0.0;
+        let lastThetaStart = 0.0;
 
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
-        for (var data in calculatedData) {
-            var values = calculatedData[data].values;
-            for (var val in values){
+        for (let data in calculatedData) {
+            let values = calculatedData[data].values;
+            for (let val in values){
                 //get first data set of the first object
                 if(val == 0){
-                    var data1Name = values[val].name;
-                    var data1Value = values[val].value;
-                    var data1Percent = values[val].percent;
+                    let data1Name = values[val].name;
+                    let data1Value = values[val].value;
+                    let data1Percent = values[val].percent;
                 }
                 else if (val == 1){
-                    var data2Name = values[val].name;
-                    var data2Value = values[val].value;
-                    var data2Percent = values[val].percent;
+                    let data2Name = values[val].name;
+                    let data2Value = values[val].value;
+                    let data2Percent = values[val].percent;
                 }
             }
             //call function which creates one segment at a time
-            var segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
+            let segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
 
             //scale in z (show second data set)
             segment.scale.z = (data2Percent/10);
@@ -258,18 +261,32 @@ class pieChart {
 
 
 
-const jsonData = new JsonData;
-
-const myscene = new SceneInit;
-myscene;
-const piechart = new PieChart;
-piechart.create3DPieChart;
-piechart.name = "groupedPieChart";
-myscene.add(piechart);
 
 
+
+
+
+
+
+
+/*
 document.addEventListener('mousedown', onDocumentMouseAction, false);
 document.addEventListener('mousemove', onDocumentMouseAction, false);
 document.ondblclick = onDocumentDblClick();
 
 window.addEventListener('resize', onWindowResize, false);
+*/
+
+
+let test = new SceneInit(45);
+test.initScene();
+test.animate();
+
+
+let geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
+let material = new THREE.MeshBasicMaterial( );
+let mesh = new THREE.Mesh( geometry, material );
+
+test.scene.add(mesh);
+test.scene.add(test.camera);
+console.log(test.scene);
