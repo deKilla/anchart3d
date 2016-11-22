@@ -16,7 +16,7 @@ class JsonData {
     constructor(file = "../src/data.json") {
         this.file = file;
       
-        this.getJsonText = function(file)
+        this.getJsonText = function(file = this.file)
         {
             var rawFile = new XMLHttpRequest();
             var rawText;
@@ -36,8 +36,8 @@ class JsonData {
             return this.rawText;
         }
 
-        this.getParsedJson = function(){
-            this.parsedJson = JSON.parse(this.getJsonText(this.file));
+        this.getParsedJson = function(file = this.file){
+            this.parsedJson = JSON.parse(this.getJsonText(file));
             return this.parsedJson;
         }
 
@@ -74,6 +74,11 @@ class JsonData {
             this.percentjson = percentjson;
             return this.percentjson;
         }
+
+        this.jsonText = this.getJsonText();
+        this.parsedJson = this.getParsedJson();
+        this.sums = this.getSums();
+        this.percent = this.getPercent();
 
     }
 }
@@ -209,7 +214,7 @@ function onWindowResize() {
  */
 function create3DPieChart(jsonData) {
     //calculate percent of every data set in json first
-    var calculatedData = jsonData.getPercent();
+    var calculatedData = jsonData.percent;
 
     //Group together all pieces
     var pieChart = new THREE.Group();
