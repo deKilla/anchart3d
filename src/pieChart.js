@@ -15,8 +15,13 @@ class JsonData {
 
     constructor(file = "../src/data.json") {
         this.file = file;
-      
-        this.getJsonText = function(file = this.file)
+        this.jsonText = this.getJsonText();
+        this.parsedJson = this.getParsedJson();
+        this.sums = this.getSums();
+        this.percent = this.getPercent();
+    }
+
+        getJsonText(file = this.file)
         {
             var rawFile = new XMLHttpRequest();
             var rawText;
@@ -36,14 +41,14 @@ class JsonData {
             return this.rawText;
         }
 
-        this.getParsedJson = function(file = this.file){
-            this.parsedJson = JSON.parse(this.getJsonText(file));
+        getParsedJson(file = this.file){
+            this.parsedJson = JSON.parse(this.jsonText);
             return this.parsedJson;
         }
 
-        this.getSums = function() {
+        getSums() {
             var sums = [];
-            for (var i = 0; i < this.getParsedJson()[0].values.length; i++) {
+            for (var i = 0; i < this.parsedJson[0].values.length; i++) {
                 this.parsedJson.reduce(function(t,cv) {
                     if (sums[cv.values[i].name]) {
                         sums[cv.values[i].name] += cv.values[i].value;
@@ -56,9 +61,9 @@ class JsonData {
             return this.sums;
         }
 
-        this.getPercent = function() {
-            let percentjson = this.getParsedJson();
-            let sums = this.getSums();
+        getPercent() {
+            let percentjson = this.parsedJson;
+            let sums = this.sums;
             for (var elements in percentjson) {
                 var values = percentjson[elements].values;
                 for (var value in values) {
@@ -75,12 +80,6 @@ class JsonData {
             return this.percentjson;
         }
 
-        this.jsonText = this.getJsonText();
-        this.parsedJson = this.getParsedJson();
-        this.sums = this.getSums();
-        this.percent = this.getPercent();
-
-    }
 }
 
 
