@@ -164,14 +164,15 @@ class SceneInit {
 
 class PieChart {
 
-    constructor(jsonData = jsonData, radius, angleStart, angleEnd){
+    constructor(jsonData, radius, angleStart, angleEnd){
         this.jsonData = jsonData;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
+        this.threeObject = this.create3DPieChart();
     }
 
-        createSegment(radius, angleStart, angleEnd) {
+    createSegment(radius, angleStart, angleEnd) {
         let extrudeOptions = {
             curveSegments: 50,
             steps: 1,
@@ -189,12 +190,12 @@ class PieChart {
             shading: THREE.SmoothShading,
             specular: 0xffffff,
             shininess: 1.5,
-        });
+   		});
 
-        return new THREE.Mesh(segmentGeom, segmentMat);
-    }
+    	return new THREE.Mesh(segmentGeom, segmentMat);
+	}
 
-        create3DPieChart(jsonData = this.jsonData) {
+    create3DPieChart(jsonData = this.jsonData) {
         //calculate percent of every data set in json first
         const calculatedData = jsonData.percent;
 
@@ -211,18 +212,18 @@ class PieChart {
             for (let val in values){
                 //get first data set of the first object
                 if(val == 0){
-                    let data1Name = values[val].name;
-                    let data1Value = values[val].value;
-                    let data1Percent = values[val].percent;
+                    var data1Name = values[val].name;
+                    var data1Value = values[val].value;
+                    var data1Percent = values[val].percent;
                 }
                 else if (val == 1){
-                    let data2Name = values[val].name;
-                    let data2Value = values[val].value;
-                    let data2Percent = values[val].percent;
+                    var data2Name = values[val].name;
+                    var data2Value = values[val].value;
+                    var data2Percent = values[val].percent;
                 }
             }
             //call function which creates one segment at a time
-            let segment = createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
+            let segment = this.createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
 
             //scale in z (show second data set)
             segment.scale.z = (data2Percent/10);
@@ -246,7 +247,7 @@ class PieChart {
             pieChart.add(segment);
         }
         return pieChart;
-    }
+	}
 }
 
 
@@ -254,19 +255,11 @@ class PieChart {
 
 
 
-let test = new SceneInit(45);
-test.initScene();
-test.animate();
+let scene = new SceneInit(45);
+scene.initScene();
+scene.animate();
 
-
-let geometry = new THREE.BoxGeometry( 3, 3, 3);
-let material = new THREE.MeshPhongMaterial({
-    color: Math.random() * 0xffffff,
-    shading: THREE.SmoothShading,
-    specular: 0xffffff,
-    shininess: 1.5,
-});
-let mesh = new THREE.Mesh( geometry, material );
-
-test.scene.add(mesh);
+const jsonData = new JsonData();
+const pieChart = new PieChart(jsonData);
+scene.scene.add(pieChart.threeObject);
 
