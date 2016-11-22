@@ -2,3 +2,26 @@ body{
     margin: 0;
     overflow: hidden
 }
+
+#legend-background {
+    background: #26272b;
+    color: #eee;
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 100%;
+    padding: 20px;
+    font-size: 14px;
+    z-index: 8;
+
+}
+.color-box {
+    border: 1px solid #000000;
+    display: inline;
+    padding: 10px;
+    width: 5px;
+    height: 5px;
+}
+.legend-block{
+    display:inline;
+}
