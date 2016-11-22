@@ -89,13 +89,16 @@ class JsonData {
 
 class SceneInit {
 
-    constructor(fov = 45,camera,scene,controls,renderer)
+    constructor(fov = 45,camera,scene,controls,renderer,INTERSECTED)
     {
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
         this.renderer = renderer;
         this.fov = fov;
+        this.mouse = new THREE.Vector2();
+        this.INTERSECTED = INTERSECTED;
+        this.raycaster = new THREE.Raycaster();
 
     }
 
@@ -127,11 +130,11 @@ class SceneInit {
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
 
-        /*
-         document.addEventListener('mousedown', onDocumentMouseAction, false);
-         document.addEventListener('mousemove', onDocumentMouseAction, false);
-         document.ondblclick = onDocumentDblClick();
-         */
+
+        document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
+        document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
+        document.ondblclick = this.onDocumentDblClick.bind(this);
+
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this) , false);
@@ -151,10 +154,56 @@ class SceneInit {
 
 
     onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
-}
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+
+    findIntersections(event) {
+
+        event.preventDefault();
+
+        this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
+        this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+        //search for our object by name which we declared before and return it
+        return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
+    }
+
+
+
+    onDocumentMouseAction(event){
+        //call function which finds intersected objects
+        let intersects = this.findIntersections(event);
+
+        if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
+            //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
+            //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
+            console.log(intersects[0].object.name);
+        }
+        else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
+
+            if ( this.INTERSECTED != intersects[ 0 ].object ) {
+                if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+                this.INTERSECTED = intersects[ 0 ].object;
+                this.currentHex = this.INTERSECTED.material.emissive.getHex();
+                this.INTERSECTED.material.emissive.setHex(0xa9a8a8);
+            }
+        }
+        else {
+            if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+            this.INTERSECTED = null;
+        }
+
+    }
+
+
+    onDocumentDblClick() {
+        //IMPLEMENT DOUBLE CLICK FUNCTION HERE
+    }
+
+
 
 }
 
@@ -201,6 +250,7 @@ class PieChart {
 
         //Group together all pieces
         let pieChart = new THREE.Group();
+        pieChart.name = "groupedPieChart";
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
