@@ -14,7 +14,19 @@
 
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
 <script type="text/javascript" src="../src/utils/TrackballControls.js"></script>
+<script type="text/javascript" src="../src/utils/SceneInit.js"></script>
+<script type="text/javascript" src="../src/utils/jsonData.js"></script>
 <script type="text/javascript" src="../src/pieChart.js"></script>
+
+<script>
+    let scene = new SceneInit(45);
+    scene.initScene();
+    scene.animate();
+
+    const jsonData = new JsonData();
+    const pieChart = new PieChart(jsonData);
+    scene.scene.add(pieChart.threeObject);
+</script>
 
 
 </body>

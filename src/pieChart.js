@@ -11,157 +11,6 @@
 "use strict";
 
 
-
-class JsonData {
-
-    constructor(file = "../src/data.json") {
-        this.file = file;
-        this.jsonText = this.getJsonText();
-        this.parsedJson = this.getParsedJson();
-        this.sums = this.getSums();
-        this.percent = this.getPercent();
-    }
-
-        getJsonText(file = this.file)
-        {
-            var rawFile = new XMLHttpRequest();
-            var rawText;
-            rawFile.open("GET", file, false);
-            rawFile.onreadystatechange = function ()
-            {
-                if(rawFile.readyState === 4)
-                {
-                    if(rawFile.status === 200 || rawFile.status == 0)
-                    {
-                        rawText = rawFile.responseText;
-                    }
-                }
-            }
-            rawFile.send(null);
-            this.rawText = rawText;
-            return this.rawText;
-        }
-
-        getParsedJson(file = this.file){
-            this.parsedJson = JSON.parse(this.jsonText);
-            return this.parsedJson;
-        }
-
-        getSums() {
-            var sums = [];
-            for (var i = 0; i < this.parsedJson[0].values.length; i++) {
-                this.parsedJson.reduce(function(t,cv) {
-                    if (sums[cv.values[i].name]) {
-                        sums[cv.values[i].name] += cv.values[i].value;
-                    } else {
-                        sums[cv.values[i].name] = cv.values[i].value;
-                    }
-                }, {});
-            }
-            this.sums = sums;
-            return this.sums;
-        }
-
-        getPercent() {
-            let percentjson = this.parsedJson;
-            let sums = this.sums;
-            for (var elements in percentjson) {
-                var values = percentjson[elements].values;
-                for (var value in values) {
-
-                    var total = sums[values[value].name];
-                    var percent = values[value].value/(total/100);
-
-                    //set calculated percent and total to the corresponding dataset
-                    percentjson[elements].values[value]["percent"] = percent;
-                    percentjson[elements].values[value]["total"] = total;
-                }
-            }
-            this.percentjson = percentjson;
-            return this.percentjson;
-        }
-
-}
-
-
-
-
-
-class SceneInit {
-
-    constructor(fov = 45,camera,scene,controls,renderer)
-    {
-        this.camera = camera;
-        this.scene = scene;
-        this.controls = controls;
-        this.renderer = renderer;
-        this.fov = fov;
-
-    }
-
-
-
-    initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.z = 15;
-
-        this.controls = new THREE.TrackballControls( this.camera );
-        this.controls.addEventListener('change', this.render.bind(this));
-
-        this.scene = new THREE.Scene();
-
-        //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myThreeJsCanvas') , antialias: true});
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
-
-
-        //ambient light which is for the whole scene
-        let ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        ambientLight.castShadow = false;
-        this.scene.add(ambientLight);
-
-        //spot light which is illuminating the chart directly
-        let spotLight = new THREE.SpotLight(0xffffff, 0.55);
-        spotLight.castShadow = true;
-        spotLight.position.set(0,40,10);
-        this.scene.add(spotLight);
-
-        /*
-         document.addEventListener('mousedown', onDocumentMouseAction, false);
-         document.addEventListener('mousemove', onDocumentMouseAction, false);
-         document.ondblclick = onDocumentDblClick();
-         */
-
-        //if window resizes
-        window.addEventListener('resize', this.onWindowResize.bind(this) , false);
-    }
-
-
-    animate(){
-        requestAnimationFrame( this.animate.bind(this) );
-        this.render();
-        this.controls.update();
-    }
-
-
-    render(){
-        this.renderer.render( this.scene, this.camera );
-    }
-
-
-    onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
-}
-
-}
-
-
-
-
-
 class PieChart {
 
     constructor(jsonData, radius, angleStart, angleEnd, legendMap){
@@ -205,6 +54,7 @@ class PieChart {
 
         //Group together all pieces
         let pieChart = new THREE.Group();
+        pieChart.name = "groupedPieChart";
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
@@ -260,17 +110,3 @@ class PieChart {
         return pieChart;
 	}
 }
-
-
-
-
-
-
-let scene = new SceneInit(45);
-scene.initScene();
-scene.animate();
-
-const jsonData = new JsonData();
-const pieChart = new PieChart(jsonData);
-scene.scene.add(pieChart.threeObject);
-

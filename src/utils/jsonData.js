@@ -68,3 +68,6 @@ class JsonData {
         }
 
 }
+
+
+//export {JsonData}
