@@ -98,7 +98,8 @@ class SceneInit {
         if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-            console.log(intersects[0].object.name);
+            console.log(intersects[0].object);
+            document.getElementById("details").innerHTML = intersects[0].object.details;
         }
         else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 

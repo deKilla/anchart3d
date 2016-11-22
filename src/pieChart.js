@@ -95,6 +95,10 @@ class PieChart {
                            "Fläche: " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n" +
                            "Höhe: " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
 
+            segment.details = "<h3>" + calculatedData[data].name + "</h3>" +
+                           "<b>Fläche:</b> " + data1Name + " = " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "<br />" +
+                           "<b>Höhe:</b> " + data2Name + " = " + data2Percent.toFixed(2) +"% " + "(€ " + data2Value + ",-)";
+            
             //define a new property for the segment to store the percent associated with it.
             //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
             Object.defineProperty(segment, 'percent', {

@@ -1,6 +1,7 @@
 body{
     margin: 0;
-    overflow: hidden
+    overflow: hidden;
+    font-family: Arial;
 }
 
 
@@ -32,7 +33,6 @@ body{
 #legend li {
     color:#fff;
     margin-bottom:5px;
-    font-family: Arial;
     padding:3px 0;
 }
 
@@ -50,3 +50,11 @@ body{
 .legend-block{
     display:inline;
 }
+
+#details { 
+    z-index:8;
+    color:#fff;
+    position: absolute;
+    top:20px;
+    left:20px;
+     }
