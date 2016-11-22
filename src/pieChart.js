@@ -87,17 +87,6 @@ class JsonData {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 class SceneInit {
 
     constructor(fov = 45,camera,scene,controls,renderer)
@@ -270,7 +259,7 @@ test.initScene();
 test.animate();
 
 
-let geometry = new THREE.BoxGeometry( 200, 200, 200 );
+let geometry = new THREE.BoxGeometry( 3, 3, 3);
 let material = new THREE.MeshPhongMaterial({
     color: Math.random() * 0xffffff,
     shading: THREE.SmoothShading,
