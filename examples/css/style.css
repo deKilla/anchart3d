@@ -11,8 +11,9 @@ body{
     right: 20px;
     font-size: 14px;
     z-index: 8;
-    border:1px dashed #fff;
+    /*border:1px dashed #fff;*/
     padding:10px 15px 5px 10px;
+    border-radius:10px;
 
 }
 
@@ -43,6 +44,7 @@ body{
     height: 14px;
     margin-right:10px;
     padding:5px;
+    border-radius:3px;
 }
 
 .legend-block{
