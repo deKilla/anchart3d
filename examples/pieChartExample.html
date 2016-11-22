@@ -5,16 +5,21 @@
     <title>Pie Chart</title>
 
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-	
+
 </head>
 <body>
-
+<div id="legend-background" class="legend-background">
+    <h4> Piechart Legend</h4>
+    <ul id="legend">
+    </ul>
+</div>
 
 <canvas id="anchart3d"></canvas>
 
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
 <script type="text/javascript" src="../src/utils/TrackballControls.js"></script>
 <script type="text/javascript" src="../src/utils/SceneInit.js"></script>
+<script type="text/javascript" src="../src/utils/legend.js"></script>
 <script type="text/javascript" src="../src/utils/jsonData.js"></script>
 <script type="text/javascript" src="../src/pieChart.js"></script>
 <script type="text/javascript" src="../src/utils/createChart.js"></script>

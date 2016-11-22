@@ -13,12 +13,15 @@
 
 class PieChart {
 
-    constructor(jsonData, radius, angleStart, angleEnd){
+    constructor(jsonData, radius, angleStart, angleEnd, legendMap){
+
         this.jsonData = jsonData;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
         this.object = this.create3DPieChart();
+        this.legendMap = legendMap;
+   
     }
 
     createSegment(radius, angleStart, angleEnd) {
@@ -55,6 +58,7 @@ class PieChart {
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
 
+        let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let data in calculatedData) {
@@ -78,6 +82,10 @@ class PieChart {
             //scale in z (show second data set)
             segment.scale.z = (data2Percent/10);
 
+            //adding elements to the legendMap
+            legendMap.set(calculatedData[data].name,segment.material.color.getHexString());
+
+
             //set the lastThetaStart to the length of the last segment, in order to not overlap segments
             lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent*3.6);
 
@@ -96,6 +104,8 @@ class PieChart {
             //add new piece to the grouped pieChart
             pieChart.add(segment);
         }
+        let pieChartLegend = new Legend(legendMap);
+        pieChartLegend.generateLegend();
         return pieChart;
 	}
 }
