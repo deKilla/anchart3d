@@ -3,25 +3,48 @@ body{
     overflow: hidden
 }
 
+
 #legend-background {
-    background: #26272b;
-    color: #eee;
+    background: #000;
     position: absolute;
-    top: 0;
-    right: 0;
-    max-width: 100%;
-    padding: 20px;
+    top: 20px;
+    right: 20px;
     font-size: 14px;
     z-index: 8;
+    border:1px dashed #fff;
+    padding:5px 10px 5px 5px;
 
 }
-.color-box {
-    border: 1px solid #000000;
-    display: inline;
-    padding: 10px;
-    width: 5px;
-    height: 5px;
+
+#legend-background h4 {
+    color:#fff;
+    font-size:25px;
+    display:none;
 }
+
+#legend {
+    list-style: none;
+    padding:0px;
+    margin:0px;
+}
+
+#legend li {
+    color:#fff;
+    margin-bottom:5px;
+    font-family: Arial;
+    padding:3px 0;
+}
+
+
+.color-box {
+    display: inline-flex;
+    border: 1px solid #000000;
+    width: 14px;
+    height: 14px;
+    margin-right:10px;
+    padding:5px;
+}
+
 .legend-block{
     display:inline;
 }
