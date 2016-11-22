@@ -9,7 +9,6 @@
  */
 
 "use strict";
-var camera, renderer, scene, controls
 
 
 
@@ -118,7 +117,7 @@ class SceneInit {
         this.camera.position.z = 15;
 
         this.controls = new THREE.TrackballControls( this.camera );
-        //this.controls.addEventListener('change', this.renderScene);
+        this.controls.addEventListener('change', this.render.bind(this));
 
         this.scene = new THREE.Scene();
 
@@ -139,9 +138,14 @@ class SceneInit {
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
 
+        /*
+         document.addEventListener('mousedown', onDocumentMouseAction, false);
+         document.addEventListener('mousemove', onDocumentMouseAction, false);
+         document.ondblclick = onDocumentDblClick();
+         */
 
         //if window resizes
-        window.addEventListener('resize', this.onWindowResize, false);
+        window.addEventListener('resize', this.onWindowResize.bind(this) , false);
     }
 
 
@@ -261,32 +265,19 @@ class PieChart {
 
 
 
-
-
-
-
-
-
-
-
-/*
-document.addEventListener('mousedown', onDocumentMouseAction, false);
-document.addEventListener('mousemove', onDocumentMouseAction, false);
-document.ondblclick = onDocumentDblClick();
-
-window.addEventListener('resize', onWindowResize, false);
-*/
-
-
 let test = new SceneInit(45);
 test.initScene();
 test.animate();
 
 
-let geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
-let material = new THREE.MeshBasicMaterial( );
+let geometry = new THREE.BoxGeometry( 200, 200, 200 );
+let material = new THREE.MeshPhongMaterial({
+    color: Math.random() * 0xffffff,
+    shading: THREE.SmoothShading,
+    specular: 0xffffff,
+    shininess: 1.5,
+});
 let mesh = new THREE.Mesh( geometry, material );
 
 test.scene.add(mesh);
-test.scene.add(test.camera);
-console.log(test.scene);
+
