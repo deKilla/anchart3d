@@ -84,7 +84,7 @@ class PieChart {
             segment.scale.z = (data2Percent/10);
 
             //adding elements to the legendMap
-            legendMap.set(values[].name,segment.material.color.getHexString());
+            legendMap.set(calculatedData[data].name,segment.material.color.getHexString());
 
 
             //set the lastThetaStart to the length of the last segment, in order to not overlap segments
