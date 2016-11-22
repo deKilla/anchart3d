@@ -38,7 +38,7 @@ body{
 
 .color-box {
     display: inline-flex;
-    border: 1px solid #000000;
+    border: 1px solid #fff;
     width: 14px;
     height: 14px;
     margin-right:10px;
