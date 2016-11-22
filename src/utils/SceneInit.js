@@ -6,8 +6,9 @@
 
 class SceneInit {
 
-    constructor(fov = 45,camera,scene,controls,renderer,INTERSECTED)
+    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED)
     {
+        this.domtarget = domtarget;
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
@@ -31,7 +32,7 @@ class SceneInit {
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myThreeJsCanvas') , antialias: true});
+        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget) , antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
