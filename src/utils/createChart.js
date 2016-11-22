@@ -10,7 +10,7 @@
 
 			this.scene.initScene();
 			this.scene.animate();
-			this.scene.scene.add(this.chart.threeObject);
+			this.scene.scene.add(this.chart.object);
 
 		}
 
@@ -26,12 +26,3 @@
 		let chart = new CreateChart(domTarget,json,chartType);
 		return chart;
 	}
-
-	
-	//what should work in the end: (something like that)
-	//createChart().domTarget("myCanvas").dataSource("../src/data.json").chartType("pieChart");
-
-
-
-
-		

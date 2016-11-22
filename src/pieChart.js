@@ -18,7 +18,7 @@ class PieChart {
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
-        this.threeObject = this.create3DPieChart();
+        this.object = this.create3DPieChart();
     }
 
     createSegment(radius, angleStart, angleEnd) {
