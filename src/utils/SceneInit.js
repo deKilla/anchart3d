@@ -6,7 +6,7 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED,canvas,context,texture,spriteMat)
+    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED,sprite,context,texture)
     {
         this.domtarget = domtarget;
         this.camera = camera;
@@ -17,11 +17,10 @@ class SceneInit {
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
         this.raycaster = new THREE.Raycaster();
-        this.cavas = canvas;
+        //used for labeling
+        this.sprite = sprite;
         this.context = context;
         this.texture = texture;
-        this.spriteMat = spriteMat;
-
     }
 
 
@@ -52,26 +51,7 @@ class SceneInit {
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
 
-
-        /////// draw text on canvas /////////
-        // create a canvas element
-        this.canvas = document.createElement('canvas');
-        this.context = this.canvas.getContext('2d');
-        this.context.font = "Bold 20px Arial";
-        this.context.fillStyle = "rgba(0,0,0,0.95)";
-
-        // canvas contents will be used for a texture
-        this.texture = new THREE.Texture(this.canvas);
-        this.texture.needsUpdate = true;
-
-        ////////////////////////////////////////
-
-        this.spriteMat = new THREE.SpriteMaterial( { map: this.texture /*, useScreenCoordinates: true*/ } );
-
-        this.sprite = new THREE.Sprite( this.spriteMat );
-        this.sprite.scale.set(200,100,1.0);
-        this.scene.add( this.sprite );
-        //////////////////////////////////////////
+        this.defineTextSprite("create");
 
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
@@ -109,16 +89,8 @@ class SceneInit {
         this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
         this.raycaster.setFromCamera( this.mouse, this.camera );
 
-
-        //convert screen coordinates to world position
-        let vector = new THREE.Vector3(this.mouse.x, this.mouse.y, 0.5);
-        vector.unproject( this.camera );
-        let dir = vector.sub( this.camera.position ).normalize();
-        let distance =  this.camera.position.z / dir.z +500;
-        let pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
-        //set the label at the mouse position
-        this.sprite.position.copy(pos);
-
+        //update the label position when hovering over a segment
+        this.getLabelPos();
 
         //search for our object by name which we declared before and return it
         return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
@@ -147,22 +119,11 @@ class SceneInit {
                 // update text, if it has a "name" field.
                 if ( intersects[ 0 ].object.name )
                 {
-                    this.context.clearRect(0,0,640,480);
-                    let message = intersects[ 0 ].object.name;
-                    let metrics = this.context.measureText(message);
-                    let width = metrics.width;
-                    this.context.fillStyle = "rgba(0,0,0,0.95)"; // black border
-                    this.context.fillRect( 0,0, width+8,20+8);
-                    this.context.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-                    this.context.fillRect( 2,2, width+4,20+4 );
-                    this.context.fillStyle = "rgba(0,0,0,1)"; // text color
-                    this.context.fillText( message, 4,20 );
-                    this.texture.needsUpdate = true;
+                    this.defineTextSprite("showOnSegment",intersects[0].object.name,24);
                 }
                 else
                 {
-                    this.context.clearRect(0,0,300,300);
-                    this.texture.needsUpdate = true;
+                    this.defineTextSprite("hide");
                 }
 
             }
@@ -171,8 +132,7 @@ class SceneInit {
             if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
             this.INTERSECTED = null;
 
-            this.context.clearRect(0,0,300,300);
-            this.texture.needsUpdate = true;
+            this.defineTextSprite("hide");
         }
 
     }
@@ -182,33 +142,70 @@ class SceneInit {
         //IMPLEMENT DOUBLE CLICK FUNCTION HERE
     }
 
-    /*
-     makeTextSprite(message, fontsize) {
-     let ctx, texture, sprite, spriteMaterial,
-     canvas = document.createElement('canvas');
-     ctx = canvas.getContext('2d');
-     ctx.font = fontsize + "px Arial";
 
-     // setting canvas width/height before ctx draw, else canvas is empty
-     canvas.width = ctx.measureText(message).width;
-     canvas.height = fontsize * 2; // fontsize * 1.5
+     defineTextSprite(option,message,fontsize) {
+        var spriteMat, canvas;
+        message = (message != undefined) ? message : "";
+        fontsize = (fontsize != undefined || !isNaN(fontsize)) ? fontsize : 20;
 
-     ctx.font = fontsize + "px Arial";
-     ctx.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-     ctx.fillRect( 2, 2, canvas.width + 5, 20+4);
-     ctx.fillStyle = "rgba(0,0,0,1)";
-     ctx.fillText(message, 4, fontsize);
+        if(option != undefined){
+             switch(option) {
+                 case "create":
+                     /////// draw text on canvas /////////
+                     // create a canvas element
+                     canvas = document.createElement('canvas');
+                     this.context = canvas.getContext('2d');
+                     this.context.font = "" + fontsize + "px Arial";
+                     this.context.fillStyle = "rgba(0,0,0,0.95)";
 
-     texture = new THREE.Texture(canvas);
-     texture.minFilter = THREE.LinearFilter; // NearestFilter;
-     texture.needsUpdate = true;
+                     // canvas contents will be used for a texture
+                     this.texture = new THREE.Texture(canvas);
+                    this.texture.minFilter = THREE.LinearFilter;
+                     this.texture.needsUpdate = true;
 
-     spriteMaterial = new THREE.SpriteMaterial({map : texture});
-     sprite = new THREE.Sprite(spriteMaterial);
-     return sprite;
+                     spriteMat = new THREE.SpriteMaterial( { map: this.texture /*, useScreenCoordinates: true*/ } );
+                     this.sprite = new THREE.Sprite( spriteMat );
+                     this.sprite.scale.set(200,100,1.0);
+                     this.scene.add( this.sprite );
+                     break;
+
+                 case "showOnSegment":
+                     this.context.clearRect(0,0,640,480);
+                     let metrics = this.context.measureText(message);
+                     let width = metrics.width;
+                     this.context.fillStyle = "rgba(0,0,0,0.95)"; // black border
+                     this.context.fillRect( 0,0, width+8,20+8);
+                     this.context.fillStyle = "rgba(255,255,255,0.95)"; // white filler
+                     this.context.fillRect( 2,2, width+10, fontsize);
+                     this.context.fillStyle = "rgba(0,0,0,1)"; // text color
+                     this.context.fillText( message, fontsize, fontsize/2);
+                     this.texture.needsUpdate = true;
+                     break;
+
+                 case "hide":
+                     this.context.clearRect(0,0,300,300);
+                     this.texture.needsUpdate = true;
+                     break;
+
+                 default:
+                     console.error("No option was defined!");
+            }
+        }
+
      }
-     */
 
+
+
+    getLabelPos(){
+        let vector = new THREE.Vector3(this.mouse.x -0.34, this.mouse.y -0.26);
+        vector.unproject( this.camera );
+        let dir = vector.sub( this.camera.position ).normalize();
+        let distance =  this.camera.position.z / dir.z +500;
+        let pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
+        //set the label at the mouse position
+        this.sprite.position.copy(pos);
+
+    }
 }
 
 
