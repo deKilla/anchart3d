@@ -18,7 +18,7 @@ class Legend {
 
             let colorElem = document.createElement("span");
             colorElem.setAttribute("class", "color-box");
-            colorElem.setAttribute("style", "background-color:#" + value + "");
+            colorElem.setAttribute("style", "background-color:#" + value);
 
             let nameElem = document.createElement("i");
             nameElem.textContent = key;
