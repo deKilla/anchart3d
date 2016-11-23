@@ -120,7 +120,7 @@ class SceneInit {
                 // update text, if it has a "name" field.
                 if ( intersects[ 0 ].object.name )
                 {
-                    this.defineTextSprite("showOnSegment",intersects[0].object.name,24);
+                    this.defineTextSprite("showOnSegment",intersects[0].object.name);
                 }
                 else
                 {
@@ -144,10 +144,9 @@ class SceneInit {
     }
 
 
-     defineTextSprite(option,message,fontsize) {
+     defineTextSprite(option,message) {
         let spriteMat, canvas;
         message = (message != undefined) ? message : "";
-        fontsize = (fontsize != undefined || !isNaN(fontsize)) ? fontsize : 20;
 
         if(option != undefined){
              switch(option) {
@@ -156,12 +155,12 @@ class SceneInit {
                      // create a canvas element
                      canvas = document.createElement('canvas');
                      this.context = canvas.getContext('2d');
-                     this.context.font = "" + fontsize + "px Arial";
+                     this.context.font = "20" + "px Arial";
                      this.context.fillStyle = "rgba(0,0,0,0.95)";
 
                      // canvas contents will be used for a texture
                      this.texture = new THREE.Texture(canvas);
-                    this.texture.minFilter = THREE.LinearFilter;
+                     this.texture.minFilter = THREE.LinearFilter;
                      this.texture.needsUpdate = true;
 
                      spriteMat = new THREE.SpriteMaterial( { map: this.texture /*, useScreenCoordinates: true*/ } );
@@ -175,11 +174,11 @@ class SceneInit {
                      let metrics = this.context.measureText(message);
                      let width = metrics.width;
                      this.context.fillStyle = "rgba(0,0,0,0.95)"; // black border
-                     this.context.fillRect( 0,0, width+8,20+8);
-                     this.context.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-                     this.context.fillRect( 2,2, width+10, fontsize);
+                     this.context.fillRect( 1,1, width+8,20+8);
+                     this.context.fillStyle = "rgba(255,255,255,0.7)"; // white filler
+                     this.context.fillRect( 2,2, width+10, 20+4);
                      this.context.fillStyle = "rgba(0,0,0,1)"; // text color
-                     this.context.fillText( message, fontsize, fontsize/2);
+                     this.context.fillText( message, 20, 20);
                      this.texture.needsUpdate = true;
                      break;
 
@@ -198,10 +197,10 @@ class SceneInit {
 
 
     getLabelPos(){
-        let vector = new THREE.Vector3(this.mouse.x -0.27, this.mouse.y -0.27, 0.9);
+        let vector = new THREE.Vector3(this.mouse.x -0.18, this.mouse.y -0.18, 0.9);
         vector.unproject( this.camera );
         let dir = vector.sub( this.camera.position ).normalize();
-        let distance =  this.camera.position.z / dir.z +500;
+        let distance =  this.camera.position.z / dir.z +700;
         let pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
         //set the label at the mouse position
         this.sprite.position.copy(pos);
