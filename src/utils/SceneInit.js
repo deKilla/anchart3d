@@ -174,8 +174,8 @@ class SceneInit {
                      this.context.clearRect(0,0,640,480);
                      let metrics = this.context.measureText(message);
                      let width = metrics.width;
-                     this.context.fillStyle = "rgba(0,0,0,0.95)"; // black border
-                     this.context.fillRect( 0,0, width+20,20);
+                     this.context.fillStyle = "rgba(255,0,0,0.8)"; // black border
+                     this.context.fillRect( 0,0, width+10,20+4);
                      this.context.fillStyle = "rgba(255,255,255,0.7)"; // white filler
                      this.context.fillRect( 0,0, width+10, 20+4);
                      this.context.fillStyle = "rgba(0,0,0,1)"; // text color
