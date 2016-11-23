@@ -106,8 +106,9 @@ class SceneInit {
         if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-            console.log(intersects[0].object.name);
-            document.getElementById("details").innerHTML = intersects[0].object.details;
+            console.log(intersects[0].object.data1.name);
+            document.getElementById("details").innerHTML = intersects[0].object.name + "<br><br>" + intersects[0].object.data1.name + ": " + intersects[0].object.data1.percent.toFixed(2) +
+            "% (" + intersects[0].object.data1.value + ")" + "<br>" + intersects[0].object.data2.name + ": " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
         }
         else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 
@@ -174,11 +175,11 @@ class SceneInit {
                      let metrics = this.context.measureText(message);
                      let width = metrics.width;
                      this.context.fillStyle = "rgba(0,0,0,0.95)"; // black border
-                     this.context.fillRect( 1,1, width+8,20+8);
+                     this.context.fillRect( 0,0, width+20,20);
                      this.context.fillStyle = "rgba(255,255,255,0.7)"; // white filler
-                     this.context.fillRect( 2,2, width+10, 20+4);
+                     this.context.fillRect( 0,0, width+10, 20+4);
                      this.context.fillStyle = "rgba(0,0,0,1)"; // text color
-                     this.context.fillText( message, 20, 20);
+                     this.context.fillText( message, 5, 20);
                      this.texture.needsUpdate = true;
                      break;
 
@@ -197,7 +198,7 @@ class SceneInit {
 
 
     getLabelPos(){
-        let vector = new THREE.Vector3(this.mouse.x -0.18, this.mouse.y -0.18, 0.9);
+        let vector = new THREE.Vector3(this.mouse.x +0.1, this.mouse.y -0.2, 0.9);
         vector.unproject( this.camera );
         let dir = vector.sub( this.camera.position ).normalize();
         let distance =  this.camera.position.z / dir.z +700;

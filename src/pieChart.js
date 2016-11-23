@@ -64,49 +64,48 @@ class PieChart {
         for (let data in calculatedData) {
             let values = calculatedData[data].values;
             for (let val in values){
+                var segment;
                 //get first data set of the first object
                 if(val == 0){
-                    var data1Name = values[val].name;
-                    var data1Value = values[val].value;
-                    var data1Percent = values[val].percent;
+                    let data1Name = values[val].name;
+                    let data1Value = values[val].value;
+                    let data1Percent = values[val].percent;
+
+                    //call function which creates one segment at a time
+                     segment = this.createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
+
+                    //set the lastThetaStart to the length of the last segment, in order to not overlap segments
+                    lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent*3.6);
+
+                    //adding elements to the legendMap
+                    legendMap.set(calculatedData[data].name,segment.material.color.getHexString());
+
+                    //assign the object the name from the description of the JSON
+                    //TODO save data somewhere else
+                    segment.name = calculatedData[data].name;
+                    segment.data1 = {};
+                    segment.data1.name = data1Name;
+                    segment.data1.value = data1Value;
+                    segment.data1.percent = data1Percent;
+
                 }
                 else if (val == 1){
-                    var data2Name = values[val].name;
-                    var data2Value = values[val].value;
-                    var data2Percent = values[val].percent;
+                    let data2Name = values[val].name;
+                    let data2Value = values[val].value;
+                    let data2Percent = values[val].percent;
+
+                    segment.data2 = {};
+                    segment.data2.name = data2Name;
+                    segment.data2.value = data2Value;
+                    segment.data2.percent = data2Percent;
+
+                    //scale in z(height) (show second data set)
+                    segment.scale.z = (data2Percent/10);
                 }
+
+                //add new piece to the grouped pieChart
+                pieChart.add(segment);
             }
-            //call function which creates one segment at a time
-            let segment = this.createSegment(3,lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent*3.6));
-
-            //scale in z (show second data set)
-            segment.scale.z = (data2Percent/10);
-
-            //adding elements to the legendMap
-            legendMap.set(calculatedData[data].name,segment.material.color.getHexString());
-
-
-            //set the lastThetaStart to the length of the last segment, in order to not overlap segments
-            lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent*3.6);
-
-            //assign the object the name from the description of the JSON
-            //TODO save data somewhere else
-            segment.name = calculatedData[data].name + "\n" +
-                           "Fläche: " + data1Name +"= " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "\n" +
-                           "Höhe: " + data2Name +"(€)= " + data2Percent.toFixed(2) +"% " + "(" + data2Value + ")";
-
-            segment.details = "<h3>" + calculatedData[data].name + "</h3>" +
-                           "<b>Fläche:</b> " + data1Name + " = " + data1Percent.toFixed(2) +"% " + "(" + data1Value + ")" + "<br />" +
-                           "<b>Höhe:</b> " + data2Name + " = " + data2Percent.toFixed(2) +"% " + "(€ " + data2Value + ",-)";
-            
-            //define a new property for the segment to store the percent associated with it.
-            //source: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
-            Object.defineProperty(segment, 'percent', {
-                value: data1Percent.toFixed(2)
-            });
-
-            //add new piece to the grouped pieChart
-            pieChart.add(segment);
         }
         let pieChartLegend = new Legend(legendMap);
         pieChartLegend.generateLegend();
