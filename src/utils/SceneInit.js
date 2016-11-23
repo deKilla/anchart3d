@@ -51,6 +51,7 @@ class SceneInit {
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
 
+        //define sprite on 2d canvas to draw tooltip at mouse hover
         this.defineTextSprite("create");
 
 
@@ -144,7 +145,7 @@ class SceneInit {
 
 
      defineTextSprite(option,message,fontsize) {
-        var spriteMat, canvas;
+        let spriteMat, canvas;
         message = (message != undefined) ? message : "";
         fontsize = (fontsize != undefined || !isNaN(fontsize)) ? fontsize : 20;
 
@@ -197,7 +198,7 @@ class SceneInit {
 
 
     getLabelPos(){
-        let vector = new THREE.Vector3(this.mouse.x -0.34, this.mouse.y -0.26);
+        let vector = new THREE.Vector3(this.mouse.x -0.27, this.mouse.y -0.27, 0.9);
         vector.unproject( this.camera );
         let dir = vector.sub( this.camera.position ).normalize();
         let distance =  this.camera.position.z / dir.z +500;
