@@ -51,10 +51,6 @@ class SceneInit {
         spotLight.position.set(0,40,10);
         this.scene.add(spotLight);
 
-        //define sprite on 2d canvas to draw tooltip at mouse hover
-        this.defineTextSprite("create");
-
-
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
@@ -90,14 +86,6 @@ class SceneInit {
         this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
         this.raycaster.setFromCamera( this.mouse, this.camera );
 
-        //update the label position when hovering over a segment
-        this.getLabelPos();
-        
-        if(this.INTERSECTED){
-            this.htmlTooltip();
-        } else {
-            if(document.getElementById("tooltip")){document.body.removeChild(document.getElementById("tooltip"))}
-        }
 
         //search for our object by name which we declared before and return it
         return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
@@ -118,29 +106,23 @@ class SceneInit {
         }
         else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 
+            //call the html tooltip whenever there is an intersected object. if it is the same call again to update position
+            if(this.INTERSECTED){
+                this.htmlTooltip("show");
+            }
+
             if ( this.INTERSECTED != intersects[ 0 ].object ) {
                 if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
                 this.INTERSECTED = intersects[ 0 ].object;
                 this.currentHex = this.INTERSECTED.material.emissive.getHex();
                 this.INTERSECTED.material.emissive.setHex(0xa9a8a8);
-
-                // update text, if it has a "name" field.
-                if ( intersects[ 0 ].object.name )
-                {
-                    this.defineTextSprite("showOnSegment",intersects[0].object.name);
-                }
-                else
-                {
-                    this.defineTextSprite("hide");
-                }
-
             }
         }
         else {
             if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
             this.INTERSECTED = null;
 
-            this.defineTextSprite("hide");
+            this.htmlTooltip("hide");
         }
 
     }
@@ -151,122 +133,76 @@ class SceneInit {
     }
 
 
-     defineTextSprite(option,message) {
-        let spriteMat, canvas;
-        message = (message != undefined) ? message : "";
 
-        if(option != undefined){
-             switch(option) {
-                 case "create":
-                     /////// draw text on canvas /////////
-                     // create a canvas element
-                     canvas = document.createElement('canvas');
-                     this.context = canvas.getContext('2d');
-                     this.context.font = "20" + "px Arial";
-                     this.context.fillStyle = "rgba(0,0,0,0.95)";
-
-                     // canvas contents will be used for a texture
-                     this.texture = new THREE.Texture(canvas);
-                     this.texture.minFilter = THREE.LinearFilter;
-                     this.texture.needsUpdate = true;
-
-                     spriteMat = new THREE.SpriteMaterial( { map: this.texture /*, useScreenCoordinates: true*/ } );
-                     this.sprite = new THREE.Sprite( spriteMat );
-                     this.sprite.scale.set(200,100,1.0);
-                     this.scene.add( this.sprite );
-                     break;
-
-                 case "showOnSegment":
-                     this.context.clearRect(0,0,640,480);
-                     let metrics = this.context.measureText(message);
-                     let width = metrics.width;
-                     this.context.fillStyle = "rgba(255,0,0,0.8)"; // black border
-                     this.context.fillRect( 0,0, width+10,20+4);
-                     this.context.fillStyle = "rgba(255,255,255,0.7)"; // white filler
-                     this.context.fillRect( 0,0, width+10, 20+4);
-                     this.context.fillStyle = "rgba(0,0,0,1)"; // text color
-                     this.context.fillText( message, 5, 20);
-                     this.texture.needsUpdate = true;
-                     break;
-
-                 case "hide":
-                     this.context.clearRect(0,0,300,300);
-                     this.texture.needsUpdate = true;
-                     break;
-
-                 default:
-                     console.error("No option was defined!");
-            }
-        }
-
-     }
-
-
-
-    getLabelPos(){
-        let vector = new THREE.Vector3(this.mouse.x +0.1, this.mouse.y -0.2, 0.9);
-        vector.unproject( this.camera );
-        let dir = vector.sub( this.camera.position ).normalize();
-        let distance =  this.camera.position.z / dir.z +700;
-        let pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
-        //set the label at the mouse position
-        this.sprite.position.copy(pos);
-    }
-
-    htmlTooltip(){
+    htmlTooltip(status){
 
         let tooltip = null;
+        status = (status == undefined) ? "show" : status;
 
-        if(!document.getElementById("tooltip")) {
-            tooltip = document.createElement("div");
-        } else {
-            tooltip = document.getElementById("tooltip");
+        if(status === "show") {
+
+            if (!document.getElementById("tooltip")) {
+                tooltip = document.createElement("div");
+            } else {
+                tooltip = document.getElementById("tooltip");
+            }
+
+            tooltip.setAttribute("id", "tooltip");
+            tooltip.innerHTML =
+
+                "<h4>" + this.INTERSECTED.name + "</h4>" +
+                "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" +
+                "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
+
+            let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
+            tooltip.style.position = "absolute";
+
+            let posX = 0;
+            let posY = 0;
+            let q = "";
+
+            if (vector.x >= 0 && vector.y >= 0) {
+                q = "q1"
+            }
+            if (vector.x <= 0 && vector.y >= 0) {
+                q = "q2"
+            }
+            if (vector.x <= 0 && vector.y <= 0) {
+                q = "q3"
+            }
+            if (vector.x >= 0 && vector.y <= 0) {
+                q = "q4"
+            }
+
+            if (q == "q1") {
+                posX = ((Math.abs(vector.x)) * 50) + 50;
+                posY = ((1 - Math.abs(vector.y)) * 50);
+            }
+
+            if (q == "q2") {
+                posX = ((1 - Math.abs(vector.x)) * 50);
+                posY = ((1 - Math.abs(vector.y)) * 50);
+            }
+
+            if (q == "q3") {
+                posX = ((1 - Math.abs(vector.x)) * 50);
+                posY = ((Math.abs(vector.y)) * 50) + 50;
+            }
+
+            if (q == "q4") {
+                posX = ((Math.abs(vector.x)) * 50) + 50;
+                posY = ((Math.abs(vector.y)) * 50) + 50;
+            }
+
+            tooltip.style.left = posX + '%';
+            tooltip.style.top = posY + '%';
+
+            document.body.appendChild(tooltip);
         }
-
-        tooltip.setAttribute("id", "tooltip");
-        tooltip.innerHTML = 
-
-        "<h4>" + this.INTERSECTED.name + "</h4>" +
-        "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" +
-        "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
-
-        let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
-        tooltip.style.position = "absolute";
-
-        let posX = 0;
-        let posY = 0;
-        let q = "";
-
-        if(vector.x >= 0 && vector.y >= 0) { q = "q1" }
-        if(vector.x <= 0 && vector.y >= 0) { q = "q2" }
-        if(vector.x <= 0 && vector.y <= 0) { q = "q3" }
-        if(vector.x >= 0 && vector.y <= 0) { q = "q4" }
-
-        if (q == "q1") {
-            posX = ((Math.abs(vector.x)) * 50) + 50;
-            posY = ((1 - Math.abs(vector.y)) * 50);
+        //remove tooltip if mouse does not hover over the pie or a pie segment
+        else if(status === "hide" && document.getElementById("tooltip")) {
+            document.body.removeChild(document.getElementById("tooltip"));
         }
-        
-        if (q == "q2") {
-            posX = ((1 - Math.abs(vector.x))*50);
-            posY = ((1 - Math.abs(vector.y))*50);
-        }
-
-        if (q == "q3") {
-            posX = ((1 - Math.abs(vector.x)) * 50);
-            posY = ((Math.abs(vector.y)) * 50) + 50;
-        }
-
-        if (q == "q4") {
-            posX = ((Math.abs(vector.x)) * 50) + 50;
-            posY = ((Math.abs(vector.y)) * 50) + 50;
-        }
-
-        tooltip.style.left = posX+'%';
-        tooltip.style.top = posY+'%';
-
-        document.body.appendChild(tooltip);
-
     }
 }
 
