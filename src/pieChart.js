@@ -4,9 +4,9 @@
 
 "use strict";
 
+ import * as THREE from "three/build/three";
  import '../src/utils/TrackballControls';
  import {Legend} from './utils/Legend';
- import * as THREE from "three/build/three";
 
 
 class PieChart {
