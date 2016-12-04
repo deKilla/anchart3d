@@ -6,8 +6,7 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED)
-    {
+    constructor(domtarget = "anchart3d", fov = 45, camera, scene, controls, renderer, INTERSECTED) {
         this.domtarget = domtarget;
         this.camera = camera;
         this.scene = scene;
@@ -20,18 +19,17 @@ class SceneInit {
     }
 
 
-
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
         this.camera.position.z = 15;
 
-        this.controls = new THREE.TrackballControls( this.camera );
+        this.controls = new THREE.TrackballControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
 
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget) , antialias: true});
+        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget), antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
@@ -44,7 +42,7 @@ class SceneInit {
         //spot light which is illuminating the chart directly
         let spotLight = new THREE.SpotLight(0xffffff, 0.55);
         spotLight.castShadow = true;
-        spotLight.position.set(0,40,10);
+        spotLight.position.set(0, 40, 10);
         this.scene.add(spotLight);
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
@@ -53,19 +51,19 @@ class SceneInit {
 
 
         //if window resizes
-        window.addEventListener('resize', this.onWindowResize.bind(this) , false);
+        window.addEventListener('resize', this.onWindowResize.bind(this), false);
     }
 
 
-    animate(){
-        requestAnimationFrame( this.animate.bind(this) );
+    animate() {
+        requestAnimationFrame(this.animate.bind(this));
         this.render();
         this.controls.update();
     }
 
 
-    render(){
-        this.renderer.render( this.scene, this.camera );
+    render() {
+        this.renderer.render(this.scene, this.camera);
     }
 
 
@@ -79,8 +77,8 @@ class SceneInit {
     findIntersections(event) {
 
         this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        this.mouse.y = - ( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-        this.raycaster.setFromCamera( this.mouse, this.camera );
+        this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera);
 
 
         //search for our object by name which we declared before and return it
@@ -88,8 +86,7 @@ class SceneInit {
     }
 
 
-
-    onDocumentMouseAction(event){
+    onDocumentMouseAction(event) {
         //call function which finds intersected objects
         let intersects = this.findIntersections(event);
 
@@ -97,24 +94,24 @@ class SceneInit {
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
             document.getElementById("details").innerHTML = intersects[0].object.name + "<br><br>" + intersects[0].object.data1.name + ": " + intersects[0].object.data1.percent.toFixed(2) +
-            "% (" + intersects[0].object.data1.value + ")" + "<br>" + intersects[0].object.data2.name + ": " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
+                "% (" + intersects[0].object.data1.value + ")" + "<br>" + intersects[0].object.data2.name + ": " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
         }
         else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 
             //call the html tooltip whenever there is an intersected object. if it is the same call again to update position
-            if(this.INTERSECTED){
+            if (this.INTERSECTED) {
                 this.htmlTooltip("show");
             }
 
-            if ( this.INTERSECTED != intersects[ 0 ].object ) {
-                if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
-                this.INTERSECTED = intersects[ 0 ].object;
+            if (this.INTERSECTED != intersects[0].object) {
+                if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex);
+                this.INTERSECTED = intersects[0].object;
                 this.currentHex = this.INTERSECTED.material.emissive.getHex();
                 this.INTERSECTED.material.emissive.setHex(0xa9a8a8);
             }
         }
         else {
-            if ( this.INTERSECTED ) this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+            if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex);
             this.INTERSECTED = null;
 
             this.htmlTooltip("hide");
@@ -128,13 +125,12 @@ class SceneInit {
     }
 
 
-
-    htmlTooltip(status){
+    htmlTooltip(status) {
 
         let tooltip = null;
         status = (status == undefined) ? "show" : status;
 
-        if(status === "show") {
+        if (status === "show") {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");
@@ -195,7 +191,7 @@ class SceneInit {
             document.body.appendChild(tooltip);
         }
         //remove tooltip if mouse does not hover over the pie or a pie segment
-        else if(status === "hide" && document.getElementById("tooltip")) {
+        else if (status === "hide" && document.getElementById("tooltip")) {
             document.body.removeChild(document.getElementById("tooltip"));
         }
     }

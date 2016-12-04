@@ -21,14 +21,63 @@
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
 <script type="text/javascript" src="../src/utils/TrackballControls.js"></script>
 <script type="text/javascript" src="../src/utils/SceneInit.js"></script>
-<script type="text/javascript" src="../src/utils/legend.js"></script>
-<script type="text/javascript" src="../src/utils/jsonData.js"></script>
-<script type="text/javascript" src="../src/pieChart.js"></script>
-<script type="text/javascript" src="../src/utils/createChart.js"></script>
+<script type="text/javascript" src="../src/utils/Legend.js"></script>
+<script type="text/javascript" src="../src/utils/JsonData.js"></script>
+<script type="text/javascript" src="../src/PieChart.js"></script>
+<script type="text/javascript" src="../src/utils/CreateChart.js"></script>
 <script>
+
+    let jsonData = [
+        {
+            "name":"Österreich",
+            "values": [
+                {"name":"Einwohner", "value":8747000},
+                {"name":"DSGehalt", "value":2670}
+            ]
+        },
+        {
+            "name":"Deutschland",
+            "values": [
+                {"name":"Einwohner", "value":80062000},
+                {"name":"DSGehalt", "value":2790}
+            ]
+        },
+        {
+            "name":"Italien",
+            "values": [
+                {"name":"Einwohner", "value":59083000},
+                {"name":"DSGehalt", "value":2390}
+            ]
+        },
+        {
+            "name":"Russland",
+            "values": [
+                {"name":"Einwohner", "value":143500000},
+                {"name":"DSGehalt", "value":1780}
+            ]
+        },{
+            "name":"Schweiz",
+            "values": [
+                {"name":"Einwohner", "value":8081000},
+                {"name":"DSGehalt", "value":2880}
+            ]
+        },{
+            "name":"Belgien",
+            "values": [
+                {"name":"Einwohner", "value":11200000},
+                {"name":"DSGehalt", "value":2470}
+            ]
+        },{
+            "name":"Frankreich",
+            "values": [
+                {"name":"Einwohner", "value":66030000},
+                {"name":"DSGehalt", "value":2500}
+            ]
+        }
+    ]
     
     //createChart("id_of_dom_element","location_of_json","chart_type");
-    createChart("anchart3d","data.json","pieChart");
+    createChart("anchart3d",jsonData,"pieChart");
 
 </script>
 

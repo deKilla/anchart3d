@@ -13,7 +13,7 @@ class Legend {
 
     generateLegend(map = this.map) {
         map.forEach(function createHTML(value, key, map) {
-            
+
             let containerElem = document.createElement("li");
 
             let colorElem = document.createElement("span");
@@ -22,7 +22,7 @@ class Legend {
 
             let nameElem = document.createElement("i");
             nameElem.textContent = key;
-            
+
             document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
             document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
 
