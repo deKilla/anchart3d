@@ -17,8 +17,7 @@
 <div id="details"></div>
 
 <canvas id="anchart3d"></canvas>
-
-
+<!--
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
 <script type="text/javascript" src="../src/utils/TrackballControls.js"></script>
 <script type="text/javascript" src="../src/utils/SceneInit.js"></script>
@@ -26,7 +25,9 @@
 <script type="text/javascript" src="../src/utils/JsonData.js"></script>
 <script type="text/javascript" src="../src/PieChart.js"></script>
 <script type="text/javascript" src="../src/utils/CreateChart.js"></script>
-
+-->
+<script type="text/javascript" src="../node_modules/three/build/three.js"></script>
+<script type="text/javascript" src="../build/anchart3d.min.js"></script>
 <script>
 
     let jsonData = [
@@ -79,9 +80,6 @@
     ]
 
     new CreateChart("anchart3d",jsonData,"pieChart");
-
-    //createChart("id_of_dom_element","location_of_json","chart_type");
-    //createChart("anchart3d",jsonData,"pieChart");
 
 </script>
 

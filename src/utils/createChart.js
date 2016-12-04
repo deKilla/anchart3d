@@ -1,8 +1,7 @@
-/*
 import {SceneInit} from './SceneInit';
 import {JsonData} from './JsonData';
 import {PieChart} from '../PieChart';
-*/
+
 
 class CreateChart {
 
@@ -26,4 +25,4 @@ class CreateChart {
     }
 }
 
-//export {CreateChart}
+export {CreateChart}

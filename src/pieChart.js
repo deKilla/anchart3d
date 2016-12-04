@@ -4,11 +4,10 @@
 
 "use strict";
 
-/*
  import '../src/utils/TrackballControls';
  import {Legend} from './utils/Legend';
  import * as THREE from "three/build/three";
-*/
+
 
 class PieChart {
 
@@ -110,4 +109,4 @@ class PieChart {
     }
 }
 
-//export {PieChart}
+export {PieChart}

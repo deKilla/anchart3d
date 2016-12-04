@@ -198,4 +198,4 @@ class SceneInit {
 }
 
 
-//export {SceneInit}
+export {SceneInit}

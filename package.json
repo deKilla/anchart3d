@@ -7,7 +7,9 @@
     "example": "examples",
     "test": "test"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "grunt dev"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/deKilla/anchart3d.git"
