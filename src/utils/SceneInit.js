@@ -262,15 +262,8 @@ class SceneInit {
             posY = ((Math.abs(vector.y)) * 50) + 50;
         }
 
-        //console.log(vector.x + " " + vector.y + " " + " = " +q );
-
-        //console.log(vector.x + "       " + vector.y);
-
-
         tooltip.style.left = posX+'%';
         tooltip.style.top = posY+'%';
-
-        //console.log(posX + "       " + posY);
 
         document.body.appendChild(tooltip);
 
