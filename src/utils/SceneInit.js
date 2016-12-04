@@ -92,6 +92,12 @@ class SceneInit {
 
         //update the label position when hovering over a segment
         this.getLabelPos();
+        
+        if(this.INTERSECTED){
+            this.htmlTooltip();
+        } else {
+            if(document.getElementById("tooltip")){document.body.removeChild(document.getElementById("tooltip"))}
+        }
 
         //search for our object by name which we declared before and return it
         return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
@@ -205,6 +211,71 @@ class SceneInit {
         let pos = this.camera.position.clone().add( dir.multiplyScalar( distance ) );
         //set the label at the mouse position
         this.sprite.position.copy(pos);
+    }
+
+    htmlTooltip(){
+
+        let tooltip = null;
+
+        if(!document.getElementById("tooltip")) {
+            tooltip = document.createElement("div");
+        } else {
+            tooltip = document.getElementById("tooltip");
+        }
+
+        tooltip.setAttribute("id", "tooltip");
+        tooltip.innerHTML = 
+
+        "<h4>" + this.INTERSECTED.name + "</h4>" +
+        "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" +
+        "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)"
+        ;
+
+
+
+        let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
+        tooltip.style.position = "absolute";
+
+        let posX = 0;
+        let posY = 0;
+        let q = "";
+
+        if(vector.x >= 0 && vector.y >= 0) { q = "q1" }
+        if(vector.x <= 0 && vector.y >= 0) { q = "q2" }
+        if(vector.x <= 0 && vector.y <= 0) { q = "q3" }
+        if(vector.x >= 0 && vector.y <= 0) { q = "q4" }
+
+        if (q == "q1") {
+            posX = ((Math.abs(vector.x)) * 50) + 50;
+            posY = ((1 - Math.abs(vector.y)) * 50);
+        }
+        
+        if (q == "q2") {
+            posX = ((1 - Math.abs(vector.x))*50);
+            posY = ((1 - Math.abs(vector.y))*50);
+        }
+
+        if (q == "q3") {
+            posX = ((1 - Math.abs(vector.x)) * 50);
+            posY = ((Math.abs(vector.y)) * 50) + 50;
+        }
+
+        if (q == "q4") {
+            posX = ((Math.abs(vector.x)) * 50) + 50;
+            posY = ((Math.abs(vector.y)) * 50) + 50;
+        }
+
+        //console.log(vector.x + " " + vector.y + " " + " = " +q );
+
+        //console.log(vector.x + "       " + vector.y);
+
+
+        tooltip.style.left = posX+'%';
+        tooltip.style.top = posY+'%';
+
+        //console.log(posX + "       " + posY);
+
+        document.body.appendChild(tooltip);
 
     }
 }

@@ -58,3 +58,13 @@ body{
     top:20px;
     left:20px;
      }
+
+#tooltip {
+    z-index: 9999;
+    padding:10px;
+    background: #ccc;
+    border:1px solid #000;
+    border-radius:5px;
+}
+
+#tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
