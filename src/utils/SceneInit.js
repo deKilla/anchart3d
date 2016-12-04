@@ -6,7 +6,7 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED,sprite,context,texture)
+    constructor(domtarget = "anchart3d",fov = 45,camera,scene,controls,renderer,INTERSECTED)
     {
         this.domtarget = domtarget;
         this.camera = camera;
@@ -17,10 +17,6 @@ class SceneInit {
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
         this.raycaster = new THREE.Raycaster();
-        //used for labeling
-        this.sprite = sprite;
-        this.context = context;
-        this.texture = texture;
     }
 
 
@@ -100,7 +96,6 @@ class SceneInit {
         if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-            console.log(intersects[0].object.data1.name);
             document.getElementById("details").innerHTML = intersects[0].object.name + "<br><br>" + intersects[0].object.data1.name + ": " + intersects[0].object.data1.percent.toFixed(2) +
             "% (" + intersects[0].object.data1.value + ")" + "<br>" + intersects[0].object.data2.name + ": " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
         }
