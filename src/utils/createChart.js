@@ -1,3 +1,9 @@
+/*
+import {SceneInit} from './SceneInit';
+import {JsonData} from './JsonData';
+import {PieChart} from '../PieChart';
+*/
+
 class CreateChart {
 
     constructor(domTarget = "anchart3d", jsonData, chartType) {
@@ -20,6 +26,4 @@ class CreateChart {
     }
 }
 
-function createChart(domTarget, json, chartType) {
-    return new CreateChart(domTarget, json, chartType);
-}
+//export {CreateChart}

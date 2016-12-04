@@ -31,3 +31,6 @@ class Legend {
 
     }
 }
+
+
+//export {Legend}

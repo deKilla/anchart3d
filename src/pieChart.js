@@ -2,14 +2,13 @@
  * Created by Amar on 07.11.2016.
  */
 
-/*
- import '../src/utils/TrackballControls';
- import * as THREE from "three/build/three";
- import * as data from './data.json';
- */
-
 "use strict";
 
+/*
+ import '../src/utils/TrackballControls';
+ import {Legend} from './utils/Legend';
+ import * as THREE from "three/build/three";
+*/
 
 class PieChart {
 
@@ -110,3 +109,5 @@ class PieChart {
         return pieChart;
     }
 }
+
+//export {PieChart}

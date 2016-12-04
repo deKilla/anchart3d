@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                     browserifyOptions: { debug: true }
                 },
                 files: {
-                    'build/anchart3d.js': ['src/**/*.js']
+                    'build/anchart3d.js': ['src/**/*.js','src/utils/*.js']
                 }
             }
         },
