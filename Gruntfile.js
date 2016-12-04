@@ -31,7 +31,7 @@ module.exports = function (grunt) {
          */
         uglify: {
             dist: {
-                src: 'build/*.js',
+                src: 'build/anchart3d.js',
                 dest: 'build/anchart3d.min.js'
             }
         },
