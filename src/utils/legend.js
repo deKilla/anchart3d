@@ -33,4 +33,4 @@ class Legend {
 }
 
 
-export {Legend}
+//export {Legend}

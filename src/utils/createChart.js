@@ -1,28 +1,61 @@
-import {SceneInit} from './SceneInit';
-import {JsonData} from './jsonData';
-import {PieChart} from '../pieChart';
+/*
+ import {SceneInit} from './SceneInit';
+ import {JsonData} from './jsonData';
+ import {PieChart} from '../pieChart';
+ */
 
+function createChart(domTarget) {
+    let scene;
+    let sceneOptions;
+    let chart;
+    let chartType;
+    let chartData;
 
-class CreateChart {
+    let options = {
+        domTarget: domTarget
+    };
 
-    constructor(domTarget = "anchart3d", jsonData, chartType) {
-        this.scene = new SceneInit(domTarget);
-        this.jsonData = new JsonData(jsonData);
-        this.chartType = chartType;
-        this.chart = this.chartSelect(this.chartType);
+    return {
+        setScene: function (json) {
+            options.scene = json;
+            return this;
+        },
+        setChart: function (chartType) {
+            options.chartType = chartType;
+            return this;
+        },
+        chartData: function (json) {
+            options.chartData = json;
+            return this;
+        },
+        draw: function () {
+            sceneOptions = (options.scene !== undefined) ? options.scene : undefined;
+            chartType = (options.chartType !== undefined) ? options.chartType : undefined;
+            chartData = (options.chartData !== undefined) ? options.chartData : undefined;
 
-        this.scene.initScene();
-        this.scene.animate();
-        this.scene.scene.add(this.chart.object);
+            if (chartType !== undefined && chartData !== undefined) {
 
-    }
+                if (sceneOptions !== undefined) {
+                    scene = new SceneInit(domTarget); //hier mit scene config übergeben
+                }
+                else {
+                    scene = new SceneInit(domTarget);
+                }
+                scene.initScene();
+                scene.animate();
 
-    chartSelect(chartType) {
-        if (chartType == "pieChart") {
-            this.chartType = new PieChart(this.jsonData);
+                switch (chartType) {//cases für diverse chart anlegen
+                    case "pieChart":
+                        chart = new PieChart(new JsonData(chartData));
+                        break;
+                }
+
+                scene.scene.add(chart.object);
+            }
+            else {
+                console.error("ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!");
+            }
         }
-        return this.chartType;
-    }
-}
+    };
 
-export {CreateChart}
+}
