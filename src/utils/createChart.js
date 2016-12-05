@@ -1,6 +1,6 @@
 import {SceneInit} from './SceneInit';
-import {JsonData} from './JsonData';
-import {PieChart} from '../PieChart';
+import {JsonData} from './jsonData';
+import {PieChart} from '../pieChart';
 
 
 class CreateChart {
