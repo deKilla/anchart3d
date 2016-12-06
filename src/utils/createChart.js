@@ -1,79 +1,59 @@
-import {SceneInit} from './SceneInit';
-import {JsonData} from './JsonData';
-import {PieChart} from '../PieChart';
+/*
+ import {SceneInit} from './SceneInit';
+ import {JsonData} from './jsonData';
+ import {PieChart} from '../pieChart';
+ */
 
+function createChart(domTarget) {
+    let scene;
+    let sceneOptions;
+    let chart;
+    let chartType;
+    let chartData;
 
-class CreateChart {
+    let options = {
+        domTarget: domTarget
+    };
 
-    constructor(domTarget = "anchart3d", jsonData, chartType) {
-        this.scene = new SceneInit(domTarget);
-        this.jsonData = new JsonData(jsonData);
-        this.chartType = chartType;
-        this.chart = this.chartSelect(this.chartType);
+    return {
+        setScene: function (json) {
+            options.scene = json;
+            return this;
+        },
+        setChart: function (chartType) {
+            options.chartType = chartType;
+            return this;
+        },
+        chartData: function (json) {
+            options.chartData = json;
+            return this;
+        },
+        draw: function () {
+            sceneOptions = (options.scene !== undefined) ? options.scene : undefined;
+            chartType = (options.chartType !== undefined) ? options.chartType : undefined;
+            chartData = (options.chartData !== undefined) ? options.chartData : undefined;
 
-        this.scene.initScene();
-        this.scene.animate();
-        this.scene.scene.add(this.chart.object);
+            if (chartType !== undefined && chartData !== undefined) {
 
-    }
+                if (sceneOptions !== undefined) {
+                    scene = new SceneInit(domTarget); //hier mit scene config übergeben
+                }
+                else {
+                    scene = new SceneInit(domTarget);
+                }
+                scene.initScene();
+                scene.animate();
 
-    chartSelect(chartType) {
-        if (chartType == "pieChart") {
-            this.chartType = new PieChart(this.jsonData);
+                switch (chartType) {//cases für diverse chart anlegen
+                    case "pieChart":
+                        chart = new PieChart(new JsonData(chartData));
+                        break;
+                }
+
+                scene.scene.add(chart.object);
+            }
+            else {
+                console.error("ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!");
+            }
         }
-        return this.chartType;
-    }
-}
-
-let jsonData = [
-        {
-            "name":"Österreich",
-            "values": [
-                {"name":"Einwohner", "value":8747000},
-                {"name":"DSGehalt", "value":2670}
-            ]
-        },
-        {
-            "name":"Deutschland",
-            "values": [
-                {"name":"Einwohner", "value":80062000},
-                {"name":"DSGehalt", "value":2790}
-            ]
-        },
-        {
-            "name":"Italien",
-            "values": [
-                {"name":"Einwohner", "value":59083000},
-                {"name":"DSGehalt", "value":2390}
-            ]
-        },
-        {
-            "name":"Russland",
-            "values": [
-                {"name":"Einwohner", "value":143500000},
-                {"name":"DSGehalt", "value":1780}
-            ]
-        },{
-            "name":"Schweiz",
-            "values": [
-                {"name":"Einwohner", "value":8081000},
-                {"name":"DSGehalt", "value":2880}
-            ]
-        },{
-            "name":"Belgien",
-            "values": [
-                {"name":"Einwohner", "value":11200000},
-                {"name":"DSGehalt", "value":2470}
-            ]
-        },{
-            "name":"Frankreich",
-            "values": [
-                {"name":"Einwohner", "value":66030000},
-                {"name":"DSGehalt", "value":2500}
-            ]
-        }
-    ]
-
-new CreateChart("anchart3d",jsonData,"pieChart");
-
-export {CreateChart}
+    };

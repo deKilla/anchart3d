@@ -16,9 +16,8 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     transform: [
-                        ['babelify', {presets: ["es2015"]}]
+                        ['babelify', {"presets": ["es2015"]}]
                     ],
-                    browserifyOptions: { debug: true }
                 },
                 files: {
                     'build/anchart3d.js': ['src/**/*.js']

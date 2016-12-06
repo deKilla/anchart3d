@@ -2,8 +2,6 @@
  * @author Eberhard Graether / http://egraether.com/
  */
 
-//import * as THREE from "three/build/three";
-
 THREE.TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
