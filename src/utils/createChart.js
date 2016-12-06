@@ -1,10 +1,10 @@
-/*
+
  import {SceneInit} from './SceneInit';
  import {JsonData} from './jsonData';
  import {PieChart} from '../pieChart';
- */
+ 
 
-function createChart(domTarget) {
+window.createChart = function(domTarget) {
     let scene;
     let sceneOptions;
     let chart;
