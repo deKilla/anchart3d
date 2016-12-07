@@ -443,7 +443,7 @@ var anchart3d =
 	    }
 	
 	    _createClass(PieChart, [{
-	        key: "createSegment",
+	        key: 'createSegment',
 	        value: function createSegment(radius, angleStart, angleEnd) {
 	            var extrudeOptions = {
 	                curveSegments: 50,
@@ -467,7 +467,7 @@ var anchart3d =
 	            return new THREE.Mesh(segmentGeom, segmentMat);
 	        }
 	    }, {
-	        key: "create3DPieChart",
+	        key: 'create3DPieChart',
 	        value: function create3DPieChart() {
 	            var jsonData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.jsonData;
 	
