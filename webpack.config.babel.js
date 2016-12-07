@@ -1,4 +1,5 @@
 module.exports = {
+
   entry: './src/utils/createChart.js',
   output: {
     filename: 'build/anchart3d.js',
