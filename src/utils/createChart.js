@@ -4,7 +4,7 @@
  import {PieChart} from '../pieChart';
  
 
-window.createChart = function(domTarget) {
+export const createChart = function(domTarget) {
     let scene;
     let sceneOptions;
     let chart;
@@ -29,13 +29,13 @@ window.createChart = function(domTarget) {
             return this;
         },
         draw: function () {
-            sceneOptions = (options.scene !== undefined) ? options.scene : undefined;
-            chartType = (options.chartType !== undefined) ? options.chartType : undefined;
-            chartData = (options.chartData !== undefined) ? options.chartData : undefined;
+            sceneOptions = options.scene;
+            chartType = options.chartType;
+            chartData = options.chartData;
 
-            if (chartType !== undefined && chartData !== undefined) {
+            if (chartType && chartData) {
 
-                if (sceneOptions !== undefined) {
+                if (sceneOptions) {
                     scene = new SceneInit(domTarget); //hier mit scene config übergeben
                 }
                 else {
@@ -57,4 +57,4 @@ window.createChart = function(domTarget) {
             }
         }
     };
-}
+};

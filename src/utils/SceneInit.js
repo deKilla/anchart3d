@@ -128,7 +128,7 @@ class SceneInit {
     htmlTooltip(status) {
 
         let tooltip = null;
-        status = (status == undefined) ? "show" : status;
+        status = (!status) ? "show" : status;
 
         if (status === "show") {
 
