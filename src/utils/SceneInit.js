@@ -59,6 +59,7 @@ class SceneInit {
         requestAnimationFrame(this.animate.bind(this));
         this.render();
         this.controls.update();
+        TWEEN.update();
     }
 
 

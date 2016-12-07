@@ -192,6 +192,7 @@ var anchart3d =
 	            requestAnimationFrame(this.animate.bind(this));
 	            this.render();
 	            this.controls.update();
+	            TWEEN.update();
 	        }
 	    }, {
 	        key: "render",
@@ -509,17 +510,30 @@ var anchart3d =
 	                        segment.data1.value = data1Value;
 	                        segment.data1.percent = data1Percent;
 	                    } else if (val == 1) {
-	                        var data2Name = values[val].name;
-	                        var data2Value = values[val].value;
-	                        var data2Percent = values[val].percent;
+	                        (function () {
+	                            var data2Name = values[val].name;
+	                            var data2Value = values[val].value;
+	                            var data2Percent = values[val].percent;
 	
-	                        segment.data2 = {};
-	                        segment.data2.name = data2Name;
-	                        segment.data2.value = data2Value;
-	                        segment.data2.percent = data2Percent;
+	                            segment.data2 = {};
+	                            segment.data2.name = data2Name;
+	                            segment.data2.value = data2Value;
+	                            segment.data2.percent = data2Percent;
 	
-	                        //scale in z(height) (show second data set)
-	                        segment.scale.z = data2Percent / 10;
+	                            //scale in z(height) (show second data set)
+	                            //segment.scale.z = (data2Percent / 10);
+	                            var startPos = segment.scale.z;
+	                            var finPos = data2Percent / 10;
+	
+	                            var tween = new TWEEN.Tween(startPos).to(finPos);
+	                            tween.delay(2500);
+	                            tween.easing(TWEEN.Easing.Cubic.InOut);
+	                            tween.start();
+	
+	                            tween.onUpdate(function () {
+	                                segment.scale.z = finPos;
+	                            });
+	                        })();
 	                    }
 	
 	                    //add new piece to the grouped pieChart

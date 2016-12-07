@@ -96,7 +96,18 @@ class PieChart {
                     segment.data2.percent = data2Percent;
 
                     //scale in z(height) (show second data set)
-                    segment.scale.z = (data2Percent / 10);
+                    //segment.scale.z = (data2Percent / 10);
+                    let startPos = segment.scale.z;
+                    let finPos = (data2Percent/ 10);
+
+                    let tween = new TWEEN.Tween(startPos).to(finPos);
+                    tween.delay(2500);
+                    tween.easing(TWEEN.Easing.Cubic.InOut);
+                    tween.start();
+
+                    tween.onUpdate(function(){
+                        segment.scale.z = finPos;
+                    });
                 }
 
                 //add new piece to the grouped pieChart
