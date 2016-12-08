@@ -444,6 +444,13 @@ var anchart3d =
 	    }
 	
 	    _createClass(PieChart, [{
+	        key: 'animateZ',
+	        value: function animateZ(obj, startpos, finpos) {
+	            return new TWEEN.Tween(startpos).to({ z: finpos }, 3000).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
+	                obj.scale.z = startpos.z;
+	            });
+	        }
+	    }, {
 	        key: 'createSegment',
 	        value: function createSegment(radius, angleStart, angleEnd) {
 	            var extrudeOptions = {
@@ -520,12 +527,16 @@ var anchart3d =
 	                        segment.data2.value = data2Value;
 	                        segment.data2.percent = data2Percent;
 	
-	                        //scale in z(height) (show second data set)
-	                        //segment.scale.z = (data2Percent / 10);
-	                        var finPos = data2Percent / 10;
-	                        var startpos = { z: segment.scale.z };
-	
-	                        animate(segment, startpos, finPos);
+	                        /**
+	                         * Animation with Tween.js (scaling in z-axis)
+	                         * @type {number}
+	                         */
+	                        var finalPos = data2Percent / 10;
+	                        var startPos = { z: segment.scale.z };
+	                        //tween.js animation for the scale on z-axis
+	                        var animation = this.animateZ(segment, startPos, finalPos);
+	                        animation.delay(2500);
+	                        animation.start();
 	                    }
 	
 	                    //add new piece to the grouped pieChart
@@ -540,12 +551,6 @@ var anchart3d =
 	
 	    return PieChart;
 	}();
-	
-	function animate(obj, startpos, finpos) {
-	    new TWEEN.Tween(startpos).to({ z: finpos }, 3000).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
-	        obj.scale.z = startpos.z;
-	    }).delay(1000).start();
-	}
 	
 	exports.PieChart = PieChart;
 
