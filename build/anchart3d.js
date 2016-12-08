@@ -449,7 +449,7 @@ var anchart3d =
 	            var extrudeOptions = {
 	                curveSegments: 50,
 	                steps: 1,
-	                amount: 1.1,
+	                amount: 1.0,
 	                bevelEnabled: false
 	            };
 	
@@ -462,7 +462,7 @@ var anchart3d =
 	                color: Math.random() * 0xffffff,
 	                shading: THREE.SmoothShading,
 	                specular: 0xffffff,
-	                shininess: 1.5
+	                shininess: 1.0
 	            });
 	
 	            return new THREE.Mesh(segmentGeom, segmentMat);
@@ -471,6 +471,7 @@ var anchart3d =
 	        key: 'create3DPieChart',
 	        value: function create3DPieChart() {
 	            var jsonData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.jsonData;
+	
 	
 	            //calculate percent of every data set in json first
 	            var calculatedData = jsonData.percent;
@@ -510,30 +511,21 @@ var anchart3d =
 	                        segment.data1.value = data1Value;
 	                        segment.data1.percent = data1Percent;
 	                    } else if (val == 1) {
-	                        (function () {
-	                            var data2Name = values[val].name;
-	                            var data2Value = values[val].value;
-	                            var data2Percent = values[val].percent;
+	                        var data2Name = values[val].name;
+	                        var data2Value = values[val].value;
+	                        var data2Percent = values[val].percent;
 	
-	                            segment.data2 = {};
-	                            segment.data2.name = data2Name;
-	                            segment.data2.value = data2Value;
-	                            segment.data2.percent = data2Percent;
+	                        segment.data2 = {};
+	                        segment.data2.name = data2Name;
+	                        segment.data2.value = data2Value;
+	                        segment.data2.percent = data2Percent;
 	
-	                            //scale in z(height) (show second data set)
-	                            //segment.scale.z = (data2Percent / 10);
-	                            var startPos = segment.scale.z;
-	                            var finPos = data2Percent / 10;
+	                        //scale in z(height) (show second data set)
+	                        //segment.scale.z = (data2Percent / 10);
+	                        var finPos = data2Percent / 10;
+	                        var startpos = { z: segment.scale.z };
 	
-	                            var tween = new TWEEN.Tween(startPos).to(finPos);
-	                            tween.delay(2500);
-	                            tween.easing(TWEEN.Easing.Cubic.InOut);
-	                            tween.start();
-	
-	                            tween.onUpdate(function () {
-	                                segment.scale.z = finPos;
-	                            });
-	                        })();
+	                        animate(segment, startpos, finPos);
 	                    }
 	
 	                    //add new piece to the grouped pieChart
@@ -548,6 +540,12 @@ var anchart3d =
 	
 	    return PieChart;
 	}();
+	
+	function animate(obj, startpos, finpos) {
+	    new TWEEN.Tween(startpos).to({ z: finpos }, 3000).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
+	        obj.scale.z = startpos.z;
+	    }).delay(1000).start();
+	}
 	
 	exports.PieChart = PieChart;
 

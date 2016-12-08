@@ -26,7 +26,7 @@ class PieChart {
         let extrudeOptions = {
             curveSegments: 50,
             steps: 1,
-            amount: 1.1,
+            amount: 1.0,
             bevelEnabled: false,
         };
 
@@ -39,13 +39,14 @@ class PieChart {
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
             specular: 0xffffff,
-            shininess: 1.5,
+            shininess: 1.0,
         });
 
         return new THREE.Mesh(segmentGeom, segmentMat);
     }
 
     create3DPieChart(jsonData = this.jsonData) {
+
         //calculate percent of every data set in json first
         const calculatedData = jsonData.percent;
 
@@ -97,17 +98,10 @@ class PieChart {
 
                     //scale in z(height) (show second data set)
                     //segment.scale.z = (data2Percent / 10);
-                    let startPos = segment.scale.z;
                     let finPos = (data2Percent/ 10);
+                    let startpos = {z: segment.scale.z};
 
-                    let tween = new TWEEN.Tween(startPos).to(finPos);
-                    tween.delay(2500);
-                    tween.easing(TWEEN.Easing.Cubic.InOut);
-                    tween.start();
-
-                    tween.onUpdate(function(){
-                        segment.scale.z = finPos;
-                    });
+                    animate(segment,startpos,finPos);
                 }
 
                 //add new piece to the grouped pieChart
@@ -119,5 +113,20 @@ class PieChart {
         return pieChart;
     }
 }
+
+
+function animate(obj,startpos,finpos,) {
+    new TWEEN.Tween(startpos)
+        .to({z:finpos}, 3000)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onUpdate(function(){
+            obj.scale.z = startpos.z;
+        })
+        .delay(1000)
+        .start();
+
+}
+
+
 
 export {PieChart}
