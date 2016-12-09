@@ -72,6 +72,11 @@
         }
     ];
 
+    let configuration = {
+        "tooltip": true,
+        "legend": false,
+        "background-color": "#FA8072", //Farbe: salmon
+    };
     /**
     * COMMENT: API kann gechained werden nach beliebieger Reihenfolge AUßER draw!
      * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
@@ -80,6 +85,7 @@
         .setScene()
         .setChart("pieChart")
         .chartData(jsonData)
+        .chartConfig(configuration)
         .draw();
 
 </script>

@@ -58,12 +58,15 @@ var anchart3d =
 	
 	var _pieChart = __webpack_require__(3);
 	
+	var _Chart = __webpack_require__(7);
+	
 	var createChart = exports.createChart = function createChart(domTarget) {
 	    var scene = void 0;
 	    var sceneOptions = void 0;
 	    var chart = void 0;
 	    var chartType = void 0;
 	    var chartData = void 0;
+	    var chartConfig = void 0;
 	
 	    var options = {
 	        domTarget: domTarget
@@ -82,10 +85,15 @@ var anchart3d =
 	            options.chartData = json;
 	            return this;
 	        },
+	        chartConfig: function chartConfig(configuration) {
+	            options.chartConfig = configuration;
+	            return this;
+	        },
 	        draw: function draw() {
 	            sceneOptions = options.scene;
 	            chartType = options.chartType;
 	            chartData = options.chartData;
+	            chartConfig = options.chartConfig;
 	
 	            if (chartType && chartData) {
 	
@@ -96,12 +104,14 @@ var anchart3d =
 	                }
 	                scene.initScene();
 	                scene.animate();
-	
-	                switch (chartType) {//cases für diverse chart anlegen
-	                    case "pieChart":
-	                        chart = new _pieChart.PieChart(new _jsonData.JsonData(chartData));
-	                        break;
-	                }
+	                chart = new _Chart.Chart(chartType, chartData, chartConfig);
+	                chart.createChart();
+	                /*
+	                 switch (chartType) {//cases für diverse chart anlegen
+	                     case "pieChart":
+	                         chart = new Chart(new JsonData(chartData),chartConfig).createPieChart();
+	                         break;
+	                 }*/
 	
 	                scene.scene.add(chart.object);
 	            } else {
@@ -426,20 +436,31 @@ var anchart3d =
 	
 	var _legend = __webpack_require__(6);
 	
+	var _Chart2 = __webpack_require__(7);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var PieChart = function () {
-	    function PieChart(jsonData, radius, angleStart, angleEnd, legendMap) {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PieChart = function (_Chart) {
+	    _inherits(PieChart, _Chart);
+	
+	    function PieChart(radius, angleStart, angleEnd) {
 	        _classCallCheck(this, PieChart);
 	
-	        this.jsonData = jsonData;
-	        this.radius = radius;
-	        this.angleStart = angleStart;
-	        this.angleEnd = angleEnd;
-	        this.object = this.create3DPieChart();
-	        this.legendMap = legendMap;
+	        var _this = _possibleConstructorReturn(this, (PieChart.__proto__ || Object.getPrototypeOf(PieChart)).call(this, jsonData, configuration));
+	
+	        _this.jsonData = jsonData;
+	        _this.radius = radius;
+	        _this.angleStart = angleStart;
+	        _this.angleEnd = angleEnd;
+	        _this.object = _this.create3DPieChart();
+	
+	        return _this;
 	    }
 	
 	    _createClass(PieChart, [{
@@ -473,21 +494,23 @@ var anchart3d =
 	
 	            //calculate percent of every data set in json first
 	            var calculatedData = jsonData.percent;
-	
 	            //Group together all pieces
 	            var pieChart = new THREE.Group();
 	            pieChart.name = "groupedPieChart";
 	
 	            //variable holds last position of the inserted segment of the pie
 	            var lastThetaStart = 0.0;
-	
+	            console.log("init map");
+	            console.log(jsonData.percent);
 	            var legendMap = new Map();
 	            //iterate over the jsonData and create for every data a new pie segment
 	            //data = one object in the json which holds the props "amount","percent" in this case.
 	            for (var data in calculatedData) {
+	                console.log("hello world123213");
 	                var values = calculatedData[data].values;
 	                for (var val in values) {
 	                    var segment;
+	                    console.log("hello wor2132132131ld");
 	                    //get first data set of the first object
 	                    if (val == 0) {
 	                        var data1Name = values[val].name;
@@ -533,7 +556,7 @@ var anchart3d =
 	    }]);
 	
 	    return PieChart;
-	}();
+	}(_Chart2.Chart);
 	
 	exports.PieChart = PieChart;
 
@@ -3944,29 +3967,39 @@ var anchart3d =
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	            value: true
 	});
+	exports.Legend = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	
+	var _Chart2 = __webpack_require__(7);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	/**
-	 * Created by timo on 22.11.16.
-	 */
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	var Legend = function () {
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by timo on 22.11.16.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var Legend = function (_Chart) {
+	            _inherits(Legend, _Chart);
+	
 	            function Legend(map) {
 	                        _classCallCheck(this, Legend);
 	
-	                        //this.description = description;
-	                        //this color = color;
-	                        this.map = map;
+	                        var _this = _possibleConstructorReturn(this, (Legend.__proto__ || Object.getPrototypeOf(Legend)).call(this, jsonData, configuration));
+	
+	                        _this.map = map;
+	                        return _this;
 	            }
 	
 	            _createClass(Legend, [{
@@ -3974,27 +4007,93 @@ var anchart3d =
 	                        value: function generateLegend() {
 	                                    var map = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.map;
 	
-	                                    map.forEach(function createHTML(value, key, map) {
 	
-	                                                var containerElem = document.createElement("li");
+	                                    var configuration = JSON.parse(_get(Legend.prototype.__proto__ || Object.getPrototypeOf(Legend.prototype), "configuration", this));
 	
-	                                                var colorElem = document.createElement("span");
-	                                                colorElem.setAttribute("class", "color-box");
-	                                                colorElem.setAttribute("style", "background-color:#" + value);
+	                                    console.log("sets up the legend");
+	                                    //checks if the the legend should be enabled
+	                                    if (configuration.legend == true) {
+	                                                console.log("ITS TRUE BOIZ");
 	
-	                                                var nameElem = document.createElement("i");
-	                                                nameElem.textContent = key;
+	                                                map.forEach(function createHTML(value, key, map) {
 	
-	                                                document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
-	                                                document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
-	                                    });
+	                                                            var containerElem = document.createElement("li");
+	
+	                                                            var colorElem = document.createElement("span");
+	                                                            colorElem.setAttribute("class", "color-box");
+	                                                            colorElem.setAttribute("style", "background-color:#" + value);
+	
+	                                                            var nameElem = document.createElement("i");
+	                                                            nameElem.textContent = key;
+	
+	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
+	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
+	                                                });
+	                                    }
 	                        }
 	            }]);
 	
 	            return Legend;
-	}();
+	}(_Chart2.Chart);
 	
 	exports.Legend = Legend;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.Chart = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Timo on 09.12.2016.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	
+	var _pieChart = __webpack_require__(3);
+	
+	var _jsonData = __webpack_require__(2);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Chart = function () {
+	    function Chart(chartType, chartData, chartConfig) {
+	        _classCallCheck(this, Chart);
+	
+	        this.charType = chartType;
+	        this.chartData = chartData;
+	        this.chartConfig = chartConfig;
+	    }
+	
+	    //createPieChart() {
+	    //  return new PieChart(jsonData);
+	    //}
+	
+	    _createClass(Chart, [{
+	        key: 'createChart',
+	        value: function createChart() {
+	            var chart = void 0;
+	            //let jsonData = new JsonData(this.chartData);
+	
+	            var jsonData = new _jsonData.JsonData(this.chartData);
+	            console.log(jsonData.percent);
+	            switch (this.charType) {
+	                case "pieChart":
+	                    chart = new _pieChart.PieChart(jsonData);
+	                    break;
+	            }
+	
+	            return chart;
+	        }
+	    }]);
+	
+	    return Chart;
+	}();
+	
+	exports.Chart = Chart;
 
 /***/ }
 /******/ ]);

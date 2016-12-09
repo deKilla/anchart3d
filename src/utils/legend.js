@@ -3,15 +3,26 @@
  */
 
 
-class Legend {
+import {Chart} from '../Chart';
+
+class Legend extends Chart{
 
     constructor(map) {
-        //this.description = description;
-        //this color = color;
+        super(jsonData,configuration);
         this.map = map;
     }
 
     generateLegend(map = this.map) {
+
+
+
+       let configuration =JSON.parse(super.configuration);
+
+        console.log("sets up the legend");
+       //checks if the the legend should be enabled
+       if(configuration.legend == true) {
+        console.log("ITS TRUE BOIZ");
+
         map.forEach(function createHTML(value, key, map) {
 
             let containerElem = document.createElement("li");
@@ -29,7 +40,8 @@ class Legend {
         })
 
 
-    }
+    }}
+
 }
 
 
