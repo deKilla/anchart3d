@@ -156,9 +156,10 @@ var anchart3d =
 	        key: "initScene",
 	        value: function initScene() {
 	            this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-	            this.camera.position.z = 15;
+	            this.camera.position.z = 7;
+	            this.camera.position.y = -10;
 	
-	            this.controls = new THREE.TrackballControls(this.camera);
+	            this.controls = new THREE.OrbitControls(this.camera);
 	            this.controls.addEventListener('change', this.render.bind(this));
 	
 	            this.scene = new THREE.Scene();
@@ -181,6 +182,7 @@ var anchart3d =
 	
 	            document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
 	            document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
+	            document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
 	            document.ondblclick = this.onDocumentDblClick.bind(this);
 	
 	            //if window resizes
@@ -197,6 +199,7 @@ var anchart3d =
 	        key: "render",
 	        value: function render() {
 	            this.renderer.render(this.scene, this.camera);
+	            TWEEN.update();
 	        }
 	    }, {
 	        key: "onWindowResize",
@@ -215,6 +218,31 @@ var anchart3d =
 	
 	            //search for our object by name which we declared before and return it
 	            return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
+	        }
+	    }, {
+	        key: "onDocumentKeyAction",
+	        value: function onDocumentKeyAction(event) {
+	            switch (event.keyCode) {
+	                case 37:
+	
+	                    break;
+	                case 38:
+	                    //up arrow
+	
+	                    break;
+	                case 39:
+	                    //right arrow
+	
+	                    break;
+	                case 40:
+	                    //down arrow
+	
+	                    break;
+	                case 82:
+	                    //R button
+	                    this.controls.reset();
+	                    break;
+	            }
 	        }
 	    }, {
 	        key: "onDocumentMouseAction",
@@ -422,7 +450,7 @@ var anchart3d =
 	
 	var THREE = _interopRequireWildcard(_three);
 	
-	__webpack_require__(5);
+	__webpack_require__(7);
 	
 	var _legend = __webpack_require__(6);
 	
@@ -3439,510 +3467,7 @@ var anchart3d =
 	function CanvasRenderer(){console.error('THREE.CanvasRenderer has been moved to /examples/js/renderers/CanvasRenderer.js');this.domElement=document.createElementNS('http://www.w3.org/1999/xhtml','canvas');this.clear=function(){};this.render=function(){};this.setClearColor=function(){};this.setSize=function(){};}exports.WebGLRenderTargetCube=WebGLRenderTargetCube;exports.WebGLRenderTarget=WebGLRenderTarget;exports.WebGLRenderer=WebGLRenderer;exports.ShaderLib=ShaderLib;exports.UniformsLib=UniformsLib;exports.UniformsUtils=UniformsUtils;exports.ShaderChunk=ShaderChunk;exports.FogExp2=FogExp2;exports.Fog=Fog;exports.Scene=Scene;exports.LensFlare=LensFlare;exports.Sprite=Sprite;exports.LOD=LOD;exports.SkinnedMesh=SkinnedMesh;exports.Skeleton=Skeleton;exports.Bone=Bone;exports.Mesh=Mesh;exports.LineSegments=LineSegments;exports.Line=Line;exports.Points=Points;exports.Group=Group;exports.VideoTexture=VideoTexture;exports.DataTexture=DataTexture;exports.CompressedTexture=CompressedTexture;exports.CubeTexture=CubeTexture;exports.CanvasTexture=CanvasTexture;exports.DepthTexture=DepthTexture;exports.TextureIdCount=TextureIdCount;exports.Texture=Texture;exports.MaterialIdCount=MaterialIdCount;exports.CompressedTextureLoader=CompressedTextureLoader;exports.BinaryTextureLoader=BinaryTextureLoader;exports.DataTextureLoader=DataTextureLoader;exports.CubeTextureLoader=CubeTextureLoader;exports.TextureLoader=TextureLoader;exports.ObjectLoader=ObjectLoader;exports.MaterialLoader=MaterialLoader;exports.BufferGeometryLoader=BufferGeometryLoader;exports.DefaultLoadingManager=DefaultLoadingManager;exports.LoadingManager=LoadingManager;exports.JSONLoader=JSONLoader;exports.ImageLoader=ImageLoader;exports.FontLoader=FontLoader;exports.XHRLoader=XHRLoader;exports.Loader=Loader;exports.Cache=Cache;exports.AudioLoader=AudioLoader;exports.SpotLightShadow=SpotLightShadow;exports.SpotLight=SpotLight;exports.PointLight=PointLight;exports.HemisphereLight=HemisphereLight;exports.DirectionalLightShadow=DirectionalLightShadow;exports.DirectionalLight=DirectionalLight;exports.AmbientLight=AmbientLight;exports.LightShadow=LightShadow;exports.Light=Light;exports.StereoCamera=StereoCamera;exports.PerspectiveCamera=PerspectiveCamera;exports.OrthographicCamera=OrthographicCamera;exports.CubeCamera=CubeCamera;exports.Camera=Camera;exports.AudioListener=AudioListener;exports.PositionalAudio=PositionalAudio;exports.getAudioContext=getAudioContext;exports.AudioAnalyser=AudioAnalyser;exports.Audio=Audio;exports.VectorKeyframeTrack=VectorKeyframeTrack;exports.StringKeyframeTrack=StringKeyframeTrack;exports.QuaternionKeyframeTrack=QuaternionKeyframeTrack;exports.NumberKeyframeTrack=NumberKeyframeTrack;exports.ColorKeyframeTrack=ColorKeyframeTrack;exports.BooleanKeyframeTrack=BooleanKeyframeTrack;exports.PropertyMixer=PropertyMixer;exports.PropertyBinding=PropertyBinding;exports.KeyframeTrack=KeyframeTrack;exports.AnimationUtils=AnimationUtils;exports.AnimationObjectGroup=AnimationObjectGroup;exports.AnimationMixer=AnimationMixer;exports.AnimationClip=AnimationClip;exports.Uniform=Uniform;exports.InstancedBufferGeometry=InstancedBufferGeometry;exports.BufferGeometry=BufferGeometry;exports.GeometryIdCount=GeometryIdCount;exports.Geometry=Geometry;exports.InterleavedBufferAttribute=InterleavedBufferAttribute;exports.InstancedInterleavedBuffer=InstancedInterleavedBuffer;exports.InterleavedBuffer=InterleavedBuffer;exports.InstancedBufferAttribute=InstancedBufferAttribute;exports.DynamicBufferAttribute=DynamicBufferAttribute;exports.Float64Attribute=Float64Attribute;exports.Float32Attribute=Float32Attribute;exports.Uint32Attribute=Uint32Attribute;exports.Int32Attribute=Int32Attribute;exports.Uint16Attribute=Uint16Attribute;exports.Int16Attribute=Int16Attribute;exports.Uint8ClampedAttribute=Uint8ClampedAttribute;exports.Uint8Attribute=Uint8Attribute;exports.Int8Attribute=Int8Attribute;exports.BufferAttribute=BufferAttribute;exports.Face3=Face3;exports.Object3DIdCount=Object3DIdCount;exports.Object3D=Object3D;exports.Raycaster=Raycaster;exports.Layers=Layers;exports.EventDispatcher=EventDispatcher;exports.Clock=Clock;exports.QuaternionLinearInterpolant=QuaternionLinearInterpolant;exports.LinearInterpolant=LinearInterpolant;exports.DiscreteInterpolant=DiscreteInterpolant;exports.CubicInterpolant=CubicInterpolant;exports.Interpolant=Interpolant;exports.Triangle=Triangle;exports.Spline=Spline;exports.Math=_Math;exports.Spherical=Spherical;exports.Plane=Plane;exports.Frustum=Frustum;exports.Sphere=Sphere;exports.Ray=Ray;exports.Matrix4=Matrix4;exports.Matrix3=Matrix3;exports.Box3=Box3;exports.Box2=Box2;exports.Line3=Line3;exports.Euler=Euler;exports.Vector4=Vector4;exports.Vector3=Vector3;exports.Vector2=Vector2;exports.Quaternion=Quaternion;exports.ColorKeywords=ColorKeywords;exports.Color=Color;exports.MorphBlendMesh=MorphBlendMesh;exports.ImmediateRenderObject=ImmediateRenderObject;exports.VertexNormalsHelper=VertexNormalsHelper;exports.SpotLightHelper=SpotLightHelper;exports.SkeletonHelper=SkeletonHelper;exports.PointLightHelper=PointLightHelper;exports.HemisphereLightHelper=HemisphereLightHelper;exports.GridHelper=GridHelper;exports.FaceNormalsHelper=FaceNormalsHelper;exports.DirectionalLightHelper=DirectionalLightHelper;exports.CameraHelper=CameraHelper;exports.BoundingBoxHelper=BoundingBoxHelper;exports.BoxHelper=BoxHelper;exports.ArrowHelper=ArrowHelper;exports.AxisHelper=AxisHelper;exports.ClosedSplineCurve3=ClosedSplineCurve3;exports.CatmullRomCurve3=CatmullRomCurve3;exports.SplineCurve3=SplineCurve3;exports.CubicBezierCurve3=CubicBezierCurve3;exports.QuadraticBezierCurve3=QuadraticBezierCurve3;exports.LineCurve3=LineCurve3;exports.ArcCurve=ArcCurve;exports.EllipseCurve=EllipseCurve;exports.SplineCurve=SplineCurve;exports.CubicBezierCurve=CubicBezierCurve;exports.QuadraticBezierCurve=QuadraticBezierCurve;exports.LineCurve=LineCurve;exports.Shape=Shape;exports.ShapePath=ShapePath;exports.Path=Path;exports.Font=Font;exports.CurvePath=CurvePath;exports.Curve=Curve;exports.ShapeUtils=ShapeUtils;exports.SceneUtils=SceneUtils;exports.CurveUtils=CurveUtils;exports.WireframeGeometry=WireframeGeometry;exports.ParametricGeometry=ParametricGeometry;exports.ParametricBufferGeometry=ParametricBufferGeometry;exports.TetrahedronGeometry=TetrahedronGeometry;exports.TetrahedronBufferGeometry=TetrahedronBufferGeometry;exports.OctahedronGeometry=OctahedronGeometry;exports.OctahedronBufferGeometry=OctahedronBufferGeometry;exports.IcosahedronGeometry=IcosahedronGeometry;exports.IcosahedronBufferGeometry=IcosahedronBufferGeometry;exports.DodecahedronGeometry=DodecahedronGeometry;exports.DodecahedronBufferGeometry=DodecahedronBufferGeometry;exports.PolyhedronGeometry=PolyhedronGeometry;exports.PolyhedronBufferGeometry=PolyhedronBufferGeometry;exports.TubeGeometry=TubeGeometry;exports.TubeBufferGeometry=TubeBufferGeometry;exports.TorusKnotGeometry=TorusKnotGeometry;exports.TorusKnotBufferGeometry=TorusKnotBufferGeometry;exports.TorusGeometry=TorusGeometry;exports.TorusBufferGeometry=TorusBufferGeometry;exports.TextGeometry=TextGeometry;exports.SphereBufferGeometry=SphereBufferGeometry;exports.SphereGeometry=SphereGeometry;exports.RingGeometry=RingGeometry;exports.RingBufferGeometry=RingBufferGeometry;exports.PlaneBufferGeometry=PlaneBufferGeometry;exports.PlaneGeometry=PlaneGeometry;exports.LatheGeometry=LatheGeometry;exports.LatheBufferGeometry=LatheBufferGeometry;exports.ShapeGeometry=ShapeGeometry;exports.ExtrudeGeometry=ExtrudeGeometry;exports.EdgesGeometry=EdgesGeometry;exports.ConeGeometry=ConeGeometry;exports.ConeBufferGeometry=ConeBufferGeometry;exports.CylinderGeometry=CylinderGeometry;exports.CylinderBufferGeometry=CylinderBufferGeometry;exports.CircleBufferGeometry=CircleBufferGeometry;exports.CircleGeometry=CircleGeometry;exports.BoxBufferGeometry=BoxBufferGeometry;exports.BoxGeometry=BoxGeometry;exports.ShadowMaterial=ShadowMaterial;exports.SpriteMaterial=SpriteMaterial;exports.RawShaderMaterial=RawShaderMaterial;exports.ShaderMaterial=ShaderMaterial;exports.PointsMaterial=PointsMaterial;exports.MultiMaterial=MultiMaterial;exports.MeshPhysicalMaterial=MeshPhysicalMaterial;exports.MeshStandardMaterial=MeshStandardMaterial;exports.MeshPhongMaterial=MeshPhongMaterial;exports.MeshNormalMaterial=MeshNormalMaterial;exports.MeshLambertMaterial=MeshLambertMaterial;exports.MeshDepthMaterial=MeshDepthMaterial;exports.MeshBasicMaterial=MeshBasicMaterial;exports.LineDashedMaterial=LineDashedMaterial;exports.LineBasicMaterial=LineBasicMaterial;exports.Material=Material;exports.REVISION=REVISION;exports.MOUSE=MOUSE;exports.CullFaceNone=CullFaceNone;exports.CullFaceBack=CullFaceBack;exports.CullFaceFront=CullFaceFront;exports.CullFaceFrontBack=CullFaceFrontBack;exports.FrontFaceDirectionCW=FrontFaceDirectionCW;exports.FrontFaceDirectionCCW=FrontFaceDirectionCCW;exports.BasicShadowMap=BasicShadowMap;exports.PCFShadowMap=PCFShadowMap;exports.PCFSoftShadowMap=PCFSoftShadowMap;exports.FrontSide=FrontSide;exports.BackSide=BackSide;exports.DoubleSide=DoubleSide;exports.FlatShading=FlatShading;exports.SmoothShading=SmoothShading;exports.NoColors=NoColors;exports.FaceColors=FaceColors;exports.VertexColors=VertexColors;exports.NoBlending=NoBlending;exports.NormalBlending=NormalBlending;exports.AdditiveBlending=AdditiveBlending;exports.SubtractiveBlending=SubtractiveBlending;exports.MultiplyBlending=MultiplyBlending;exports.CustomBlending=CustomBlending;exports.BlendingMode=BlendingMode;exports.AddEquation=AddEquation;exports.SubtractEquation=SubtractEquation;exports.ReverseSubtractEquation=ReverseSubtractEquation;exports.MinEquation=MinEquation;exports.MaxEquation=MaxEquation;exports.ZeroFactor=ZeroFactor;exports.OneFactor=OneFactor;exports.SrcColorFactor=SrcColorFactor;exports.OneMinusSrcColorFactor=OneMinusSrcColorFactor;exports.SrcAlphaFactor=SrcAlphaFactor;exports.OneMinusSrcAlphaFactor=OneMinusSrcAlphaFactor;exports.DstAlphaFactor=DstAlphaFactor;exports.OneMinusDstAlphaFactor=OneMinusDstAlphaFactor;exports.DstColorFactor=DstColorFactor;exports.OneMinusDstColorFactor=OneMinusDstColorFactor;exports.SrcAlphaSaturateFactor=SrcAlphaSaturateFactor;exports.NeverDepth=NeverDepth;exports.AlwaysDepth=AlwaysDepth;exports.LessDepth=LessDepth;exports.LessEqualDepth=LessEqualDepth;exports.EqualDepth=EqualDepth;exports.GreaterEqualDepth=GreaterEqualDepth;exports.GreaterDepth=GreaterDepth;exports.NotEqualDepth=NotEqualDepth;exports.MultiplyOperation=MultiplyOperation;exports.MixOperation=MixOperation;exports.AddOperation=AddOperation;exports.NoToneMapping=NoToneMapping;exports.LinearToneMapping=LinearToneMapping;exports.ReinhardToneMapping=ReinhardToneMapping;exports.Uncharted2ToneMapping=Uncharted2ToneMapping;exports.CineonToneMapping=CineonToneMapping;exports.UVMapping=UVMapping;exports.CubeReflectionMapping=CubeReflectionMapping;exports.CubeRefractionMapping=CubeRefractionMapping;exports.EquirectangularReflectionMapping=EquirectangularReflectionMapping;exports.EquirectangularRefractionMapping=EquirectangularRefractionMapping;exports.SphericalReflectionMapping=SphericalReflectionMapping;exports.CubeUVReflectionMapping=CubeUVReflectionMapping;exports.CubeUVRefractionMapping=CubeUVRefractionMapping;exports.TextureMapping=TextureMapping;exports.RepeatWrapping=RepeatWrapping;exports.ClampToEdgeWrapping=ClampToEdgeWrapping;exports.MirroredRepeatWrapping=MirroredRepeatWrapping;exports.TextureWrapping=TextureWrapping;exports.NearestFilter=NearestFilter;exports.NearestMipMapNearestFilter=NearestMipMapNearestFilter;exports.NearestMipMapLinearFilter=NearestMipMapLinearFilter;exports.LinearFilter=LinearFilter;exports.LinearMipMapNearestFilter=LinearMipMapNearestFilter;exports.LinearMipMapLinearFilter=LinearMipMapLinearFilter;exports.TextureFilter=TextureFilter;exports.UnsignedByteType=UnsignedByteType;exports.ByteType=ByteType;exports.ShortType=ShortType;exports.UnsignedShortType=UnsignedShortType;exports.IntType=IntType;exports.UnsignedIntType=UnsignedIntType;exports.FloatType=FloatType;exports.HalfFloatType=HalfFloatType;exports.UnsignedShort4444Type=UnsignedShort4444Type;exports.UnsignedShort5551Type=UnsignedShort5551Type;exports.UnsignedShort565Type=UnsignedShort565Type;exports.UnsignedInt248Type=UnsignedInt248Type;exports.AlphaFormat=AlphaFormat;exports.RGBFormat=RGBFormat;exports.RGBAFormat=RGBAFormat;exports.LuminanceFormat=LuminanceFormat;exports.LuminanceAlphaFormat=LuminanceAlphaFormat;exports.RGBEFormat=RGBEFormat;exports.DepthFormat=DepthFormat;exports.DepthStencilFormat=DepthStencilFormat;exports.RGB_S3TC_DXT1_Format=RGB_S3TC_DXT1_Format;exports.RGBA_S3TC_DXT1_Format=RGBA_S3TC_DXT1_Format;exports.RGBA_S3TC_DXT3_Format=RGBA_S3TC_DXT3_Format;exports.RGBA_S3TC_DXT5_Format=RGBA_S3TC_DXT5_Format;exports.RGB_PVRTC_4BPPV1_Format=RGB_PVRTC_4BPPV1_Format;exports.RGB_PVRTC_2BPPV1_Format=RGB_PVRTC_2BPPV1_Format;exports.RGBA_PVRTC_4BPPV1_Format=RGBA_PVRTC_4BPPV1_Format;exports.RGBA_PVRTC_2BPPV1_Format=RGBA_PVRTC_2BPPV1_Format;exports.RGB_ETC1_Format=RGB_ETC1_Format;exports.LoopOnce=LoopOnce;exports.LoopRepeat=LoopRepeat;exports.LoopPingPong=LoopPingPong;exports.InterpolateDiscrete=InterpolateDiscrete;exports.InterpolateLinear=InterpolateLinear;exports.InterpolateSmooth=InterpolateSmooth;exports.ZeroCurvatureEnding=ZeroCurvatureEnding;exports.ZeroSlopeEnding=ZeroSlopeEnding;exports.WrapAroundEnding=WrapAroundEnding;exports.TrianglesDrawMode=TrianglesDrawMode;exports.TriangleStripDrawMode=TriangleStripDrawMode;exports.TriangleFanDrawMode=TriangleFanDrawMode;exports.LinearEncoding=LinearEncoding;exports.sRGBEncoding=sRGBEncoding;exports.GammaEncoding=GammaEncoding;exports.RGBEEncoding=RGBEEncoding;exports.LogLuvEncoding=LogLuvEncoding;exports.RGBM7Encoding=RGBM7Encoding;exports.RGBM16Encoding=RGBM16Encoding;exports.RGBDEncoding=RGBDEncoding;exports.BasicDepthPacking=BasicDepthPacking;exports.RGBADepthPacking=RGBADepthPacking;exports.CubeGeometry=BoxGeometry;exports.Face4=Face4;exports.LineStrip=LineStrip;exports.LinePieces=LinePieces;exports.MeshFaceMaterial=MultiMaterial;exports.PointCloud=PointCloud;exports.Particle=Sprite;exports.ParticleSystem=ParticleSystem;exports.PointCloudMaterial=PointCloudMaterial;exports.ParticleBasicMaterial=ParticleBasicMaterial;exports.ParticleSystemMaterial=ParticleSystemMaterial;exports.Vertex=Vertex;exports.EdgesHelper=EdgesHelper;exports.WireframeHelper=WireframeHelper;exports.GeometryUtils=GeometryUtils;exports.ImageUtils=ImageUtils;exports.Projector=Projector;exports.CanvasRenderer=CanvasRenderer;Object.defineProperty(exports,'__esModule',{value:true});Object.defineProperty(exports,'AudioContext',{get:function get(){return exports.getAudioContext();}});});
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * @author Eberhard Graether / http://egraether.com/
-	 */
-	
-	THREE.TrackballControls = function (object, domElement) {
-	
-			var _this = this;
-			var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM: 4, TOUCH_PAN: 5 };
-	
-			this.object = object;
-			this.domElement = domElement !== undefined ? domElement : document;
-	
-			// API
-	
-			this.enabled = true;
-	
-			this.screen = { left: 0, top: 0, width: 0, height: 0 };
-	
-			this.rotateSpeed = 1.0;
-			this.zoomSpeed = 1.2;
-			this.panSpeed = 0.3;
-	
-			this.noRotate = false;
-			this.noZoom = false;
-			this.noPan = false;
-			this.noRoll = false;
-	
-			this.staticMoving = false;
-			this.dynamicDampingFactor = 0.2;
-	
-			this.minDistance = 0;
-			this.maxDistance = Infinity;
-	
-			this.keys = [65 /*A*/, 83 /*S*/, 68 /*D*/];
-	
-			// internals
-	
-			this.target = new THREE.Vector3();
-	
-			var lastPosition = new THREE.Vector3();
-	
-			var _state = STATE.NONE,
-			    _prevState = STATE.NONE,
-			    _eye = new THREE.Vector3(),
-			    _rotateStart = new THREE.Vector3(),
-			    _rotateEnd = new THREE.Vector3(),
-			    _zoomStart = new THREE.Vector2(),
-			    _zoomEnd = new THREE.Vector2(),
-			    _touchZoomDistanceStart = 0,
-			    _touchZoomDistanceEnd = 0,
-			    _panStart = new THREE.Vector2(),
-			    _panEnd = new THREE.Vector2();
-	
-			// for reset
-	
-			this.target0 = this.target.clone();
-			this.position0 = this.object.position.clone();
-			this.up0 = this.object.up.clone();
-	
-			// events
-	
-			var changeEvent = { type: 'change' };
-			var startEvent = { type: 'start' };
-			var endEvent = { type: 'end' };
-	
-			// methods
-	
-			this.handleResize = function () {
-	
-					if (this.domElement === document) {
-	
-							this.screen.left = 0;
-							this.screen.top = 0;
-							this.screen.width = window.innerWidth;
-							this.screen.height = window.innerHeight;
-					} else {
-	
-							this.screen = this.domElement.getBoundingClientRect();
-					}
-			};
-	
-			this.handleEvent = function (event) {
-	
-					if (typeof this[event.type] == 'function') {
-	
-							this[event.type](event);
-					}
-			};
-	
-			this.getMouseOnScreen = function (clientX, clientY) {
-	
-					return new THREE.Vector2((clientX - _this.screen.left) / _this.screen.width, (clientY - _this.screen.top) / _this.screen.height);
-			};
-	
-			this.getMouseProjectionOnBall = function (clientX, clientY) {
-	
-					var mouseOnBall = new THREE.Vector3((clientX - _this.screen.width * 0.5 - _this.screen.left) / (_this.screen.width * .5), (_this.screen.height * 0.5 + _this.screen.top - clientY) / (_this.screen.height * .5), 0.0);
-	
-					var length = mouseOnBall.length();
-	
-					if (_this.noRoll) {
-	
-							if (length < Math.SQRT1_2) {
-	
-									mouseOnBall.z = Math.sqrt(1.0 - length * length);
-							} else {
-	
-									mouseOnBall.z = .5 / length;
-							}
-					} else if (length > 1.0) {
-	
-							mouseOnBall.normalize();
-					} else {
-	
-							mouseOnBall.z = Math.sqrt(1.0 - length * length);
-					}
-	
-					_eye.copy(_this.object.position).sub(_this.target);
-	
-					var projection = _this.object.up.clone().setLength(mouseOnBall.y);
-					projection.add(_this.object.up.clone().cross(_eye).setLength(mouseOnBall.x));
-					projection.add(_eye.setLength(mouseOnBall.z));
-	
-					return projection;
-			};
-	
-			this.rotateCamera = function () {
-	
-					var angle = Math.acos(_rotateStart.dot(_rotateEnd) / _rotateStart.length() / _rotateEnd.length());
-	
-					if (angle) {
-	
-							var axis = new THREE.Vector3().crossVectors(_rotateStart, _rotateEnd).normalize(),
-							    quaternion = new THREE.Quaternion();
-	
-							angle *= _this.rotateSpeed;
-	
-							quaternion.setFromAxisAngle(axis, -angle);
-	
-							_eye.applyQuaternion(quaternion);
-							_this.object.up.applyQuaternion(quaternion);
-	
-							_rotateEnd.applyQuaternion(quaternion);
-	
-							if (_this.staticMoving) {
-	
-									_rotateStart.copy(_rotateEnd);
-							} else {
-	
-									quaternion.setFromAxisAngle(axis, angle * (_this.dynamicDampingFactor - 1.0));
-									_rotateStart.applyQuaternion(quaternion);
-							}
-					}
-			};
-	
-			this.zoomCamera = function () {
-	
-					if (_state === STATE.TOUCH_ZOOM) {
-	
-							var factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
-							_touchZoomDistanceStart = _touchZoomDistanceEnd;
-							_eye.multiplyScalar(factor);
-					} else {
-	
-							var factor = 1.0 + (_zoomEnd.y - _zoomStart.y) * _this.zoomSpeed;
-	
-							if (factor !== 1.0 && factor > 0.0) {
-	
-									_eye.multiplyScalar(factor);
-	
-									if (_this.staticMoving) {
-	
-											_zoomStart.copy(_zoomEnd);
-									} else {
-	
-											_zoomStart.y += (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
-									}
-							}
-					}
-			};
-	
-			this.panCamera = function () {
-	
-					var mouseChange = _panEnd.clone().sub(_panStart);
-	
-					if (mouseChange.lengthSq()) {
-	
-							mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
-	
-							var pan = _eye.clone().cross(_this.object.up).setLength(mouseChange.x);
-							pan.add(_this.object.up.clone().setLength(mouseChange.y));
-	
-							_this.object.position.add(pan);
-							_this.target.add(pan);
-	
-							if (_this.staticMoving) {
-	
-									_panStart = _panEnd;
-							} else {
-	
-									_panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
-							}
-					}
-			};
-	
-			this.checkDistances = function () {
-	
-					if (!_this.noZoom || !_this.noPan) {
-	
-							if (_eye.lengthSq() > _this.maxDistance * _this.maxDistance) {
-	
-									_this.object.position.addVectors(_this.target, _eye.setLength(_this.maxDistance));
-							}
-	
-							if (_eye.lengthSq() < _this.minDistance * _this.minDistance) {
-	
-									_this.object.position.addVectors(_this.target, _eye.setLength(_this.minDistance));
-							}
-					}
-			};
-	
-			this.update = function () {
-	
-					_eye.subVectors(_this.object.position, _this.target);
-	
-					if (!_this.noRotate) {
-	
-							_this.rotateCamera();
-					}
-	
-					if (!_this.noZoom) {
-	
-							_this.zoomCamera();
-					}
-	
-					if (!_this.noPan) {
-	
-							_this.panCamera();
-					}
-	
-					_this.object.position.addVectors(_this.target, _eye);
-	
-					_this.checkDistances();
-	
-					_this.object.lookAt(_this.target);
-	
-					if (lastPosition.distanceToSquared(_this.object.position) > 0) {
-	
-							_this.dispatchEvent(changeEvent);
-	
-							lastPosition.copy(_this.object.position);
-					}
-			};
-	
-			this.reset = function () {
-	
-					_state = STATE.NONE;
-					_prevState = STATE.NONE;
-	
-					_this.target.copy(_this.target0);
-					_this.object.position.copy(_this.position0);
-					_this.object.up.copy(_this.up0);
-	
-					_eye.subVectors(_this.object.position, _this.target);
-	
-					_this.object.lookAt(_this.target);
-	
-					_this.dispatchEvent(changeEvent);
-	
-					lastPosition.copy(_this.object.position);
-			};
-	
-			// listeners
-	
-			function keydown(event) {
-	
-					if (_this.enabled === false) return;
-	
-					window.removeEventListener('keydown', keydown);
-	
-					_prevState = _state;
-	
-					if (_state !== STATE.NONE) {
-	
-							return;
-					} else if (event.keyCode === _this.keys[STATE.ROTATE] && !_this.noRotate) {
-	
-							_state = STATE.ROTATE;
-					} else if (event.keyCode === _this.keys[STATE.ZOOM] && !_this.noZoom) {
-	
-							_state = STATE.ZOOM;
-					} else if (event.keyCode === _this.keys[STATE.PAN] && !_this.noPan) {
-	
-							_state = STATE.PAN;
-					}
-			}
-	
-			function keyup(event) {
-	
-					if (_this.enabled === false) return;
-	
-					_state = _prevState;
-	
-					window.addEventListener('keydown', keydown, false);
-			}
-	
-			function mousedown(event) {
-	
-					if (_this.enabled === false) return;
-	
-					event.preventDefault();
-					event.stopPropagation();
-	
-					if (_state === STATE.NONE) {
-	
-							_state = event.button;
-					}
-	
-					if (_state === STATE.ROTATE && !_this.noRotate) {
-	
-							_rotateStart = _this.getMouseProjectionOnBall(event.clientX, event.clientY);
-							_rotateEnd.copy(_rotateStart);
-					} else if (_state === STATE.ZOOM && !_this.noZoom) {
-	
-							_zoomStart = _this.getMouseOnScreen(event.clientX, event.clientY);
-							_zoomEnd.copy(_zoomStart);
-					} else if (_state === STATE.PAN && !_this.noPan) {
-	
-							_panStart = _this.getMouseOnScreen(event.clientX, event.clientY);
-							_panEnd.copy(_panStart);
-					}
-	
-					document.addEventListener('mousemove', mousemove, false);
-					document.addEventListener('mouseup', mouseup, false);
-					_this.dispatchEvent(startEvent);
-			}
-	
-			function mousemove(event) {
-	
-					if (_this.enabled === false) return;
-	
-					event.preventDefault();
-					event.stopPropagation();
-	
-					if (_state === STATE.ROTATE && !_this.noRotate) {
-	
-							_rotateEnd = _this.getMouseProjectionOnBall(event.clientX, event.clientY);
-					} else if (_state === STATE.ZOOM && !_this.noZoom) {
-	
-							_zoomEnd = _this.getMouseOnScreen(event.clientX, event.clientY);
-					} else if (_state === STATE.PAN && !_this.noPan) {
-	
-							_panEnd = _this.getMouseOnScreen(event.clientX, event.clientY);
-					}
-			}
-	
-			function mouseup(event) {
-	
-					if (_this.enabled === false) return;
-	
-					event.preventDefault();
-					event.stopPropagation();
-	
-					_state = STATE.NONE;
-	
-					document.removeEventListener('mousemove', mousemove);
-					document.removeEventListener('mouseup', mouseup);
-					_this.dispatchEvent(endEvent);
-			}
-	
-			function mousewheel(event) {
-	
-					if (_this.enabled === false) return;
-	
-					event.preventDefault();
-					event.stopPropagation();
-	
-					var delta = 0;
-	
-					if (event.wheelDelta) {
-							// WebKit / Opera / Explorer 9
-	
-							delta = event.wheelDelta / 40;
-					} else if (event.detail) {
-							// Firefox
-	
-							delta = -event.detail / 3;
-					}
-	
-					_zoomStart.y += delta * 0.01;
-					_this.dispatchEvent(startEvent);
-					_this.dispatchEvent(endEvent);
-			}
-	
-			function touchstart(event) {
-	
-					if (_this.enabled === false) return;
-	
-					switch (event.touches.length) {
-	
-							case 1:
-									_state = STATE.TOUCH_ROTATE;
-									_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-							case 2:
-									_state = STATE.TOUCH_ZOOM;
-									var dx = event.touches[0].pageX - event.touches[1].pageX;
-									var dy = event.touches[0].pageY - event.touches[1].pageY;
-									_touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
-									break;
-	
-							case 3:
-									_state = STATE.TOUCH_PAN;
-									_panStart = _panEnd = _this.getMouseOnScreen(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-							default:
-									_state = STATE.NONE;
-	
-					}
-					_this.dispatchEvent(startEvent);
-			}
-	
-			function touchmove(event) {
-	
-					if (_this.enabled === false) return;
-	
-					event.preventDefault();
-					event.stopPropagation();
-	
-					switch (event.touches.length) {
-	
-							case 1:
-									_rotateEnd = _this.getMouseProjectionOnBall(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-							case 2:
-									var dx = event.touches[0].pageX - event.touches[1].pageX;
-									var dy = event.touches[0].pageY - event.touches[1].pageY;
-									_touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
-									break;
-	
-							case 3:
-									_panEnd = _this.getMouseOnScreen(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-							default:
-									_state = STATE.NONE;
-	
-					}
-			}
-	
-			function touchend(event) {
-	
-					if (_this.enabled === false) return;
-	
-					switch (event.touches.length) {
-	
-							case 1:
-									_rotateStart = _rotateEnd = _this.getMouseProjectionOnBall(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-							case 2:
-									_touchZoomDistanceStart = _touchZoomDistanceEnd = 0;
-									break;
-	
-							case 3:
-									_panStart = _panEnd = _this.getMouseOnScreen(event.touches[0].pageX, event.touches[0].pageY);
-									break;
-	
-					}
-	
-					_state = STATE.NONE;
-					_this.dispatchEvent(endEvent);
-			}
-	
-			this.domElement.addEventListener('contextmenu', function (event) {
-					event.preventDefault();
-			}, false);
-	
-			this.domElement.addEventListener('mousedown', mousedown, false);
-	
-			this.domElement.addEventListener('mousewheel', mousewheel, false);
-			this.domElement.addEventListener('DOMMouseScroll', mousewheel, false); // firefox
-	
-			this.domElement.addEventListener('touchstart', touchstart, false);
-			this.domElement.addEventListener('touchend', touchend, false);
-			this.domElement.addEventListener('touchmove', touchmove, false);
-	
-			window.addEventListener('keydown', keydown, false);
-			window.addEventListener('keyup', keyup, false);
-	
-			this.handleResize();
-	};
-	
-	THREE.TrackballControls.prototype = Object.create(THREE.EventDispatcher.prototype);
-
-/***/ },
+/* 5 */,
 /* 6 */
 /***/ function(module, exports) {
 
@@ -3995,6 +3520,956 @@ var anchart3d =
 	}();
 	
 	exports.Legend = Legend;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * @author qiao / https://github.com/qiao
+	 * @author mrdoob / http://mrdoob.com
+	 * @author alteredq / http://alteredqualia.com/
+	 * @author WestLangley / http://github.com/WestLangley
+	 * @author erich666 / http://erichaines.com
+	 */
+	
+	// This set of controls performs orbiting, dollying (zooming), and panning.
+	// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+	//
+	//    Orbit - left mouse / touch: one finger move
+	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+	//    Pan - right mouse, or arrow keys / touch: three finger swipe
+	
+	THREE.OrbitControls = function (object, domElement) {
+	
+		this.object = object;
+	
+		this.domElement = domElement !== undefined ? domElement : document;
+	
+		// Set to false to disable this control
+		this.enabled = true;
+	
+		// "target" sets the location of focus, where the object orbits around
+		this.target = new THREE.Vector3();
+	
+		// How far you can dolly in and out ( PerspectiveCamera only )
+		this.minDistance = 0;
+		this.maxDistance = Infinity;
+	
+		// How far you can orbit vertically, upper and lower limits.
+		// Range is 0 to Math.PI radians.
+		this.minPolarAngle = 0; // radians
+		this.maxPolarAngle = Math.PI; // radians
+	
+		// How far you can orbit horizontally, upper and lower limits.
+		// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
+		this.minAzimuthAngle = -Math.PI; // radians
+		this.maxAzimuthAngle = Math.PI; // radians
+	
+		// Set to true to enable damping (inertia)
+		// If damping is enabled, you must call controls.update() in your animation loop
+		this.enableDamping = false;
+		this.dampingFactor = 0.25;
+	
+		// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
+		// Set to false to disable zooming
+		this.enableZoom = true;
+		this.zoomSpeed = 1.0;
+	
+		// Set to false to disable rotating
+		this.enableRotate = true;
+		this.rotateSpeed = 1.0;
+	
+		// Set to false to disable panning
+		this.enablePan = false;
+		this.keyPanSpeed = 7.0; // pixels moved per arrow key push
+	
+		// Set to true to automatically rotate around the target
+		// If auto-rotate is enabled, you must call controls.update() in your animation loop
+		this.autoRotate = false;
+		this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+	
+		// Set to false to disable use of the keys
+		this.enableKeys = true;
+	
+		// The four arrow keys
+		this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+	
+		// Mouse buttons
+		this.mouseButtons = { ORBIT: THREE.MOUSE.LEFT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.RIGHT };
+	
+		// for reset
+		this.target0 = this.target.clone();
+		this.position0 = this.object.position.clone();
+		this.zoom0 = this.object.zoom;
+	
+		//
+		// public methods
+		//
+	
+		this.getPolarAngle = function () {
+	
+			return spherical.phi;
+		};
+	
+		this.getAzimuthalAngle = function () {
+	
+			return spherical.theta;
+		};
+	
+		/**
+	 * @author Amar
+	 * @date 09.12.2016
+	 *
+	 * Resets the camera position to the initial position
+	  */
+		this.reset = function () {
+			var actualPos = { x: scope.object.position.x, y: scope.object.position.y, z: scope.object.position.z };
+			var defaultPos = { x: this.position0.x, y: this.position0.y, z: this.position0.z };
+	
+			var initPos = !(actualPos.x !== defaultPos.x && actualPos.y !== defaultPos.y && actualPos.z !== defaultPos.z);
+	
+			if (!initPos) {
+				new TWEEN.Tween(actualPos).to({ x: defaultPos.x, y: defaultPos.y, z: defaultPos.z }, 4000).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
+					scope.object.position.setX(actualPos.x);
+					scope.object.position.setY(actualPos.y);
+					scope.object.position.setZ(actualPos.z);
+				}).start();
+			}
+	
+			scope.object.updateProjectionMatrix();
+			scope.dispatchEvent(changeEvent);
+			scope.update();
+			state = STATE.NONE;
+		};
+	
+		// this method is exposed, but perhaps it would be better if we can make it private...
+		this.update = function () {
+	
+			var offset = new THREE.Vector3();
+	
+			// so camera.up is the orbit axis
+			var quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
+			var quatInverse = quat.clone().inverse();
+	
+			var lastPosition = new THREE.Vector3();
+			var lastQuaternion = new THREE.Quaternion();
+	
+			return function update() {
+	
+				var position = scope.object.position;
+	
+				offset.copy(position).sub(scope.target);
+	
+				// rotate offset to "y-axis-is-up" space
+				offset.applyQuaternion(quat);
+	
+				// angle from z-axis around y-axis
+				spherical.setFromVector3(offset);
+	
+				if (scope.autoRotate && state === STATE.NONE) {
+	
+					rotateLeft(getAutoRotationAngle());
+				}
+	
+				spherical.theta += sphericalDelta.theta;
+				spherical.phi += sphericalDelta.phi;
+	
+				// restrict theta to be between desired limits
+				spherical.theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, spherical.theta));
+	
+				// restrict phi to be between desired limits
+				spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
+	
+				spherical.makeSafe();
+	
+				spherical.radius *= scale;
+	
+				// restrict radius to be between desired limits
+				spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
+	
+				// move target to panned location
+				scope.target.add(panOffset);
+	
+				offset.setFromSpherical(spherical);
+	
+				// rotate offset back to "camera-up-vector-is-up" space
+				offset.applyQuaternion(quatInverse);
+	
+				position.copy(scope.target).add(offset);
+	
+				scope.object.lookAt(scope.target);
+	
+				if (scope.enableDamping === true) {
+	
+					sphericalDelta.theta *= 1 - scope.dampingFactor;
+					sphericalDelta.phi *= 1 - scope.dampingFactor;
+				} else {
+	
+					sphericalDelta.set(0, 0, 0);
+				}
+	
+				scale = 1;
+				panOffset.set(0, 0, 0);
+	
+				// update condition is:
+				// min(camera displacement, camera rotation in radians)^2 > EPS
+				// using small-angle approximation cos(x/2) = 1 - x^2 / 8
+	
+				if (zoomChanged || lastPosition.distanceToSquared(scope.object.position) > EPS || 8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
+	
+					scope.dispatchEvent(changeEvent);
+	
+					lastPosition.copy(scope.object.position);
+					lastQuaternion.copy(scope.object.quaternion);
+					zoomChanged = false;
+	
+					return true;
+				}
+	
+				return false;
+			};
+		}();
+	
+		this.dispose = function () {
+	
+			scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+			scope.domElement.removeEventListener('mousedown', onMouseDown, false);
+			scope.domElement.removeEventListener('wheel', onMouseWheel, false);
+	
+			scope.domElement.removeEventListener('touchstart', onTouchStart, false);
+			scope.domElement.removeEventListener('touchend', onTouchEnd, false);
+			scope.domElement.removeEventListener('touchmove', onTouchMove, false);
+	
+			document.removeEventListener('mousemove', onMouseMove, false);
+			document.removeEventListener('mouseup', onMouseUp, false);
+	
+			scope.domElement.removeEventListener('keydown', onKeyDown, false);
+	
+			//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+		};
+	
+		//
+		// internals
+		//
+	
+		var scope = this;
+	
+		var changeEvent = { type: 'change' };
+		var startEvent = { type: 'start' };
+		var endEvent = { type: 'end' };
+	
+		var STATE = { NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
+	
+		var state = STATE.NONE;
+	
+		var EPS = 0.000001;
+	
+		// current position in spherical coordinates
+		var spherical = new THREE.Spherical();
+		var sphericalDelta = new THREE.Spherical();
+	
+		var scale = 1;
+		var panOffset = new THREE.Vector3();
+		var zoomChanged = false;
+	
+		var rotateStart = new THREE.Vector2();
+		var rotateEnd = new THREE.Vector2();
+		var rotateDelta = new THREE.Vector2();
+	
+		var panStart = new THREE.Vector2();
+		var panEnd = new THREE.Vector2();
+		var panDelta = new THREE.Vector2();
+	
+		var dollyStart = new THREE.Vector2();
+		var dollyEnd = new THREE.Vector2();
+		var dollyDelta = new THREE.Vector2();
+	
+		function getAutoRotationAngle() {
+	
+			return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+		}
+	
+		function getZoomScale() {
+	
+			return Math.pow(0.95, scope.zoomSpeed);
+		}
+	
+		function rotateLeft(angle) {
+	
+			sphericalDelta.theta -= angle;
+		}
+	
+		function rotateUp(angle) {
+	
+			sphericalDelta.phi -= angle;
+		}
+	
+		var panLeft = function () {
+	
+			var v = new THREE.Vector3();
+	
+			return function panLeft(distance, objectMatrix) {
+	
+				v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
+				v.multiplyScalar(-distance);
+	
+				panOffset.add(v);
+			};
+		}();
+	
+		var panUp = function () {
+	
+			var v = new THREE.Vector3();
+	
+			return function panUp(distance, objectMatrix) {
+	
+				v.setFromMatrixColumn(objectMatrix, 1); // get Y column of objectMatrix
+				v.multiplyScalar(distance);
+	
+				panOffset.add(v);
+			};
+		}();
+	
+		// deltaX and deltaY are in pixels; right and down are positive
+		var pan = function () {
+	
+			var offset = new THREE.Vector3();
+	
+			return function pan(deltaX, deltaY) {
+	
+				var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+	
+				if (scope.object instanceof THREE.PerspectiveCamera) {
+	
+					// perspective
+					var position = scope.object.position;
+					offset.copy(position).sub(scope.target);
+					var targetDistance = offset.length();
+	
+					// half of the fov is center to top of screen
+					targetDistance *= Math.tan(scope.object.fov / 2 * Math.PI / 180.0);
+	
+					// we actually don't use screenWidth, since perspective camera is fixed to screen height
+					panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
+					panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
+				} else if (scope.object instanceof THREE.OrthographicCamera) {
+	
+					// orthographic
+					panLeft(deltaX * (scope.object.right - scope.object.left) / scope.object.zoom / element.clientWidth, scope.object.matrix);
+					panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
+				} else {
+	
+					// camera neither orthographic nor perspective
+					console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+					scope.enablePan = false;
+				}
+			};
+		}();
+	
+		function dollyIn(dollyScale) {
+	
+			if (scope.object instanceof THREE.PerspectiveCamera) {
+	
+				scale /= dollyScale;
+			} else if (scope.object instanceof THREE.OrthographicCamera) {
+	
+				scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom * dollyScale));
+				scope.object.updateProjectionMatrix();
+				zoomChanged = true;
+			} else {
+	
+				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+				scope.enableZoom = false;
+			}
+		}
+	
+		function dollyOut(dollyScale) {
+	
+			if (scope.object instanceof THREE.PerspectiveCamera) {
+	
+				scale *= dollyScale;
+			} else if (scope.object instanceof THREE.OrthographicCamera) {
+	
+				scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / dollyScale));
+				scope.object.updateProjectionMatrix();
+				zoomChanged = true;
+			} else {
+	
+				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+				scope.enableZoom = false;
+			}
+		}
+	
+		//
+		// event callbacks - update the object state
+		//
+	
+		function handleMouseDownRotate(event) {
+	
+			//console.log( 'handleMouseDownRotate' );
+	
+			rotateStart.set(event.clientX, event.clientY);
+		}
+	
+		function handleMouseDownDolly(event) {
+	
+			//console.log( 'handleMouseDownDolly' );
+	
+			dollyStart.set(event.clientX, event.clientY);
+		}
+	
+		function handleMouseDownPan(event) {
+	
+			//console.log( 'handleMouseDownPan' );
+	
+			panStart.set(event.clientX, event.clientY);
+		}
+	
+		function handleMouseMoveRotate(event) {
+	
+			//console.log( 'handleMouseMoveRotate' );
+	
+			rotateEnd.set(event.clientX, event.clientY);
+			rotateDelta.subVectors(rotateEnd, rotateStart);
+	
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+	
+			// rotating across whole screen goes 360 degrees around
+			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+	
+			// rotating up and down along whole screen attempts to go 360, but limited to 180
+			rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+	
+			rotateStart.copy(rotateEnd);
+	
+			scope.update();
+		}
+	
+		function handleMouseMoveDolly(event) {
+	
+			//console.log( 'handleMouseMoveDolly' );
+	
+			dollyEnd.set(event.clientX, event.clientY);
+	
+			dollyDelta.subVectors(dollyEnd, dollyStart);
+	
+			if (dollyDelta.y > 0) {
+	
+				dollyIn(getZoomScale());
+			} else if (dollyDelta.y < 0) {
+	
+				dollyOut(getZoomScale());
+			}
+	
+			dollyStart.copy(dollyEnd);
+	
+			scope.update();
+		}
+	
+		function handleMouseMovePan(event) {
+	
+			//console.log( 'handleMouseMovePan' );
+	
+			panEnd.set(event.clientX, event.clientY);
+	
+			panDelta.subVectors(panEnd, panStart);
+	
+			pan(panDelta.x, panDelta.y);
+	
+			panStart.copy(panEnd);
+	
+			scope.update();
+		}
+	
+		function handleMouseUp(event) {
+	
+			// console.log( 'handleMouseUp' );
+	
+		}
+	
+		function handleMouseWheel(event) {
+	
+			// console.log( 'handleMouseWheel' );
+	
+			if (event.deltaY < 0) {
+	
+				dollyOut(getZoomScale());
+			} else if (event.deltaY > 0) {
+	
+				dollyIn(getZoomScale());
+			}
+	
+			scope.update();
+		}
+	
+		function handleKeyDown(event) {
+	
+			//console.log( 'handleKeyDown' );
+	
+			switch (event.keyCode) {
+	
+				case scope.keys.UP:
+					pan(0, scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+				case scope.keys.BOTTOM:
+					pan(0, -scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+				case scope.keys.LEFT:
+					pan(scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+				case scope.keys.RIGHT:
+					pan(-scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+			}
+		}
+	
+		function handleTouchStartRotate(event) {
+	
+			//console.log( 'handleTouchStartRotate' );
+	
+			rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
+		}
+	
+		function handleTouchStartDolly(event) {
+	
+			//console.log( 'handleTouchStartDolly' );
+	
+			var dx = event.touches[0].pageX - event.touches[1].pageX;
+			var dy = event.touches[0].pageY - event.touches[1].pageY;
+	
+			var distance = Math.sqrt(dx * dx + dy * dy);
+	
+			dollyStart.set(0, distance);
+		}
+	
+		function handleTouchStartPan(event) {
+	
+			//console.log( 'handleTouchStartPan' );
+	
+			panStart.set(event.touches[0].pageX, event.touches[0].pageY);
+		}
+	
+		function handleTouchMoveRotate(event) {
+	
+			//console.log( 'handleTouchMoveRotate' );
+	
+			rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+			rotateDelta.subVectors(rotateEnd, rotateStart);
+	
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+	
+			// rotating across whole screen goes 360 degrees around
+			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+	
+			// rotating up and down along whole screen attempts to go 360, but limited to 180
+			rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+	
+			rotateStart.copy(rotateEnd);
+	
+			scope.update();
+		}
+	
+		function handleTouchMoveDolly(event) {
+	
+			//console.log( 'handleTouchMoveDolly' );
+	
+			var dx = event.touches[0].pageX - event.touches[1].pageX;
+			var dy = event.touches[0].pageY - event.touches[1].pageY;
+	
+			var distance = Math.sqrt(dx * dx + dy * dy);
+	
+			dollyEnd.set(0, distance);
+	
+			dollyDelta.subVectors(dollyEnd, dollyStart);
+	
+			if (dollyDelta.y > 0) {
+	
+				dollyOut(getZoomScale());
+			} else if (dollyDelta.y < 0) {
+	
+				dollyIn(getZoomScale());
+			}
+	
+			dollyStart.copy(dollyEnd);
+	
+			scope.update();
+		}
+	
+		function handleTouchMovePan(event) {
+	
+			//console.log( 'handleTouchMovePan' );
+	
+			panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+	
+			panDelta.subVectors(panEnd, panStart);
+	
+			pan(panDelta.x, panDelta.y);
+	
+			panStart.copy(panEnd);
+	
+			scope.update();
+		}
+	
+		function handleTouchEnd(event) {}
+	
+		//console.log( 'handleTouchEnd' );
+	
+		//
+		// event handlers - FSM: listen for events and reset state
+		//
+	
+		function onMouseDown(event) {
+	
+			if (scope.enabled === false) return;
+	
+			event.preventDefault();
+	
+			if (event.button === scope.mouseButtons.ORBIT) {
+	
+				if (scope.enableRotate === false) return;
+	
+				handleMouseDownRotate(event);
+	
+				state = STATE.ROTATE;
+			} else if (event.button === scope.mouseButtons.ZOOM) {
+	
+				if (scope.enableZoom === false) return;
+	
+				handleMouseDownDolly(event);
+	
+				state = STATE.DOLLY;
+			} else if (event.button === scope.mouseButtons.PAN) {
+	
+				if (scope.enablePan === false) return;
+	
+				handleMouseDownPan(event);
+	
+				state = STATE.PAN;
+			}
+	
+			if (state !== STATE.NONE) {
+	
+				document.addEventListener('mousemove', onMouseMove, false);
+				document.addEventListener('mouseup', onMouseUp, false);
+	
+				scope.dispatchEvent(startEvent);
+			}
+		}
+	
+		function onMouseMove(event) {
+	
+			if (scope.enabled === false) return;
+	
+			event.preventDefault();
+	
+			if (state === STATE.ROTATE) {
+	
+				if (scope.enableRotate === false) return;
+	
+				handleMouseMoveRotate(event);
+			} else if (state === STATE.DOLLY) {
+	
+				if (scope.enableZoom === false) return;
+	
+				handleMouseMoveDolly(event);
+			} else if (state === STATE.PAN) {
+	
+				if (scope.enablePan === false) return;
+	
+				handleMouseMovePan(event);
+			}
+		}
+	
+		function onMouseUp(event) {
+	
+			if (scope.enabled === false) return;
+	
+			handleMouseUp(event);
+	
+			document.removeEventListener('mousemove', onMouseMove, false);
+			document.removeEventListener('mouseup', onMouseUp, false);
+	
+			scope.dispatchEvent(endEvent);
+	
+			state = STATE.NONE;
+		}
+	
+		function onMouseWheel(event) {
+	
+			if (scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE && state !== STATE.ROTATE) return;
+	
+			event.preventDefault();
+			event.stopPropagation();
+	
+			handleMouseWheel(event);
+	
+			scope.dispatchEvent(startEvent); // not sure why these are here...
+			scope.dispatchEvent(endEvent);
+		}
+	
+		function onKeyDown(event) {
+	
+			if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+	
+			handleKeyDown(event);
+		}
+	
+		function onTouchStart(event) {
+	
+			if (scope.enabled === false) return;
+	
+			switch (event.touches.length) {
+	
+				case 1:
+					// one-fingered touch: rotate
+	
+					if (scope.enableRotate === false) return;
+	
+					handleTouchStartRotate(event);
+	
+					state = STATE.TOUCH_ROTATE;
+	
+					break;
+	
+				case 2:
+					// two-fingered touch: dolly
+	
+					if (scope.enableZoom === false) return;
+	
+					handleTouchStartDolly(event);
+	
+					state = STATE.TOUCH_DOLLY;
+	
+					break;
+	
+				case 3:
+					// three-fingered touch: pan
+	
+					if (scope.enablePan === false) return;
+	
+					handleTouchStartPan(event);
+	
+					state = STATE.TOUCH_PAN;
+	
+					break;
+	
+				default:
+	
+					state = STATE.NONE;
+	
+			}
+	
+			if (state !== STATE.NONE) {
+	
+				scope.dispatchEvent(startEvent);
+			}
+		}
+	
+		function onTouchMove(event) {
+	
+			if (scope.enabled === false) return;
+	
+			event.preventDefault();
+			event.stopPropagation();
+	
+			switch (event.touches.length) {
+	
+				case 1:
+					// one-fingered touch: rotate
+	
+					if (scope.enableRotate === false) return;
+					if (state !== STATE.TOUCH_ROTATE) return; // is this needed?...
+	
+					handleTouchMoveRotate(event);
+	
+					break;
+	
+				case 2:
+					// two-fingered touch: dolly
+	
+					if (scope.enableZoom === false) return;
+					if (state !== STATE.TOUCH_DOLLY) return; // is this needed?...
+	
+					handleTouchMoveDolly(event);
+	
+					break;
+	
+				case 3:
+					// three-fingered touch: pan
+	
+					if (scope.enablePan === false) return;
+					if (state !== STATE.TOUCH_PAN) return; // is this needed?...
+	
+					handleTouchMovePan(event);
+	
+					break;
+	
+				default:
+	
+					state = STATE.NONE;
+	
+			}
+		}
+	
+		function onTouchEnd(event) {
+	
+			if (scope.enabled === false) return;
+	
+			handleTouchEnd(event);
+	
+			scope.dispatchEvent(endEvent);
+	
+			state = STATE.NONE;
+		}
+	
+		function onContextMenu(event) {
+	
+			event.preventDefault();
+		}
+	
+		//
+	
+		scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+	
+		scope.domElement.addEventListener('mousedown', onMouseDown, false);
+		scope.domElement.addEventListener('wheel', onMouseWheel, false);
+	
+		scope.domElement.addEventListener('touchstart', onTouchStart, false);
+		scope.domElement.addEventListener('touchend', onTouchEnd, false);
+		scope.domElement.addEventListener('touchmove', onTouchMove, false);
+	
+		scope.domElement.addEventListener('keydown', onKeyDown, false);
+	
+		// force an update at start
+	
+		this.update();
+	};
+	
+	THREE.OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
+	THREE.OrbitControls.prototype.constructor = THREE.OrbitControls;
+	
+	Object.defineProperties(THREE.OrbitControls.prototype, {
+	
+		center: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .center has been renamed to .target');
+				return this.target;
+			}
+	
+		},
+	
+		// backward compatibility
+	
+		noZoom: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+				return !this.enableZoom;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+				this.enableZoom = !value;
+			}
+	
+		},
+	
+		noRotate: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+				return !this.enableRotate;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+				this.enableRotate = !value;
+			}
+	
+		},
+	
+		noPan: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+				return !this.enablePan;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+				this.enablePan = !value;
+			}
+	
+		},
+	
+		noKeys: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+				return !this.enableKeys;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+				this.enableKeys = !value;
+			}
+	
+		},
+	
+		staticMoving: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+				return !this.enableDamping;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+				this.enableDamping = !value;
+			}
+	
+		},
+	
+		dynamicDampingFactor: {
+	
+			get: function get() {
+	
+				console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+				return this.dampingFactor;
+			},
+	
+			set: function set(value) {
+	
+				console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+				this.dampingFactor = value;
+			}
+	
+		}
+	
+	});
 
 /***/ }
 /******/ ]);

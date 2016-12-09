@@ -21,9 +21,10 @@ class SceneInit {
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.z = 15;
+        this.camera.position.z = 7;
+        this.camera.position.y = -10;
 
-        this.controls = new THREE.TrackballControls(this.camera);
+        this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
 
         this.scene = new THREE.Scene();
@@ -47,6 +48,7 @@ class SceneInit {
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
+        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
 
@@ -64,6 +66,7 @@ class SceneInit {
 
     render() {
         this.renderer.render(this.scene, this.camera);
+        TWEEN.update();
     }
 
 
@@ -84,6 +87,28 @@ class SceneInit {
         //search for our object by name which we declared before and return it
         return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
     }
+
+
+
+    onDocumentKeyAction(event) {
+    switch (event.keyCode) {
+        case 37:
+
+            break;
+        case 38: //up arrow
+
+            break;
+        case 39: //right arrow
+
+            break;
+        case 40: //down arrow
+
+            break;
+        case 82: //R button
+            this.controls.reset();
+            break;
+    }
+};
 
 
     onDocumentMouseAction(event) {

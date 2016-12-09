@@ -5,7 +5,7 @@
 "use strict";
 
  import * as THREE from '../node_modules/three/build/three';
- import '../src/utils/TrackballControls';
+ import '../src/utils/OrbitControls';
  import {Legend} from './utils/legend';
 
 
