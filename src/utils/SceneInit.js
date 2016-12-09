@@ -6,7 +6,7 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d", fov = 45, camera, scene, controls, renderer, INTERSECTED) {
+    constructor(domtarget = "anchart3d", fov = 45, camera, scene, controls, renderer, INTERSECTED, entryAnim=true) {
         this.domtarget = domtarget;
         this.camera = camera;
         this.scene = scene;
@@ -16,13 +16,19 @@ class SceneInit {
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
         this.raycaster = new THREE.Raycaster();
+        this.entryAnim = entryAnim; //if false, no entry animation will be played
     }
 
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.z = 7;
-        this.camera.position.y = -10;
+
+        if(this.entryAnim) {
+            this.camera.position.set(0, -10, 1100);
+            this.entryAnimation();
+        }else{
+            this.camera.position.set(0, -10, 7);
+        }
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
@@ -50,7 +56,6 @@ class SceneInit {
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
-
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
@@ -220,6 +225,25 @@ class SceneInit {
             document.body.removeChild(document.getElementById("tooltip"));
         }
     }
+
+
+    entryAnimation() {
+        let cam = this.camera;
+        let startPos = {x: cam.position.x, y: cam.position.y, z: cam.position.z};
+        let endPos = {x: 0, y: -10, z: 7};
+
+        new TWEEN.Tween(startPos)
+            .to({x: endPos.x, y: endPos.y, z: endPos.z}, 2500)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .onUpdate(function () {
+                cam.position.setY(startPos.y);
+                cam.position.setZ(startPos.z);
+            })
+            .delay(800)
+            .start();
+
+    }
+
 }
 
 

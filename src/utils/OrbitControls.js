@@ -102,7 +102,7 @@ THREE.OrbitControls = function ( object, domElement ) {
      */
 	this.reset = function () {
         let actualPos = {x: scope.object.position.x, y: scope.object.position.y, z: scope.object.position.z};
-        let defaultPos = {x: this.position0.x, y: this.position0.y, z: this.position0.z};
+        let defaultPos = {x: 0, y: -10, z: 7};
 
         let initPos = (!(actualPos.x !== defaultPos.x && actualPos.y !== defaultPos.y && actualPos.z !== defaultPos.z));
 

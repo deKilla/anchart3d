@@ -138,6 +138,7 @@ var anchart3d =
 	        var controls = arguments[4];
 	        var renderer = arguments[5];
 	        var INTERSECTED = arguments[6];
+	        var entryAnim = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : true;
 	
 	        _classCallCheck(this, SceneInit);
 	
@@ -150,14 +151,20 @@ var anchart3d =
 	        this.mouse = new THREE.Vector2();
 	        this.INTERSECTED = INTERSECTED;
 	        this.raycaster = new THREE.Raycaster();
+	        this.entryAnim = entryAnim; //if false, no entry animation will be played
 	    }
 	
 	    _createClass(SceneInit, [{
 	        key: "initScene",
 	        value: function initScene() {
 	            this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-	            this.camera.position.z = 7;
-	            this.camera.position.y = -10;
+	
+	            if (this.entryAnim) {
+	                this.camera.position.set(0, -10, 1100);
+	                this.entryAnimation();
+	            } else {
+	                this.camera.position.set(0, -10, 7);
+	            }
 	
 	            this.controls = new THREE.OrbitControls(this.camera);
 	            this.controls.addEventListener('change', this.render.bind(this));
@@ -348,6 +355,18 @@ var anchart3d =
 	            else if (status === "hide" && document.getElementById("tooltip")) {
 	                    document.body.removeChild(document.getElementById("tooltip"));
 	                }
+	        }
+	    }, {
+	        key: "entryAnimation",
+	        value: function entryAnimation() {
+	            var cam = this.camera;
+	            var startPos = { x: cam.position.x, y: cam.position.y, z: cam.position.z };
+	            var endPos = { x: 0, y: -10, z: 7 };
+	
+	            new TWEEN.Tween(startPos).to({ x: endPos.x, y: endPos.y, z: endPos.z }, 2500).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
+	                cam.position.setY(startPos.y);
+	                cam.position.setZ(startPos.z);
+	            }).delay(800).start();
 	        }
 	    }]);
 	
@@ -3627,7 +3646,7 @@ var anchart3d =
 	  */
 		this.reset = function () {
 			var actualPos = { x: scope.object.position.x, y: scope.object.position.y, z: scope.object.position.z };
-			var defaultPos = { x: this.position0.x, y: this.position0.y, z: this.position0.z };
+			var defaultPos = { x: 0, y: -10, z: 7 };
 	
 			var initPos = !(actualPos.x !== defaultPos.x && actualPos.y !== defaultPos.y && actualPos.z !== defaultPos.z);
 	

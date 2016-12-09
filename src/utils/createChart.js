@@ -51,6 +51,7 @@ export const createChart = function(domTarget) {
                 }
 
                 scene.scene.add(chart.object);
+
             }
             else {
                 console.error("ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!");
