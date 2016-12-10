@@ -6,7 +6,6 @@
  * @author erich666 / http://erichaines.com
  */
 
-
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
 //
@@ -30,6 +29,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.minDistance = 0;
 	this.maxDistance = Infinity;
 
+	// How far you can zoom in and out ( OrthographicCamera only )
+	this.minZoom = 0;
+	this.maxZoom = Infinity;
 
 	// How far you can orbit vertically, upper and lower limits.
 	// Range is 0 to Math.PI radians.
@@ -38,8 +40,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	// How far you can orbit horizontally, upper and lower limits.
 	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
-	this.minAzimuthAngle = - Math.PI; // radians
-	this.maxAzimuthAngle = Math.PI; // radians
+	this.minAzimuthAngle = - Infinity; // radians
+	this.maxAzimuthAngle = Infinity; // radians
 
 	// Set to true to enable damping (inertia)
 	// If damping is enabled, you must call controls.update() in your animation loop
@@ -65,7 +67,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
 
 	// Set to false to disable use of the keys
-	this.enableKeys = true;
+	this.enableKeys = false;
 
 	// The four arrow keys
 	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
@@ -94,33 +96,17 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	};
 
-    /**
-	 * @author Amar
-	 * @date 09.12.2016
-	 *
-	 * Resets the camera position to the initial position
-     */
 	this.reset = function () {
-        let actualPos = {x: scope.object.position.x, y: scope.object.position.y, z: scope.object.position.z};
-        let defaultPos = {x: 0, y: -10, z: 7};
 
-        let initPos = (!(actualPos.x !== defaultPos.x && actualPos.y !== defaultPos.y && actualPos.z !== defaultPos.z));
-
-        if(!initPos) {
-            new TWEEN.Tween(actualPos)
-                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    scope.object.position.setX(actualPos.x);
-                    scope.object.position.setY(actualPos.y);
-                    scope.object.position.setZ(actualPos.z);
-                }).start();
-        }
-
+		scope.target.copy( scope.target0 );
+		scope.object.position.copy( scope.position0 );
+		scope.object.zoom = scope.zoom0;
 
 		scope.object.updateProjectionMatrix();
 		scope.dispatchEvent( changeEvent );
+
 		scope.update();
+
 		state = STATE.NONE;
 
 	};
@@ -128,18 +114,18 @@ THREE.OrbitControls = function ( object, domElement ) {
 	// this method is exposed, but perhaps it would be better if we can make it private...
 	this.update = function () {
 
-		let offset = new THREE.Vector3();
+		var offset = new THREE.Vector3();
 
 		// so camera.up is the orbit axis
-		let quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
-		let quatInverse = quat.clone().inverse();
+		var quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
+		var quatInverse = quat.clone().inverse();
 
-		let lastPosition = new THREE.Vector3();
-		let lastQuaternion = new THREE.Quaternion();
+		var lastPosition = new THREE.Vector3();
+		var lastQuaternion = new THREE.Quaternion();
 
 		return function update() {
 
-			let position = scope.object.position;
+			var position = scope.object.position;
 
 			offset.copy( position ).sub( scope.target );
 
@@ -235,7 +221,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		document.removeEventListener( 'mousemove', onMouseMove, false );
 		document.removeEventListener( 'mouseup', onMouseUp, false );
 
-		scope.domElement.removeEventListener( 'keydown', onKeyDown, false );
+		window.removeEventListener( 'keydown', onKeyDown, false );
 
 		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
@@ -245,37 +231,37 @@ THREE.OrbitControls = function ( object, domElement ) {
 	// internals
 	//
 
-	let scope = this;
+	var scope = this;
 
-	let changeEvent = { type: 'change' };
-	let startEvent = { type: 'start' };
-	let endEvent = { type: 'end' };
+	var changeEvent = { type: 'change' };
+	var startEvent = { type: 'start' };
+	var endEvent = { type: 'end' };
 
-	let STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
+	var STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
 
-	let state = STATE.NONE;
+	var state = STATE.NONE;
 
-	let EPS = 0.000001;
+	var EPS = 0.000001;
 
 	// current position in spherical coordinates
-	let spherical = new THREE.Spherical();
-	let sphericalDelta = new THREE.Spherical();
+	var spherical = new THREE.Spherical();
+	var sphericalDelta = new THREE.Spherical();
 
-	let scale = 1;
-	let panOffset = new THREE.Vector3();
-	let zoomChanged = false;
+	var scale = 1;
+	var panOffset = new THREE.Vector3();
+	var zoomChanged = false;
 
-	let rotateStart = new THREE.Vector2();
-	let rotateEnd = new THREE.Vector2();
-	let rotateDelta = new THREE.Vector2();
+	var rotateStart = new THREE.Vector2();
+	var rotateEnd = new THREE.Vector2();
+	var rotateDelta = new THREE.Vector2();
 
-	let panStart = new THREE.Vector2();
-	let panEnd = new THREE.Vector2();
-	let panDelta = new THREE.Vector2();
+	var panStart = new THREE.Vector2();
+	var panEnd = new THREE.Vector2();
+	var panDelta = new THREE.Vector2();
 
-	let dollyStart = new THREE.Vector2();
-	let dollyEnd = new THREE.Vector2();
-	let dollyDelta = new THREE.Vector2();
+	var dollyStart = new THREE.Vector2();
+	var dollyEnd = new THREE.Vector2();
+	var dollyDelta = new THREE.Vector2();
 
 	function getAutoRotationAngle() {
 
@@ -301,9 +287,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	let panLeft = function () {
+	var panLeft = function () {
 
-		let v = new THREE.Vector3();
+		var v = new THREE.Vector3();
 
 		return function panLeft( distance, objectMatrix ) {
 
@@ -316,9 +302,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}();
 
-	let panUp = function () {
+	var panUp = function () {
 
-		let v = new THREE.Vector3();
+		var v = new THREE.Vector3();
 
 		return function panUp( distance, objectMatrix ) {
 
@@ -332,20 +318,20 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}();
 
 	// deltaX and deltaY are in pixels; right and down are positive
-	let pan = function () {
+	var pan = function () {
 
-		let offset = new THREE.Vector3();
+		var offset = new THREE.Vector3();
 
 		return function pan( deltaX, deltaY ) {
 
-			let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
 			if ( scope.object instanceof THREE.PerspectiveCamera ) {
 
 				// perspective
-				let position = scope.object.position;
+				var position = scope.object.position;
 				offset.copy( position ).sub( scope.target );
-				let targetDistance = offset.length();
+				var targetDistance = offset.length();
 
 				// half of the fov is center to top of screen
 				targetDistance *= Math.tan( ( scope.object.fov / 2 ) * Math.PI / 180.0 );
@@ -449,7 +435,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		rotateEnd.set( event.clientX, event.clientY );
 		rotateDelta.subVectors( rotateEnd, rotateStart );
 
-		let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
 		// rotating across whole screen goes 360 degrees around
 		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
@@ -569,10 +555,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		//console.log( 'handleTouchStartDolly' );
 
-		let dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-		let dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+		var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+		var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
 
-		let distance = Math.sqrt( dx * dx + dy * dy );
+		var distance = Math.sqrt( dx * dx + dy * dy );
 
 		dollyStart.set( 0, distance );
 
@@ -593,7 +579,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		rotateEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
 		rotateDelta.subVectors( rotateEnd, rotateStart );
 
-		let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
 		// rotating across whole screen goes 360 degrees around
 		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
@@ -611,10 +597,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		//console.log( 'handleTouchMoveDolly' );
 
-		let dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-		let dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+		var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+		var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
 
-		let distance = Math.sqrt( dx * dx + dy * dy );
+		var distance = Math.sqrt( dx * dx + dy * dy );
 
 		dollyEnd.set( 0, distance );
 
@@ -893,7 +879,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
 	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
 
-	scope.domElement.addEventListener( 'keydown', onKeyDown, false );
+	window.addEventListener( 'keydown', onKeyDown, false );
 
 	// force an update at start
 

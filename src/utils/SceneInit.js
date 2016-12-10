@@ -97,20 +97,20 @@ class SceneInit {
 
     onDocumentKeyAction(event) {
     switch (event.keyCode) {
-        case 37:
-
+        case 37: //left arrow
+            // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
             break;
         case 38: //up arrow
-
+            // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
             break;
         case 39: //right arrow
-
+            // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
             break;
         case 40: //down arrow
-
+            // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
             break;
         case 82: //R button
-            this.controls.reset();
+            this.resetCameraPosition();
             break;
     }
 };
@@ -243,6 +243,43 @@ class SceneInit {
             .start();
 
     }
+
+
+    resetCameraPosition(){
+        let cam = this.camera;
+        let actualPos = {x: cam.position.x, y: cam.position.y, z: cam.position.z};
+        let defaultPos = {x: 0, y: -10, z: 7};
+
+        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+
+        if(!initPos) {
+            new TWEEN.Tween(actualPos)
+                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onUpdate(function () {
+                    cam.position.set(actualPos.x,actualPos.y,actualPos.z);
+                }).start();
+        }
+    }
+
+
+    /*resetObjectPosition(){
+        let object = this.scene.getObjectByName("groupedPieChart", true);
+        let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+        let defaultPos = {x: 0, y: 0, z: 0};
+
+        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+
+        if(!initPos) {
+            new TWEEN.Tween(actualPos)
+                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onUpdate(function () {
+                    object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
+                }).start();
+        }
+    }*/
+
 
 }
 
