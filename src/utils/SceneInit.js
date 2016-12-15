@@ -57,6 +57,7 @@ class SceneInit {
         document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
+
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
     }
@@ -119,9 +120,8 @@ class SceneInit {
     }
 
     showOnScreenControls() {
-        let resetChart = this.resetCameraPosition();
-        document.getElementById("controls").innerHTML = `<a id="reset">R</a>`;
-        document.getElementById("reset").onclick=function(){console.log("reset");resetChart};
+        document.getElementById("controls").innerHTML = `<button id="resetBtn">Reset</button>`;
+        document.querySelector("#resetBtn").addEventListener('click',this.resetCameraPosition.bind(this),false);
     }
 
     onDocumentMouseAction(event) {
