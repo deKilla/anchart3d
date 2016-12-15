@@ -21,11 +21,11 @@ class Chart {
     createChart() {
         let chart;
         //let jsonData = new JsonData(this.chartData);
-        console.log("works");
-        let jsonData = new JsonData(this.chartData);
+        //let jsonData = new JsonData(this.chartData);
         switch (this.charType) {
             case "pieChart":
-                chart = new PieChart(jsonData);
+                chart = new PieChart(new JsonData(this.chartData));
+                console.log(chart);
                 break;
         }
 

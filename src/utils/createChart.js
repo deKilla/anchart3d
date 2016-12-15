@@ -44,6 +44,9 @@ export const createChart = function(domTarget) {
 
             if (chartType && chartData) {
 
+                chart = new Chart(chartType, chartData, chartConfig)
+                    .createChart();
+
                 if (sceneOptions) {
                     scene = new SceneInit(domTarget); //hier mit scene config übergeben
                 }
@@ -52,16 +55,6 @@ export const createChart = function(domTarget) {
                 }
                 scene.initScene();
                 scene.animate();
-
-                chart = new Chart(chartType, chartData, chartConfig);
-                chart.createChart();
-                 //chart.createChart();
-               /*
-                switch (chartType) {//cases für diverse chart anlegen
-                    case "pieChart":
-                        chart = new Chart(new JsonData(chartData),chartConfig).createPieChart();
-                        break;
-                }*/
 
                 scene.scene.add(chart.object);
             }

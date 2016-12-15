@@ -12,7 +12,7 @@
 
 class PieChart extends Chart {
 
-    constructor(radius, angleStart, angleEnd) {
+    constructor(jsonData,radius, angleStart, angleEnd) {
 
         super(jsonData,configuration);
         this.jsonData = jsonData;
