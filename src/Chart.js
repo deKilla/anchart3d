@@ -12,16 +12,24 @@ class Chart {
         this.charType = chartType;
         this.chartData = chartData;
         this.chartConfig = chartConfig;
+
+
     }
 
     //createPieChart() {
       //  return new PieChart(jsonData);
     //}
 
+
+
+
     createChart() {
         let chart;
-        //let jsonData = new JsonData(this.chartData);
-        //let jsonData = new JsonData(this.chartData);
+        //Hinzufügen der Config zum document
+        //var configuration = document.createElement("configuration");
+        //configuration.appendChild(this.chartData);
+        //document.appendChild()
+
         switch (this.charType) {
             case "pieChart":
                 chart = new PieChart(new JsonData(this.chartData));

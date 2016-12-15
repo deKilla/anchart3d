@@ -33,6 +33,10 @@ class SceneInit {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
+        console.log(configuration.bgcolor);
+        if(configuration.bgcolor){
+            this.scene.background = new THREE.Color(configuration.bgcolor);
+        }
 
         //ambient light which is for the whole scene
         let ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -130,8 +134,10 @@ class SceneInit {
 
         let tooltip = null;
         status = (!status) ? "show" : status;
-
-        if (status === "show") {
+        //check if it is enabled in the config
+        //var configuration = document.getChildById(configuration);
+        console.log(configuration.tooltip);
+        if (status === "show" && configuration.tooltip == true) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");

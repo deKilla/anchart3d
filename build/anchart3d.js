@@ -58,7 +58,7 @@ var anchart3d =
 	
 	var _pieChart = __webpack_require__(3);
 	
-	var _Chart = __webpack_require__(8);
+	var _Chart = __webpack_require__(7);
 	
 	var createChart = exports.createChart = function createChart(domTarget) {
 	    var scene = void 0;
@@ -172,6 +172,11 @@ var anchart3d =
 	            this.renderer.setSize(window.innerWidth, window.innerHeight);
 	            document.body.appendChild(this.renderer.domElement);
 	
+	            console.log(configuration.bgcolor);
+	            if (configuration.bgcolor) {
+	                this.scene.background = new THREE.Color(configuration.bgcolor);
+	            }
+	
 	            //ambient light which is for the whole scene
 	            var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
 	            ambientLight.castShadow = false;
@@ -263,8 +268,10 @@ var anchart3d =
 	
 	            var tooltip = null;
 	            status = !status ? "show" : status;
-	
-	            if (status === "show") {
+	            //check if it is enabled in the config
+	            //var configuration = document.getChildById(configuration);
+	            console.log(configuration.tooltip);
+	            if (status === "show" && configuration.tooltip == true) {
 	
 	                if (!document.getElementById("tooltip")) {
 	                    tooltip = document.createElement("div");
@@ -426,11 +433,11 @@ var anchart3d =
 	
 	var THREE = _interopRequireWildcard(_three);
 	
-	__webpack_require__(7);
+	__webpack_require__(5);
 	
 	var _legend = __webpack_require__(6);
 	
-	var _Chart2 = __webpack_require__(8);
+	var _Chart2 = __webpack_require__(7);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -3453,80 +3460,7 @@ var anchart3d =
 	function CanvasRenderer(){console.error('THREE.CanvasRenderer has been moved to /examples/js/renderers/CanvasRenderer.js');this.domElement=document.createElementNS('http://www.w3.org/1999/xhtml','canvas');this.clear=function(){};this.render=function(){};this.setClearColor=function(){};this.setSize=function(){};}exports.WebGLRenderTargetCube=WebGLRenderTargetCube;exports.WebGLRenderTarget=WebGLRenderTarget;exports.WebGLRenderer=WebGLRenderer;exports.ShaderLib=ShaderLib;exports.UniformsLib=UniformsLib;exports.UniformsUtils=UniformsUtils;exports.ShaderChunk=ShaderChunk;exports.FogExp2=FogExp2;exports.Fog=Fog;exports.Scene=Scene;exports.LensFlare=LensFlare;exports.Sprite=Sprite;exports.LOD=LOD;exports.SkinnedMesh=SkinnedMesh;exports.Skeleton=Skeleton;exports.Bone=Bone;exports.Mesh=Mesh;exports.LineSegments=LineSegments;exports.Line=Line;exports.Points=Points;exports.Group=Group;exports.VideoTexture=VideoTexture;exports.DataTexture=DataTexture;exports.CompressedTexture=CompressedTexture;exports.CubeTexture=CubeTexture;exports.CanvasTexture=CanvasTexture;exports.DepthTexture=DepthTexture;exports.TextureIdCount=TextureIdCount;exports.Texture=Texture;exports.MaterialIdCount=MaterialIdCount;exports.CompressedTextureLoader=CompressedTextureLoader;exports.BinaryTextureLoader=BinaryTextureLoader;exports.DataTextureLoader=DataTextureLoader;exports.CubeTextureLoader=CubeTextureLoader;exports.TextureLoader=TextureLoader;exports.ObjectLoader=ObjectLoader;exports.MaterialLoader=MaterialLoader;exports.BufferGeometryLoader=BufferGeometryLoader;exports.DefaultLoadingManager=DefaultLoadingManager;exports.LoadingManager=LoadingManager;exports.JSONLoader=JSONLoader;exports.ImageLoader=ImageLoader;exports.FontLoader=FontLoader;exports.XHRLoader=XHRLoader;exports.Loader=Loader;exports.Cache=Cache;exports.AudioLoader=AudioLoader;exports.SpotLightShadow=SpotLightShadow;exports.SpotLight=SpotLight;exports.PointLight=PointLight;exports.HemisphereLight=HemisphereLight;exports.DirectionalLightShadow=DirectionalLightShadow;exports.DirectionalLight=DirectionalLight;exports.AmbientLight=AmbientLight;exports.LightShadow=LightShadow;exports.Light=Light;exports.StereoCamera=StereoCamera;exports.PerspectiveCamera=PerspectiveCamera;exports.OrthographicCamera=OrthographicCamera;exports.CubeCamera=CubeCamera;exports.Camera=Camera;exports.AudioListener=AudioListener;exports.PositionalAudio=PositionalAudio;exports.getAudioContext=getAudioContext;exports.AudioAnalyser=AudioAnalyser;exports.Audio=Audio;exports.VectorKeyframeTrack=VectorKeyframeTrack;exports.StringKeyframeTrack=StringKeyframeTrack;exports.QuaternionKeyframeTrack=QuaternionKeyframeTrack;exports.NumberKeyframeTrack=NumberKeyframeTrack;exports.ColorKeyframeTrack=ColorKeyframeTrack;exports.BooleanKeyframeTrack=BooleanKeyframeTrack;exports.PropertyMixer=PropertyMixer;exports.PropertyBinding=PropertyBinding;exports.KeyframeTrack=KeyframeTrack;exports.AnimationUtils=AnimationUtils;exports.AnimationObjectGroup=AnimationObjectGroup;exports.AnimationMixer=AnimationMixer;exports.AnimationClip=AnimationClip;exports.Uniform=Uniform;exports.InstancedBufferGeometry=InstancedBufferGeometry;exports.BufferGeometry=BufferGeometry;exports.GeometryIdCount=GeometryIdCount;exports.Geometry=Geometry;exports.InterleavedBufferAttribute=InterleavedBufferAttribute;exports.InstancedInterleavedBuffer=InstancedInterleavedBuffer;exports.InterleavedBuffer=InterleavedBuffer;exports.InstancedBufferAttribute=InstancedBufferAttribute;exports.DynamicBufferAttribute=DynamicBufferAttribute;exports.Float64Attribute=Float64Attribute;exports.Float32Attribute=Float32Attribute;exports.Uint32Attribute=Uint32Attribute;exports.Int32Attribute=Int32Attribute;exports.Uint16Attribute=Uint16Attribute;exports.Int16Attribute=Int16Attribute;exports.Uint8ClampedAttribute=Uint8ClampedAttribute;exports.Uint8Attribute=Uint8Attribute;exports.Int8Attribute=Int8Attribute;exports.BufferAttribute=BufferAttribute;exports.Face3=Face3;exports.Object3DIdCount=Object3DIdCount;exports.Object3D=Object3D;exports.Raycaster=Raycaster;exports.Layers=Layers;exports.EventDispatcher=EventDispatcher;exports.Clock=Clock;exports.QuaternionLinearInterpolant=QuaternionLinearInterpolant;exports.LinearInterpolant=LinearInterpolant;exports.DiscreteInterpolant=DiscreteInterpolant;exports.CubicInterpolant=CubicInterpolant;exports.Interpolant=Interpolant;exports.Triangle=Triangle;exports.Spline=Spline;exports.Math=_Math;exports.Spherical=Spherical;exports.Plane=Plane;exports.Frustum=Frustum;exports.Sphere=Sphere;exports.Ray=Ray;exports.Matrix4=Matrix4;exports.Matrix3=Matrix3;exports.Box3=Box3;exports.Box2=Box2;exports.Line3=Line3;exports.Euler=Euler;exports.Vector4=Vector4;exports.Vector3=Vector3;exports.Vector2=Vector2;exports.Quaternion=Quaternion;exports.ColorKeywords=ColorKeywords;exports.Color=Color;exports.MorphBlendMesh=MorphBlendMesh;exports.ImmediateRenderObject=ImmediateRenderObject;exports.VertexNormalsHelper=VertexNormalsHelper;exports.SpotLightHelper=SpotLightHelper;exports.SkeletonHelper=SkeletonHelper;exports.PointLightHelper=PointLightHelper;exports.HemisphereLightHelper=HemisphereLightHelper;exports.GridHelper=GridHelper;exports.FaceNormalsHelper=FaceNormalsHelper;exports.DirectionalLightHelper=DirectionalLightHelper;exports.CameraHelper=CameraHelper;exports.BoundingBoxHelper=BoundingBoxHelper;exports.BoxHelper=BoxHelper;exports.ArrowHelper=ArrowHelper;exports.AxisHelper=AxisHelper;exports.ClosedSplineCurve3=ClosedSplineCurve3;exports.CatmullRomCurve3=CatmullRomCurve3;exports.SplineCurve3=SplineCurve3;exports.CubicBezierCurve3=CubicBezierCurve3;exports.QuadraticBezierCurve3=QuadraticBezierCurve3;exports.LineCurve3=LineCurve3;exports.ArcCurve=ArcCurve;exports.EllipseCurve=EllipseCurve;exports.SplineCurve=SplineCurve;exports.CubicBezierCurve=CubicBezierCurve;exports.QuadraticBezierCurve=QuadraticBezierCurve;exports.LineCurve=LineCurve;exports.Shape=Shape;exports.ShapePath=ShapePath;exports.Path=Path;exports.Font=Font;exports.CurvePath=CurvePath;exports.Curve=Curve;exports.ShapeUtils=ShapeUtils;exports.SceneUtils=SceneUtils;exports.CurveUtils=CurveUtils;exports.WireframeGeometry=WireframeGeometry;exports.ParametricGeometry=ParametricGeometry;exports.ParametricBufferGeometry=ParametricBufferGeometry;exports.TetrahedronGeometry=TetrahedronGeometry;exports.TetrahedronBufferGeometry=TetrahedronBufferGeometry;exports.OctahedronGeometry=OctahedronGeometry;exports.OctahedronBufferGeometry=OctahedronBufferGeometry;exports.IcosahedronGeometry=IcosahedronGeometry;exports.IcosahedronBufferGeometry=IcosahedronBufferGeometry;exports.DodecahedronGeometry=DodecahedronGeometry;exports.DodecahedronBufferGeometry=DodecahedronBufferGeometry;exports.PolyhedronGeometry=PolyhedronGeometry;exports.PolyhedronBufferGeometry=PolyhedronBufferGeometry;exports.TubeGeometry=TubeGeometry;exports.TubeBufferGeometry=TubeBufferGeometry;exports.TorusKnotGeometry=TorusKnotGeometry;exports.TorusKnotBufferGeometry=TorusKnotBufferGeometry;exports.TorusGeometry=TorusGeometry;exports.TorusBufferGeometry=TorusBufferGeometry;exports.TextGeometry=TextGeometry;exports.SphereBufferGeometry=SphereBufferGeometry;exports.SphereGeometry=SphereGeometry;exports.RingGeometry=RingGeometry;exports.RingBufferGeometry=RingBufferGeometry;exports.PlaneBufferGeometry=PlaneBufferGeometry;exports.PlaneGeometry=PlaneGeometry;exports.LatheGeometry=LatheGeometry;exports.LatheBufferGeometry=LatheBufferGeometry;exports.ShapeGeometry=ShapeGeometry;exports.ExtrudeGeometry=ExtrudeGeometry;exports.EdgesGeometry=EdgesGeometry;exports.ConeGeometry=ConeGeometry;exports.ConeBufferGeometry=ConeBufferGeometry;exports.CylinderGeometry=CylinderGeometry;exports.CylinderBufferGeometry=CylinderBufferGeometry;exports.CircleBufferGeometry=CircleBufferGeometry;exports.CircleGeometry=CircleGeometry;exports.BoxBufferGeometry=BoxBufferGeometry;exports.BoxGeometry=BoxGeometry;exports.ShadowMaterial=ShadowMaterial;exports.SpriteMaterial=SpriteMaterial;exports.RawShaderMaterial=RawShaderMaterial;exports.ShaderMaterial=ShaderMaterial;exports.PointsMaterial=PointsMaterial;exports.MultiMaterial=MultiMaterial;exports.MeshPhysicalMaterial=MeshPhysicalMaterial;exports.MeshStandardMaterial=MeshStandardMaterial;exports.MeshPhongMaterial=MeshPhongMaterial;exports.MeshNormalMaterial=MeshNormalMaterial;exports.MeshLambertMaterial=MeshLambertMaterial;exports.MeshDepthMaterial=MeshDepthMaterial;exports.MeshBasicMaterial=MeshBasicMaterial;exports.LineDashedMaterial=LineDashedMaterial;exports.LineBasicMaterial=LineBasicMaterial;exports.Material=Material;exports.REVISION=REVISION;exports.MOUSE=MOUSE;exports.CullFaceNone=CullFaceNone;exports.CullFaceBack=CullFaceBack;exports.CullFaceFront=CullFaceFront;exports.CullFaceFrontBack=CullFaceFrontBack;exports.FrontFaceDirectionCW=FrontFaceDirectionCW;exports.FrontFaceDirectionCCW=FrontFaceDirectionCCW;exports.BasicShadowMap=BasicShadowMap;exports.PCFShadowMap=PCFShadowMap;exports.PCFSoftShadowMap=PCFSoftShadowMap;exports.FrontSide=FrontSide;exports.BackSide=BackSide;exports.DoubleSide=DoubleSide;exports.FlatShading=FlatShading;exports.SmoothShading=SmoothShading;exports.NoColors=NoColors;exports.FaceColors=FaceColors;exports.VertexColors=VertexColors;exports.NoBlending=NoBlending;exports.NormalBlending=NormalBlending;exports.AdditiveBlending=AdditiveBlending;exports.SubtractiveBlending=SubtractiveBlending;exports.MultiplyBlending=MultiplyBlending;exports.CustomBlending=CustomBlending;exports.BlendingMode=BlendingMode;exports.AddEquation=AddEquation;exports.SubtractEquation=SubtractEquation;exports.ReverseSubtractEquation=ReverseSubtractEquation;exports.MinEquation=MinEquation;exports.MaxEquation=MaxEquation;exports.ZeroFactor=ZeroFactor;exports.OneFactor=OneFactor;exports.SrcColorFactor=SrcColorFactor;exports.OneMinusSrcColorFactor=OneMinusSrcColorFactor;exports.SrcAlphaFactor=SrcAlphaFactor;exports.OneMinusSrcAlphaFactor=OneMinusSrcAlphaFactor;exports.DstAlphaFactor=DstAlphaFactor;exports.OneMinusDstAlphaFactor=OneMinusDstAlphaFactor;exports.DstColorFactor=DstColorFactor;exports.OneMinusDstColorFactor=OneMinusDstColorFactor;exports.SrcAlphaSaturateFactor=SrcAlphaSaturateFactor;exports.NeverDepth=NeverDepth;exports.AlwaysDepth=AlwaysDepth;exports.LessDepth=LessDepth;exports.LessEqualDepth=LessEqualDepth;exports.EqualDepth=EqualDepth;exports.GreaterEqualDepth=GreaterEqualDepth;exports.GreaterDepth=GreaterDepth;exports.NotEqualDepth=NotEqualDepth;exports.MultiplyOperation=MultiplyOperation;exports.MixOperation=MixOperation;exports.AddOperation=AddOperation;exports.NoToneMapping=NoToneMapping;exports.LinearToneMapping=LinearToneMapping;exports.ReinhardToneMapping=ReinhardToneMapping;exports.Uncharted2ToneMapping=Uncharted2ToneMapping;exports.CineonToneMapping=CineonToneMapping;exports.UVMapping=UVMapping;exports.CubeReflectionMapping=CubeReflectionMapping;exports.CubeRefractionMapping=CubeRefractionMapping;exports.EquirectangularReflectionMapping=EquirectangularReflectionMapping;exports.EquirectangularRefractionMapping=EquirectangularRefractionMapping;exports.SphericalReflectionMapping=SphericalReflectionMapping;exports.CubeUVReflectionMapping=CubeUVReflectionMapping;exports.CubeUVRefractionMapping=CubeUVRefractionMapping;exports.TextureMapping=TextureMapping;exports.RepeatWrapping=RepeatWrapping;exports.ClampToEdgeWrapping=ClampToEdgeWrapping;exports.MirroredRepeatWrapping=MirroredRepeatWrapping;exports.TextureWrapping=TextureWrapping;exports.NearestFilter=NearestFilter;exports.NearestMipMapNearestFilter=NearestMipMapNearestFilter;exports.NearestMipMapLinearFilter=NearestMipMapLinearFilter;exports.LinearFilter=LinearFilter;exports.LinearMipMapNearestFilter=LinearMipMapNearestFilter;exports.LinearMipMapLinearFilter=LinearMipMapLinearFilter;exports.TextureFilter=TextureFilter;exports.UnsignedByteType=UnsignedByteType;exports.ByteType=ByteType;exports.ShortType=ShortType;exports.UnsignedShortType=UnsignedShortType;exports.IntType=IntType;exports.UnsignedIntType=UnsignedIntType;exports.FloatType=FloatType;exports.HalfFloatType=HalfFloatType;exports.UnsignedShort4444Type=UnsignedShort4444Type;exports.UnsignedShort5551Type=UnsignedShort5551Type;exports.UnsignedShort565Type=UnsignedShort565Type;exports.UnsignedInt248Type=UnsignedInt248Type;exports.AlphaFormat=AlphaFormat;exports.RGBFormat=RGBFormat;exports.RGBAFormat=RGBAFormat;exports.LuminanceFormat=LuminanceFormat;exports.LuminanceAlphaFormat=LuminanceAlphaFormat;exports.RGBEFormat=RGBEFormat;exports.DepthFormat=DepthFormat;exports.DepthStencilFormat=DepthStencilFormat;exports.RGB_S3TC_DXT1_Format=RGB_S3TC_DXT1_Format;exports.RGBA_S3TC_DXT1_Format=RGBA_S3TC_DXT1_Format;exports.RGBA_S3TC_DXT3_Format=RGBA_S3TC_DXT3_Format;exports.RGBA_S3TC_DXT5_Format=RGBA_S3TC_DXT5_Format;exports.RGB_PVRTC_4BPPV1_Format=RGB_PVRTC_4BPPV1_Format;exports.RGB_PVRTC_2BPPV1_Format=RGB_PVRTC_2BPPV1_Format;exports.RGBA_PVRTC_4BPPV1_Format=RGBA_PVRTC_4BPPV1_Format;exports.RGBA_PVRTC_2BPPV1_Format=RGBA_PVRTC_2BPPV1_Format;exports.RGB_ETC1_Format=RGB_ETC1_Format;exports.LoopOnce=LoopOnce;exports.LoopRepeat=LoopRepeat;exports.LoopPingPong=LoopPingPong;exports.InterpolateDiscrete=InterpolateDiscrete;exports.InterpolateLinear=InterpolateLinear;exports.InterpolateSmooth=InterpolateSmooth;exports.ZeroCurvatureEnding=ZeroCurvatureEnding;exports.ZeroSlopeEnding=ZeroSlopeEnding;exports.WrapAroundEnding=WrapAroundEnding;exports.TrianglesDrawMode=TrianglesDrawMode;exports.TriangleStripDrawMode=TriangleStripDrawMode;exports.TriangleFanDrawMode=TriangleFanDrawMode;exports.LinearEncoding=LinearEncoding;exports.sRGBEncoding=sRGBEncoding;exports.GammaEncoding=GammaEncoding;exports.RGBEEncoding=RGBEEncoding;exports.LogLuvEncoding=LogLuvEncoding;exports.RGBM7Encoding=RGBM7Encoding;exports.RGBM16Encoding=RGBM16Encoding;exports.RGBDEncoding=RGBDEncoding;exports.BasicDepthPacking=BasicDepthPacking;exports.RGBADepthPacking=RGBADepthPacking;exports.CubeGeometry=BoxGeometry;exports.Face4=Face4;exports.LineStrip=LineStrip;exports.LinePieces=LinePieces;exports.MeshFaceMaterial=MultiMaterial;exports.PointCloud=PointCloud;exports.Particle=Sprite;exports.ParticleSystem=ParticleSystem;exports.PointCloudMaterial=PointCloudMaterial;exports.ParticleBasicMaterial=ParticleBasicMaterial;exports.ParticleSystemMaterial=ParticleSystemMaterial;exports.Vertex=Vertex;exports.EdgesHelper=EdgesHelper;exports.WireframeHelper=WireframeHelper;exports.GeometryUtils=GeometryUtils;exports.ImageUtils=ImageUtils;exports.Projector=Projector;exports.CanvasRenderer=CanvasRenderer;Object.defineProperty(exports,'__esModule',{value:true});Object.defineProperty(exports,'AudioContext',{get:function get(){return exports.getAudioContext();}});});
 
 /***/ },
-/* 5 */,
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	            value: true
-	});
-	exports.Legend = undefined;
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _Chart2 = __webpack_require__(8);
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by timo on 22.11.16.
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-	
-	var Legend = function (_Chart) {
-	            _inherits(Legend, _Chart);
-	
-	            function Legend(map) {
-	                        _classCallCheck(this, Legend);
-	
-	                        var _this = _possibleConstructorReturn(this, (Legend.__proto__ || Object.getPrototypeOf(Legend)).call(this, jsonData, configuration));
-	
-	                        _this.map = map;
-	                        return _this;
-	            }
-	
-	            _createClass(Legend, [{
-	                        key: "generateLegend",
-	                        value: function generateLegend() {
-	                                    var map = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.map;
-	
-	
-	                                    var txt = JSON.stringify(configuration);
-	                                    var configJSON = JSON.parse(txt);
-	
-	                                    console.log("sets up the legend");
-	                                    //checks if the the legend should be enabled
-	                                    if (configJSON.legend == true) {
-	                                                console.log("ITS TRUE BOIZ");
-	
-	                                                map.forEach(function createHTML(value, key, map) {
-	
-	                                                            var containerElem = document.createElement("li");
-	
-	                                                            var colorElem = document.createElement("span");
-	                                                            colorElem.setAttribute("class", "color-box");
-	                                                            colorElem.setAttribute("style", "background-color:#" + value);
-	
-	                                                            var nameElem = document.createElement("i");
-	                                                            nameElem.textContent = key;
-	
-	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
-	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
-	                                                });
-	                                    }
-	                        }
-	            }]);
-	
-	            return Legend;
-	}(_Chart2.Chart);
-	
-	exports.Legend = Legend;
-
-/***/ },
-/* 7 */
+/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4030,7 +3964,79 @@ var anchart3d =
 	THREE.TrackballControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 
 /***/ },
-/* 8 */
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	            value: true
+	});
+	exports.Legend = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Chart2 = __webpack_require__(7);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by timo on 22.11.16.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var Legend = function (_Chart) {
+	            _inherits(Legend, _Chart);
+	
+	            function Legend(map) {
+	                        _classCallCheck(this, Legend);
+	
+	                        var _this = _possibleConstructorReturn(this, (Legend.__proto__ || Object.getPrototypeOf(Legend)).call(this, configuration));
+	
+	                        _this.map = map;
+	                        return _this;
+	            }
+	
+	            _createClass(Legend, [{
+	                        key: "generateLegend",
+	                        value: function generateLegend() {
+	                                    var map = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.map;
+	
+	
+	                                    var txt = JSON.stringify(configuration);
+	                                    var configJSON = JSON.parse(txt);
+	
+	                                    console.log("sets up the legend");
+	                                    //checks if the the legend should be enabled
+	                                    if (configJSON.legend == true) {
+	                                                console.log("ITS TRUE BOIZ");
+	
+	                                                map.forEach(function createHTML(value, key, map) {
+	
+	                                                            var containerElem = document.createElement("li");
+	
+	                                                            var colorElem = document.createElement("span");
+	                                                            colorElem.setAttribute("class", "color-box");
+	                                                            colorElem.setAttribute("style", "background-color:#" + value);
+	
+	                                                            var nameElem = document.createElement("i");
+	                                                            nameElem.textContent = key;
+	
+	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
+	                                                            document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
+	                                                });
+	                                    }
+	                        }
+	            }]);
+	
+	            return Legend;
+	}(_Chart2.Chart);
+	
+	exports.Legend = Legend;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4063,12 +4069,16 @@ var anchart3d =
 	    //  return new PieChart(jsonData);
 	    //}
 	
+	
 	    _createClass(Chart, [{
 	        key: 'createChart',
 	        value: function createChart() {
 	            var chart = void 0;
-	            //let jsonData = new JsonData(this.chartData);
-	            //let jsonData = new JsonData(this.chartData);
+	            //Hinzufügen der Config zum document
+	            //var configuration = document.createElement("configuration");
+	            //configuration.appendChild(this.chartData);
+	            //document.appendChild()
+	
 	            switch (this.charType) {
 	                case "pieChart":
 	                    chart = new _pieChart.PieChart(new _jsonData.JsonData(this.chartData));

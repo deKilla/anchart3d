@@ -8,8 +8,7 @@ import {Chart} from '../Chart';
 class Legend extends Chart{
 
     constructor(map) {
-        super(jsonData,configuration);
-
+        super(configuration);
         this.map = map;
     }
 
