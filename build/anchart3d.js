@@ -104,8 +104,10 @@ var anchart3d =
 	                }
 	                scene.initScene();
 	                scene.animate();
+	
 	                chart = new _Chart.Chart(chartType, chartData, chartConfig);
 	                chart.createChart();
+	                //chart.createChart();
 	                /*
 	                 switch (chartType) {//cases für diverse chart anlegen
 	                     case "pieChart":
@@ -500,17 +502,14 @@ var anchart3d =
 	
 	            //variable holds last position of the inserted segment of the pie
 	            var lastThetaStart = 0.0;
-	            console.log("init map");
-	            console.log(jsonData.percent);
+	
 	            var legendMap = new Map();
 	            //iterate over the jsonData and create for every data a new pie segment
 	            //data = one object in the json which holds the props "amount","percent" in this case.
 	            for (var data in calculatedData) {
-	                console.log("hello world123213");
 	                var values = calculatedData[data].values;
 	                for (var val in values) {
 	                    var segment;
-	                    console.log("hello wor2132132131ld");
 	                    //get first data set of the first object
 	                    if (val == 0) {
 	                        var data1Name = values[val].name;
@@ -3978,8 +3977,6 @@ var anchart3d =
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
 	var _Chart2 = __webpack_require__(7);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4008,11 +4005,12 @@ var anchart3d =
 	                                    var map = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.map;
 	
 	
-	                                    var configuration = JSON.parse(_get(Legend.prototype.__proto__ || Object.getPrototypeOf(Legend.prototype), "configuration", this));
+	                                    var txt = JSON.stringify(configuration);
+	                                    var configJSON = JSON.parse(txt);
 	
 	                                    console.log("sets up the legend");
 	                                    //checks if the the legend should be enabled
-	                                    if (configuration.legend == true) {
+	                                    if (configJSON.legend == true) {
 	                                                console.log("ITS TRUE BOIZ");
 	
 	                                                map.forEach(function createHTML(value, key, map) {
@@ -4077,9 +4075,8 @@ var anchart3d =
 	        value: function createChart() {
 	            var chart = void 0;
 	            //let jsonData = new JsonData(this.chartData);
-	
+	            console.log("works");
 	            var jsonData = new _jsonData.JsonData(this.chartData);
-	            console.log(jsonData.percent);
 	            switch (this.charType) {
 	                case "pieChart":
 	                    chart = new _pieChart.PieChart(jsonData);

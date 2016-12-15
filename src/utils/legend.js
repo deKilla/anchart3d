@@ -9,18 +9,18 @@ class Legend extends Chart{
 
     constructor(map) {
         super(jsonData,configuration);
+
         this.map = map;
     }
 
     generateLegend(map = this.map) {
 
-
-
-       let configuration =JSON.parse(super.configuration);
+       let txt = JSON.stringify(configuration);
+       let configJSON =JSON.parse(txt);
 
         console.log("sets up the legend");
        //checks if the the legend should be enabled
-       if(configuration.legend == true) {
+       if(configJSON.legend == true) {
         console.log("ITS TRUE BOIZ");
 
         map.forEach(function createHTML(value, key, map) {

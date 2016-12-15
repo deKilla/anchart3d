@@ -86,6 +86,7 @@ class SceneInit {
     }
 
 
+
     onDocumentMouseAction(event) {
         //call function which finds intersected objects
         let intersects = this.findIntersections(event);

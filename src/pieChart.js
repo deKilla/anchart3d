@@ -55,17 +55,14 @@ class PieChart extends Chart {
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
-        console.log("init map");
-        console.log(jsonData.percent);
+
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let data in calculatedData) {
-            console.log("hello world123213");
             let values = calculatedData[data].values;
             for (let val in values) {
                 var segment;
-                console.log("hello wor2132132131ld");
                 //get first data set of the first object
                 if (val == 0) {
                     let data1Name = values[val].name;

@@ -21,9 +21,8 @@ class Chart {
     createChart() {
         let chart;
         //let jsonData = new JsonData(this.chartData);
-
+        console.log("works");
         let jsonData = new JsonData(this.chartData);
-        console.log(jsonData.percent);
         switch (this.charType) {
             case "pieChart":
                 chart = new PieChart(jsonData);

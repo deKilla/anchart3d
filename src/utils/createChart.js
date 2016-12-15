@@ -52,8 +52,10 @@ export const createChart = function(domTarget) {
                 }
                 scene.initScene();
                 scene.animate();
+
                 chart = new Chart(chartType, chartData, chartConfig);
                 chart.createChart();
+                 //chart.createChart();
                /*
                 switch (chartType) {//cases für diverse chart anlegen
                     case "pieChart":
