@@ -170,10 +170,9 @@ class SceneInit {
 
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
-
-                "<h4>" + this.INTERSECTED.name + "</h4>" +
-                "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" +
-                "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
+                `<h4>${this.INTERSECTED.name}</h4>
+                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />
+                     <b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
 
             let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
             tooltip.style.position = "absolute";
@@ -247,9 +246,8 @@ class SceneInit {
 
     resetCameraPosition(){
         let cam = this.camera;
-        let actualPos = {x: cam.position.x, y: cam.position.y, z: cam.position.z};
+        let actualPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
         let defaultPos = {x: 0, y: -10, z: 7};
-
         let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
 
         if(!initPos) {

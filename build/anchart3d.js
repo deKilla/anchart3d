@@ -232,24 +232,23 @@ var anchart3d =
 	            switch (event.keyCode) {
 	                case 37:
 	                    //left arrow
-	                    this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
+	                    // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
 	                    break;
 	                case 38:
 	                    //up arrow
-	                    this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
+	                    // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
 	                    break;
 	                case 39:
 	                    //right arrow
-	                    this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
+	                    // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
 	                    break;
 	                case 40:
 	                    //down arrow
-	                    this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
+	                    // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
 	                    break;
 	                case 82:
 	                    //R button
 	                    this.resetCameraPosition();
-	                    this.resetObjectPosition();
 	                    break;
 	            }
 	        }
@@ -306,7 +305,7 @@ var anchart3d =
 	                }
 	
 	                tooltip.setAttribute("id", "tooltip");
-	                tooltip.innerHTML = "<h4>" + this.INTERSECTED.name + "</h4>" + "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" + "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
+	                tooltip.innerHTML = "<h4>" + this.INTERSECTED.name + "</h4>\n                     <b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)<br />\n                     <b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
 	
 	                var vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
 	                tooltip.style.position = "absolute";
@@ -374,9 +373,8 @@ var anchart3d =
 	        key: "resetCameraPosition",
 	        value: function resetCameraPosition() {
 	            var cam = this.camera;
-	            var actualPos = { x: cam.position.x, y: cam.position.y, z: cam.position.z };
+	            var actualPos = { x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z) }; //ceiling upwards cause of minimal variety
 	            var defaultPos = { x: 0, y: -10, z: 7 };
-	
 	            var initPos = actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z;
 	
 	            if (!initPos) {
@@ -385,21 +383,22 @@ var anchart3d =
 	                }).start();
 	            }
 	        }
-	    }, {
-	        key: "resetObjectPosition",
-	        value: function resetObjectPosition() {
-	            var object = this.scene.getObjectByName("groupedPieChart", true);
-	            var actualPos = { x: object.rotation.x, y: object.rotation.y, z: object.rotation.z };
-	            var defaultPos = { x: 0, y: 0, z: 0 };
 	
-	            var initPos = actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z;
-	
-	            if (!initPos) {
-	                new TWEEN.Tween(actualPos).to({ x: defaultPos.x, y: defaultPos.y, z: defaultPos.z }, 4000).easing(TWEEN.Easing.Cubic.Out).onUpdate(function () {
-	                    object.rotation.set(actualPos.x, actualPos.y, actualPos.z);
-	                }).start();
+	        /*resetObjectPosition(){
+	            let object = this.scene.getObjectByName("groupedPieChart", true);
+	            let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+	            let defaultPos = {x: 0, y: 0, z: 0};
+	              let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+	              if(!initPos) {
+	                new TWEEN.Tween(actualPos)
+	                    .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+	                    .easing(TWEEN.Easing.Cubic.Out)
+	                    .onUpdate(function () {
+	                        object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
+	                    }).start();
 	            }
-	        }
+	        }*/
+	
 	    }]);
 	
 	    return SceneInit;
