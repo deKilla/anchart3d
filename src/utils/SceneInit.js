@@ -96,25 +96,33 @@ class SceneInit {
 
 
     onDocumentKeyAction(event) {
-    switch (event.keyCode) {
-        case 37: //left arrow
-            // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
-            break;
-        case 38: //up arrow
-            // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
-            break;
-        case 39: //right arrow
-            // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
-            break;
-        case 40: //down arrow
-            // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
-            break;
-        case 82: //R button
-            this.resetCameraPosition();
-            break;
+        switch (event.keyCode) {
+            case 37: //left arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
+                break;
+            case 38: //up arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
+                break;
+            case 39: //right arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
+                break;
+            case 40: //down arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
+                break;
+            case 82: //R button
+                this.resetCameraPosition();
+                break;
+            case 67:
+                this.showOnScreenControls();
+                break;
+        }
     }
-};
 
+    showOnScreenControls() {
+        let resetChart = this.resetCameraPosition();
+        document.getElementById("controls").innerHTML = `<a id="reset">R</a>`;
+        document.getElementById("reset").onclick=function(){console.log("reset");resetChart};
+    }
 
     onDocumentMouseAction(event) {
         //call function which finds intersected objects
@@ -147,13 +155,13 @@ class SceneInit {
             this.htmlTooltip("hide");
         }
 
+
     }
 
 
     onDocumentDblClick() {
         //IMPLEMENT DOUBLE CLICK FUNCTION HERE
     }
-
 
     htmlTooltip(status) {
 

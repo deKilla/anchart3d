@@ -68,3 +68,5 @@ body{
 }
 
 #tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
+
+#controls { z-index:9999; color:#fff; position: absolute; font-size: 100px; }
