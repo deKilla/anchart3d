@@ -20,7 +20,7 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.sceneOptions.fov, window.innerWidth / window.innerHeight, 1, 1000);
         this.camera.position.z = 15;
 
         this.controls = new THREE.TrackballControls(this.camera);
@@ -30,7 +30,7 @@ class SceneInit {
 
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget),
-            antialias: (this.sceneOptions.antialias || false), alpha: (this.sceneOptions.transparency ||false) });
+            antialias: this.sceneOptions.antialias, alpha: this.sceneOptions.transparency });
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
