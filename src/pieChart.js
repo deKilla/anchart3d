@@ -7,18 +7,19 @@
  import * as THREE from '../node_modules/three/build/three';
  import '../src/utils/TrackballControls';
  import {Legend} from './utils/legend';
+ import {Chart} from './Chart';
 
 
-class PieChart {
+class PieChart extends Chart {
 
-    constructor(jsonData, radius, angleStart, angleEnd, legendMap) {
+    constructor(jsonData,radius, angleStart, angleEnd) {
 
+        super(jsonData,configuration);
         this.jsonData = jsonData;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
         this.object = this.create3DPieChart();
-        this.legendMap = legendMap;
 
     }
 
@@ -60,10 +61,9 @@ class PieChart {
 
         //calculate percent of every data set in json first
         const calculatedData = jsonData.percent;
-
         //Group together all pieces
         let pieChart = new THREE.Group();
-        pieChart.name = "groupedPieChart";
+        pieChart.name = "groupedChart";
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;

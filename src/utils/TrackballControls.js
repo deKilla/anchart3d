@@ -22,8 +22,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	this.noRotate = false;
 	this.noZoom = false;
-	this.noPan = false;
-	this.noRoll = false;
+	this.noPan = true;
+	this.noRoll = true;
 
 	this.staticMoving = false;
 	this.dynamicDampingFactor = 0.2;
