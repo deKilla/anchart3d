@@ -17,10 +17,8 @@ class Legend extends Chart{
        let txt = JSON.stringify(configuration);
        let configJSON =JSON.parse(txt);
 
-        console.log("sets up the legend");
        //checks if the the legend should be enabled
        if(configJSON.legend == true) {
-        console.log("ITS TRUE BOIZ");
 
         map.forEach(function createHTML(value, key, map) {
 

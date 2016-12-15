@@ -72,16 +72,16 @@
         }
     ];
 
-    let configuration = {"tooltip": false, "legend": true, "bgcolor":"#009b9b","startAnimation":true};
+    let configuration = {"tooltip": true, "legend": true, "bgcolor":"skyblue","entryAnimation":true, "transparency":false, "antialias": true, "fov":50};
     /**
     * COMMENT: API kann gechained werden nach beliebieger Reihenfolge AUßER draw!
      * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
      **/
     anchart3d.createChart("anchart3d")
-        .setScene()
+        .setScene(configuration)
         .setChart("pieChart")
         .chartData(jsonData)
-        .chartConfig(configuration)
+        .chartConfig()
         .draw();
 
 </script>

@@ -100,13 +100,14 @@ var anchart3d =
 	                chart = new _Chart.Chart(chartType, chartData, chartConfig).createChart();
 	
 	                if (sceneOptions) {
-	                    scene = new _SceneInit.SceneInit(domTarget); //hier mit scene config übergeben
+	                    //if config for the sceneInit is available
+	                    scene = new _SceneInit.SceneInit(domTarget, sceneOptions);
 	                } else {
+	                    //else use default sceneInit settings
 	                    scene = new _SceneInit.SceneInit(domTarget);
 	                }
 	                scene.initScene();
 	                scene.animate();
-	
 	                scene.scene.add(chart.object);
 	            } else {
 	                console.error("ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!");
@@ -134,32 +135,23 @@ var anchart3d =
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var SceneInit = function () {
-	    function SceneInit() {
-	        var domtarget = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "anchart3d";
-	        var fov = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 45;
-	        var camera = arguments[2];
-	        var scene = arguments[3];
-	        var controls = arguments[4];
-	        var renderer = arguments[5];
-	        var INTERSECTED = arguments[6];
-	
+	    function SceneInit(domtarget, sceneOptions, camera, scene, controls, renderer, mouse, INTERSECTED) {
 	        _classCallCheck(this, SceneInit);
 	
 	        this.domtarget = domtarget;
+	        this.sceneOptions = sceneOptions; //custom user options held here
 	        this.camera = camera;
 	        this.scene = scene;
 	        this.controls = controls;
 	        this.renderer = renderer;
-	        this.fov = fov;
 	        this.mouse = new THREE.Vector2();
 	        this.INTERSECTED = INTERSECTED;
-	        this.raycaster = new THREE.Raycaster();
 	    }
 	
 	    _createClass(SceneInit, [{
-	        key: "initScene",
+	        key: 'initScene',
 	        value: function initScene() {
-	            this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
+	            this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 	            this.camera.position.z = 15;
 	
 	            this.controls = new THREE.TrackballControls(this.camera);
@@ -167,14 +159,15 @@ var anchart3d =
 	
 	            this.scene = new THREE.Scene();
 	
-	            //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-	            this.renderer = new THREE.WebGLRenderer({ canvas: document.getElementById(this.domtarget), antialias: true });
+	            //specify a canvas which is already created in the HTML file and tagged by an id
+	            this.renderer = new THREE.WebGLRenderer({ canvas: document.getElementById(this.domtarget),
+	                antialias: this.sceneOptions.antialias || false, alpha: this.sceneOptions.transparency || false });
+	
 	            this.renderer.setSize(window.innerWidth, window.innerHeight);
 	            document.body.appendChild(this.renderer.domElement);
 	
-	            console.log(configuration.bgcolor);
-	            if (configuration.bgcolor) {
-	                this.scene.background = new THREE.Color(configuration.bgcolor);
+	            if (this.sceneOptions.bgcolor) {
+	                this.scene.background = new THREE.Color(this.sceneOptions.bgcolor);
 	            }
 	
 	            //ambient light which is for the whole scene
@@ -196,37 +189,37 @@ var anchart3d =
 	            window.addEventListener('resize', this.onWindowResize.bind(this), false);
 	        }
 	    }, {
-	        key: "animate",
+	        key: 'animate',
 	        value: function animate() {
 	            requestAnimationFrame(this.animate.bind(this));
 	            this.render();
 	            this.controls.update();
 	        }
 	    }, {
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
 	            this.renderer.render(this.scene, this.camera);
 	        }
 	    }, {
-	        key: "onWindowResize",
+	        key: 'onWindowResize',
 	        value: function onWindowResize() {
 	            this.camera.aspect = window.innerWidth / window.innerHeight;
 	            this.camera.updateProjectionMatrix();
 	            this.renderer.setSize(window.innerWidth, window.innerHeight);
 	        }
 	    }, {
-	        key: "findIntersections",
+	        key: 'findIntersections',
 	        value: function findIntersections(event) {
-	
+	            var raycaster = new THREE.Raycaster();
 	            this.mouse.x = event.clientX / this.renderer.domElement.clientWidth * 2 - 1;
 	            this.mouse.y = -(event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
-	            this.raycaster.setFromCamera(this.mouse, this.camera);
+	            raycaster.setFromCamera(this.mouse, this.camera);
 	
 	            //search for our object by name which we declared before and return it
-	            return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
+	            return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
 	        }
 	    }, {
-	        key: "onDocumentMouseAction",
+	        key: 'onDocumentMouseAction',
 	        value: function onDocumentMouseAction(event) {
 	            //call function which finds intersected objects
 	            var intersects = this.findIntersections(event);
@@ -258,20 +251,18 @@ var anchart3d =
 	            }
 	        }
 	    }, {
-	        key: "onDocumentDblClick",
+	        key: 'onDocumentDblClick',
 	        value: function onDocumentDblClick() {
 	            //IMPLEMENT DOUBLE CLICK FUNCTION HERE
 	        }
 	    }, {
-	        key: "htmlTooltip",
+	        key: 'htmlTooltip',
 	        value: function htmlTooltip(status) {
 	
 	            var tooltip = null;
 	            status = !status ? "show" : status;
-	            //check if it is enabled in the config
-	            //var configuration = document.getChildById(configuration);
-	            console.log(configuration.tooltip);
-	            if (status === "show" && configuration.tooltip == true) {
+	
+	            if (status === "show" && this.sceneOptions.tooltip) {
 	
 	                if (!document.getElementById("tooltip")) {
 	                    tooltip = document.createElement("div");
@@ -497,7 +488,7 @@ var anchart3d =
 	            var calculatedData = jsonData.percent;
 	            //Group together all pieces
 	            var pieChart = new THREE.Group();
-	            pieChart.name = "groupedPieChart";
+	            pieChart.name = "groupedChart";
 	
 	            //variable holds last position of the inserted segment of the pie
 	            var lastThetaStart = 0.0;
@@ -3489,8 +3480,8 @@ var anchart3d =
 	
 			this.noRotate = false;
 			this.noZoom = false;
-			this.noPan = false;
-			this.noRoll = false;
+			this.noPan = true;
+			this.noRoll = true;
 	
 			this.staticMoving = false;
 			this.dynamicDampingFactor = 0.2;
@@ -4007,10 +3998,8 @@ var anchart3d =
 	                                    var txt = JSON.stringify(configuration);
 	                                    var configJSON = JSON.parse(txt);
 	
-	                                    console.log("sets up the legend");
 	                                    //checks if the the legend should be enabled
 	                                    if (configJSON.legend == true) {
-	                                                console.log("ITS TRUE BOIZ");
 	
 	                                                map.forEach(function createHTML(value, key, map) {
 	
@@ -4065,24 +4054,14 @@ var anchart3d =
 	        this.chartConfig = chartConfig;
 	    }
 	
-	    //createPieChart() {
-	    //  return new PieChart(jsonData);
-	    //}
-	
-	
 	    _createClass(Chart, [{
 	        key: 'createChart',
 	        value: function createChart() {
 	            var chart = void 0;
-	            //Hinzufügen der Config zum document
-	            //var configuration = document.createElement("configuration");
-	            //configuration.appendChild(this.chartData);
-	            //document.appendChild()
 	
 	            switch (this.charType) {
 	                case "pieChart":
 	                    chart = new _pieChart.PieChart(new _jsonData.JsonData(this.chartData));
-	                    console.log(chart);
 	                    break;
 	            }
 	

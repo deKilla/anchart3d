@@ -6,21 +6,21 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d", fov = 45, camera, scene, controls, renderer, INTERSECTED) {
+    constructor(domtarget, sceneOptions, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
+        this.sceneOptions = sceneOptions; //custom user options held here
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
         this.renderer = renderer;
-        this.fov = fov;
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
-        this.raycaster = new THREE.Raycaster();
     }
 
 
+
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
         this.camera.position.z = 15;
 
         this.controls = new THREE.TrackballControls(this.camera);
@@ -28,15 +28,17 @@ class SceneInit {
 
         this.scene = new THREE.Scene();
 
-        //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget), antialias: true});
+        //specify a canvas which is already created in the HTML file and tagged by an id
+        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget),
+            antialias: (this.sceneOptions.antialias || false), alpha: (this.sceneOptions.transparency ||false) });
+
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        console.log(configuration.bgcolor);
-        if(configuration.bgcolor){
-            this.scene.background = new THREE.Color(configuration.bgcolor);
+        if(this.sceneOptions.bgcolor){
+            this.scene.background = new THREE.Color(this.sceneOptions.bgcolor);
         }
+
 
         //ambient light which is for the whole scene
         let ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -79,14 +81,14 @@ class SceneInit {
 
 
     findIntersections(event) {
-
+        let raycaster = new THREE.Raycaster();
         this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
         this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera);
+        raycaster.setFromCamera(this.mouse, this.camera);
 
 
         //search for our object by name which we declared before and return it
-        return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
+        return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
     }
 
 
@@ -134,10 +136,8 @@ class SceneInit {
 
         let tooltip = null;
         status = (!status) ? "show" : status;
-        //check if it is enabled in the config
-        //var configuration = document.getChildById(configuration);
-        console.log(configuration.tooltip);
-        if (status === "show" && configuration.tooltip == true) {
+
+        if (status === "show" && this.sceneOptions.tooltip) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");

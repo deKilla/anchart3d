@@ -51,7 +51,7 @@ class PieChart extends Chart {
         const calculatedData = jsonData.percent;
         //Group together all pieces
         let pieChart = new THREE.Group();
-        pieChart.name = "groupedPieChart";
+        pieChart.name = "groupedChart";
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;

@@ -47,15 +47,14 @@ export const createChart = function(domTarget) {
                 chart = new Chart(chartType, chartData, chartConfig)
                     .createChart();
 
-                if (sceneOptions) {
-                    scene = new SceneInit(domTarget); //hier mit scene config übergeben
+                if (sceneOptions) { //if config for the sceneInit is available
+                    scene = new SceneInit(domTarget,sceneOptions);
                 }
-                else {
+                else { //else use default sceneInit settings
                     scene = new SceneInit(domTarget);
                 }
                 scene.initScene();
                 scene.animate();
-
                 scene.scene.add(chart.object);
             }
             else {
