@@ -19,7 +19,9 @@
 <canvas id="anchart3d"></canvas>
 
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
+<!-- IMPORTANT: NEEDS TO BE WEBPACKED BUT STILL ERROR WHEN TRYING TO INCLUDE IN anchart3d.js -->
 <script type='text/javascript' src='../node_modules/tween.js/src/Tween.js'></script>
+<!-- END: IMPORTANT: NEEDS TO BE WEBPACKED BUT STILL ERROR WHEN TRYING TO INCLUDE IN anchart3d.js -->
 <script type="text/javascript" src="../build/anchart3d.js"></script>
 
 <script>
@@ -73,13 +75,13 @@
         }
     ];
 
-    let configuration = {"tooltip": true, "legend": true, "bgcolor":"skyblue","entryAnimation":true, "transparency":false, "antialias": true, "fov":45};
+    let sceneConfig = {"tooltip": true, "legend": true, "bgcolor":"skyblue","entryAnimation":true, "transparency":false, "antialias": true, "fov":45};
     /**
     * COMMENT: API kann gechained werden nach beliebieger Reihenfolge AUßER draw!
      * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
      **/
     anchart3d.createChart("anchart3d")
-        .setScene(configuration)
+        .setScene(sceneConfig)
         .setChart("pieChart")
         .chartData(jsonData)
         .chartConfig()
