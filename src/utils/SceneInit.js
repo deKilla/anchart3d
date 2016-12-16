@@ -20,7 +20,7 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.sceneOptions.fov, window.innerWidth / window.innerHeight, 1, 1000);
 
         if(this.sceneOptions.startAnimation) {
             this.camera.position.set(0, -10, 1100);
