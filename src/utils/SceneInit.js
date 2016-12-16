@@ -104,22 +104,22 @@ class SceneInit {
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
-                this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
+                this.scene.getObjectByName("groupedChart", true).rotation.z += 0.1;
                 break;
             case 38: //up arrow
-                this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
+                this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
                 break;
             case 39: //right arrow
-                this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
+                this.scene.getObjectByName("groupedChart", true).rotation.z -= 0.1;
                 break;
             case 40: //down arrow
-                this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
+                this.scene.getObjectByName("groupedChart", true).rotation.x -= 0.1;
                 break;
             case 82: //R button
                 this.resetCameraPosition();
                 break;
             case 67:
-                let currentChart = this.scene.getObjectByName("groupedPieChart", true);
+                let currentChart = this.scene.getObjectByName("groupedChart", true);
                 this.showOnScreenControls("mouseover",currentChart); //click, mouseover
         }
     }
