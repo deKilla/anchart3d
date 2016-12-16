@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/deKilla/anchart3d#readme",
   "dependencies": {
-    "three": "^0.82.1"
+    "three": "^0.82.1",
+    "tween.js": "^16.3.5"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
