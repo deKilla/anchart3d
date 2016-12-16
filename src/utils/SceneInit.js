@@ -57,9 +57,9 @@ class SceneInit {
         document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
-
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
     }
 
 
@@ -99,29 +99,52 @@ class SceneInit {
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
-                // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
+                this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
                 break;
             case 38: //up arrow
-                // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
+                this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
                 break;
             case 39: //right arrow
-                // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
+                this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
                 break;
             case 40: //down arrow
-                // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
+                this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
                 break;
             case 82: //R button
                 this.resetCameraPosition();
                 break;
             case 67:
-                this.showOnScreenControls();
-                break;
+                let currentChart = this.scene.getObjectByName("groupedPieChart", true);
+                this.showOnScreenControls("mouseover",currentChart); //click, mouseover
         }
     }
 
-    showOnScreenControls() {
-        document.getElementById("controls").innerHTML = `<button id="resetBtn">Reset</button>`;
-        document.querySelector("#resetBtn").addEventListener('click',this.resetCameraPosition.bind(this),false);
+    showOnScreenControls(method = "click", currentChart) {
+        console.log(currentChart);
+        let repeater;
+
+        if(method == "hover"){method = "mouseover"}
+        
+        
+        document.getElementById("controls").innerHTML = `<a id="btnup">&uarr;</a>`;
+        document.getElementById("controls").innerHTML += `<a id="btnleft">&larr;</a>`;
+        document.getElementById("controls").innerHTML += `<a id="btnreset">R</a>`;
+        document.getElementById("controls").innerHTML += `<a id="btnright">&rarr;</a>`;
+        document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
+
+        document.querySelector("#btnreset").addEventListener("click",this.resetCameraPosition.bind(this));
+
+        document.querySelector("#btnleft").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z += 0.1},100)});
+        document.querySelector("#btnup").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x -= 0.1},100)});
+        document.querySelector("#btnright").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z -= 0.1},100)});
+        document.querySelector("#btndown").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x += 0.1},100)});
+
+        if(method == "mouseover") {
+            document.querySelector("#btnleft").addEventListener("mouseout",function(){clearInterval(repeater)});
+            document.querySelector("#btnup").addEventListener("mouseout",function(){clearInterval(repeater)});
+            document.querySelector("#btnright").addEventListener("mouseout",function(){clearInterval(repeater)});
+            document.querySelector("#btndown").addEventListener("mouseout",function(){clearInterval(repeater)});
+        }
     }
 
     onDocumentMouseAction(event) {

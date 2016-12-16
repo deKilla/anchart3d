@@ -69,4 +69,12 @@ body{
 
 #tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
 
-#controls { z-index:9999; color:#fff; position: absolute; font-size: 100px; }
+#controls { z-index:9999; position: absolute; width:90px; height:90px; display: block; right:10px; bottom:10px;}
+#controls a { background:#ccc; display: inline-block; border:1px solid #fff; text-align: center; font-weight:bold; color:#000;}
+#controls a:hover { background: #fff; }
+
+#btnup {cursor:pointer; width:28px; height:28px; margin:0 30px; line-height: 30px;}
+#btnleft {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btnreset {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btnright {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btndown {cursor:pointer; width: 28px; height:28px; margin:0 30px; line-height: 30px;}
