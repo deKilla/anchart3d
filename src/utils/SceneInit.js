@@ -118,7 +118,7 @@ class SceneInit {
                 this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
                 break;
             case 82: //R button
-                this.resetCameraPosition();
+                this.resetPosition();
                 break;
             case 67:
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
@@ -145,7 +145,7 @@ class SceneInit {
         document.getElementById("controls").innerHTML += `<a id="btnright">&rarr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
 
-        document.querySelector("#btnreset").addEventListener("click", this.resetCameraPosition.bind(this));
+        document.querySelector("#btnreset").addEventListener("click", this.resetPosition.bind(this));
 
         document.querySelector("#btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
@@ -308,44 +308,41 @@ class SceneInit {
             })
             .delay(800)
             .start();
-
     }
 
 
-    resetCameraPosition() {
+    resetPosition() {//resets camera and object position
+        //Camera Rotation and Position
         let cam = this.camera;
-        let actualPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
-        let defaultPos = {x: 0, y: -10, z: 7};
-        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+        let actualCamPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
+        let defaultCamPos = {x: 0, y: -10, z: 7};
+        let initCam = (actualCamPos.x == defaultCamPos.x && actualCamPos.y == defaultCamPos.y && actualCamPos.z == defaultCamPos.z);
 
-        if (!initPos) {
-            new TWEEN.Tween(actualPos)
-                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+        if (!initCam) {
+            new TWEEN.Tween(actualCamPos)
+                .to({x: defaultCamPos.x, y: defaultCamPos.y, z: defaultCamPos.z}, 4000)
                 .easing(TWEEN.Easing.Cubic.Out)
                 .onUpdate(function () {
-                    cam.position.set(actualPos.x, actualPos.y, actualPos.z);
+                    cam.position.set(actualCamPos.x, actualCamPos.y, actualCamPos.z);
                 }).start();
         }
+
+        //Object Rotation and Position
+        let object = this.scene.getObjectByName("groupedChart", true);
+        let actualObjPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+        let defaultObjPos = {x: 0, y: 0, z: 0};
+        let initObj = (actualObjPos.x == defaultObjPos.x && actualObjPos.y == defaultObjPos.y && actualObjPos.z == defaultObjPos.z);
+
+        if (!initObj) {
+            new TWEEN.Tween(actualObjPos)
+                .to({x: defaultObjPos.x, y: defaultObjPos.y, z: defaultObjPos.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onUpdate(function () {
+                    object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
+                }).start();
+
+            }
     }
-
-
-    /*resetObjectPosition(){
-     let object = this.scene.getObjectByName("groupedPieChart", true);
-     let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
-     let defaultPos = {x: 0, y: 0, z: 0};
-
-     let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
-
-     if(!initPos) {
-     new TWEEN.Tween(actualPos)
-     .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
-     .easing(TWEEN.Easing.Cubic.Out)
-     .onUpdate(function () {
-     object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
-     }).start();
-     }
-     }*/
-
 
 }
 
