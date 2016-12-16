@@ -4,15 +4,15 @@
 
 "use strict";
 
- import * as THREE from '../node_modules/three/build/three';
- import '../src/utils/OrbitControls';
- import {Legend} from './utils/legend';
- import {Chart} from './Chart';
+import * as THREE from '../node_modules/three/build/three';
+import '../src/utils/OrbitControls';
+import {Legend} from './utils/legend';
+import {Chart} from './Chart';
 
 
 class PieChart extends Chart {
 
-    constructor(jsonData,radius, angleStart, angleEnd) {
+    constructor(jsonData, radius, angleStart, angleEnd) {
 
         super(jsonData);
         this.jsonData = jsonData;
@@ -24,7 +24,7 @@ class PieChart extends Chart {
     }
 
 
-    animateZ(obj,startpos,finpos,) {
+    animateZ(obj, startpos, finpos,) {
         return new TWEEN.Tween(startpos)
             .to({z: finpos}, 3000)
             .easing(TWEEN.Easing.Cubic.Out)
@@ -111,12 +111,16 @@ class PieChart extends Chart {
                      * Animation with Tween.js (scaling in z-axis)
                      * @type {number}
                      */
-                    let finalPos = (data2Percent/ 10);
-                    let startPos = {z: segment.scale.z};
-                    //tween.js animation for the scale on z-axis
-                    let animation = this.animateZ(segment,startPos,finalPos);
-                    animation.delay(3000);
-                    animation.start();
+
+                    if (sceneConfig.startAnimation) {
+                        let finalPos = (data2Percent / 10);
+                        let startPos = {z: segment.scale.z};
+                        //tween.js animation for the scale on z-axis
+
+                        let animation = this.animateZ(segment, startPos, finalPos);
+                        animation.delay(3000);
+                        animation.start();
+                    }
 
                 }
 
@@ -129,7 +133,6 @@ class PieChart extends Chart {
         return pieChart;
     }
 }
-
 
 
 export {PieChart}

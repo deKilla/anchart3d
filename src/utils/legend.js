@@ -3,41 +3,41 @@
  */
 
 
-import {Chart} from '../Chart';
-
-class Legend extends Chart{
+class Legend {
 
     constructor(map) {
-        super(sceneConfig); //OMFG NOOOO PLS NO REMOVE
         this.map = map;
+
     }
 
     generateLegend(map = this.map) {
 
-       let txt = JSON.stringify(sceneConfig); //OMFG NOOOO PLS NO REMOVE
-       let configJSON =JSON.parse(txt);
-
-       //checks if the the legend should be enabled
-       if(configJSON.legend == true) {
-
-        map.forEach(function createHTML(value, key, map) {
-
-            let containerElem = document.createElement("li");
-
-            let colorElem = document.createElement("span");
-            colorElem.setAttribute("class", "color-box");
-            colorElem.setAttribute("style", "background-color:#" + value);
-
-            let nameElem = document.createElement("i");
-            nameElem.textContent = key;
-
-            document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
-            document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
-
-        })
 
 
-    }}
+        //checks in the config if the the legend should be enabled
+        //default is true
+
+        if (sceneConfig.legend) {
+
+            map.forEach(function createHTML(value, key, map) {
+
+                let containerElem = document.createElement("li");
+
+                let colorElem = document.createElement("span");
+                colorElem.setAttribute("class", "color-box");
+                colorElem.setAttribute("style", "background-color:#" + value);
+
+                let nameElem = document.createElement("i");
+                nameElem.textContent = key;
+
+                document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
+                document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
+
+            })
+
+
+        }
+    }
 
 }
 

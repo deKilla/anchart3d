@@ -18,14 +18,20 @@ class SceneInit {
     }
 
 
-
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.sceneOptions.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        if(this.sceneOptions.fov) {
+            this.camera = new THREE.PerspectiveCamera(this.sceneOptions.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        } //default case  fov = 45
+        else {
+            this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+        }
 
-        if(this.sceneOptions.startAnimation) {
+        if (this.sceneOptions.startAnimation) {
             this.camera.position.set(0, -10, 1100);
-            this.entryAnimation();
-        }else{
+            if (sceneConfig.startAnimation) {
+                this.entryAnimation();
+            }
+        } else {
             this.camera.position.set(0, -10, 7);
         }
 
@@ -35,13 +41,41 @@ class SceneInit {
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget),
-            antialias: this.sceneOptions.antialias, alpha: this.sceneOptions.transparency });
+        //checks if the antialiasing   else uses a default value
+        if (this.sceneOptions.antialias && this.sceneOptions.transparency) {
+            this.renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById(this.domtarget),
+                antialias: this.sceneOptions.antialias, alpha: this.sceneOptions.transparency
+            });
+        } else {
+            //checks if one of both is set in the configuration json
+            //default for antialias = true; default for transparency = false
+            if (this.sceneOptions.antialias) {
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById(this.domtarget),
+                    antialias: this.sceneOptions.antialias, alpha: false
+                });
+            } else if (this.sceneOptions.transparency) {
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById(this.domtarget),
+                    antialias: true, alpha: this.sceneOptions.transparency
+                });
+            }
+            //none of both is set  DEFAULT CASE
+            else {
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById(this.domtarget),
+                    antialias: true, alpha: false
+                });
+            }
+        }
+
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        if(this.sceneOptions.bgcolor){
+        if (this.sceneOptions.bgcolor) {
+            //Setting the BG Color of the Scene
             this.scene.background = new THREE.Color(this.sceneOptions.bgcolor);
         }
 
@@ -59,7 +93,7 @@ class SceneInit {
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
-        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
+        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
 
@@ -100,7 +134,6 @@ class SceneInit {
     }
 
 
-
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
@@ -126,7 +159,7 @@ class SceneInit {
 
     showOnScreenControls() {
         document.getElementById("controls").innerHTML = `<button id="resetBtn">Reset</button>`;
-        document.querySelector("#resetBtn").addEventListener('click',this.resetCameraPosition.bind(this),false);
+        document.querySelector("#resetBtn").addEventListener('click', this.resetCameraPosition.bind(this), false);
     }
 
     onDocumentMouseAction(event) {
@@ -257,39 +290,39 @@ class SceneInit {
     }
 
 
-    resetCameraPosition(){
+    resetCameraPosition() {
         let cam = this.camera;
         let actualPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
         let defaultPos = {x: 0, y: -10, z: 7};
         let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
 
-        if(!initPos) {
+        if (!initPos) {
             new TWEEN.Tween(actualPos)
                 .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
                 .easing(TWEEN.Easing.Cubic.Out)
                 .onUpdate(function () {
-                    cam.position.set(actualPos.x,actualPos.y,actualPos.z);
+                    cam.position.set(actualPos.x, actualPos.y, actualPos.z);
                 }).start();
         }
     }
 
 
     /*resetObjectPosition(){
-        let object = this.scene.getObjectByName("groupedPieChart", true);
-        let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
-        let defaultPos = {x: 0, y: 0, z: 0};
+     let object = this.scene.getObjectByName("groupedPieChart", true);
+     let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+     let defaultPos = {x: 0, y: 0, z: 0};
 
-        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+     let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
 
-        if(!initPos) {
-            new TWEEN.Tween(actualPos)
-                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
-                }).start();
-        }
-    }*/
+     if(!initPos) {
+     new TWEEN.Tween(actualPos)
+     .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+     .easing(TWEEN.Easing.Cubic.Out)
+     .onUpdate(function () {
+     object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
+     }).start();
+     }
+     }*/
 
 
 }
