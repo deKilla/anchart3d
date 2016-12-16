@@ -5,28 +5,40 @@
 "use strict";
 
  import * as THREE from '../node_modules/three/build/three';
- import '../src/utils/TrackballControls';
+ import '../src/utils/OrbitControls';
  import {Legend} from './utils/legend';
+ import {Chart} from './Chart';
 
 
-class PieChart {
+class PieChart extends Chart {
 
-    constructor(jsonData, radius, angleStart, angleEnd, legendMap) {
+    constructor(jsonData,radius, angleStart, angleEnd) {
 
+        super(jsonData);
         this.jsonData = jsonData;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
         this.object = this.create3DPieChart();
-        this.legendMap = legendMap;
 
     }
+
+
+    animateZ(obj,startpos,finpos,) {
+        return new TWEEN.Tween(startpos)
+            .to({z: finpos}, 3000)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .onUpdate(function () {
+                obj.scale.z = startpos.z;
+            });
+    }
+
 
     createSegment(radius, angleStart, angleEnd) {
         let extrudeOptions = {
             curveSegments: 50,
             steps: 1,
-            amount: 1.1,
+            amount: 1.0,
             bevelEnabled: false,
         };
 
@@ -39,19 +51,19 @@ class PieChart {
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
             specular: 0xffffff,
-            shininess: 1.5,
+            shininess: 1.0,
         });
 
         return new THREE.Mesh(segmentGeom, segmentMat);
     }
 
     create3DPieChart(jsonData = this.jsonData) {
+
         //calculate percent of every data set in json first
         const calculatedData = jsonData.percent;
-
         //Group together all pieces
         let pieChart = new THREE.Group();
-        pieChart.name = "groupedPieChart";
+        pieChart.name = "groupedChart";
 
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
@@ -95,8 +107,17 @@ class PieChart {
                     segment.data2.value = data2Value;
                     segment.data2.percent = data2Percent;
 
-                    //scale in z(height) (show second data set)
-                    segment.scale.z = (data2Percent / 10);
+                    /**
+                     * Animation with Tween.js (scaling in z-axis)
+                     * @type {number}
+                     */
+                    let finalPos = (data2Percent/ 10);
+                    let startPos = {z: segment.scale.z};
+                    //tween.js animation for the scale on z-axis
+                    let animation = this.animateZ(segment,startPos,finalPos);
+                    animation.delay(3000);
+                    animation.start();
+
                 }
 
                 //add new piece to the grouped pieChart
@@ -108,5 +129,7 @@ class PieChart {
         return pieChart;
     }
 }
+
+
 
 export {PieChart}

@@ -6,32 +6,44 @@
 
 class SceneInit {
 
-    constructor(domtarget = "anchart3d", fov = 45, camera, scene, controls, renderer, INTERSECTED) {
+    constructor(domtarget, sceneOptions, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
+        this.sceneOptions = sceneOptions; //custom user options held here
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
         this.renderer = renderer;
-        this.fov = fov;
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
-        this.raycaster = new THREE.Raycaster();
     }
+
 
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.fov, window.innerWidth / window.innerHeight, 1, 1000);
-        this.camera.position.z = 15;
 
-        this.controls = new THREE.TrackballControls(this.camera);
+        if(this.sceneOptions.startAnimation) {
+            this.camera.position.set(0, -10, 1100);
+            this.entryAnimation();
+        }else{
+            this.camera.position.set(0, -10, 7);
+        }
+
+        this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
 
         this.scene = new THREE.Scene();
 
-        //specify a canvas which is already created in the HTML file and tagged by an id        //aliasing enabled
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget), antialias: true});
+        //specify a canvas which is already created in the HTML file and tagged by an id
+        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget),
+            antialias: this.sceneOptions.antialias, alpha: this.sceneOptions.transparency });
+
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
+
+        if(this.sceneOptions.bgcolor){
+            this.scene.background = new THREE.Color(this.sceneOptions.bgcolor);
+        }
 
 
         //ambient light which is for the whole scene
@@ -47,6 +59,7 @@ class SceneInit {
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
+        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
 
@@ -64,6 +77,7 @@ class SceneInit {
 
     render() {
         this.renderer.render(this.scene, this.camera);
+        TWEEN.update();
     }
 
 
@@ -75,16 +89,45 @@ class SceneInit {
 
 
     findIntersections(event) {
-
+        let raycaster = new THREE.Raycaster();
         this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
         this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera);
+        raycaster.setFromCamera(this.mouse, this.camera);
 
 
         //search for our object by name which we declared before and return it
-        return this.raycaster.intersectObjects(this.scene.getObjectByName("groupedPieChart", true).children);
+        return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
     }
 
+
+
+    onDocumentKeyAction(event) {
+        switch (event.keyCode) {
+            case 37: //left arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.z += 0.1;
+                break;
+            case 38: //up arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.x += 0.1;
+                break;
+            case 39: //right arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.z -= 0.1;
+                break;
+            case 40: //down arrow
+                // this.scene.getObjectByName("groupedPieChart", true).rotation.x -= 0.1;
+                break;
+            case 82: //R button
+                this.resetCameraPosition();
+                break;
+            case 67:
+                this.showOnScreenControls();
+                break;
+        }
+    }
+
+    showOnScreenControls() {
+        document.getElementById("controls").innerHTML = `<button id="resetBtn">Reset</button>`;
+        document.querySelector("#resetBtn").addEventListener('click',this.resetCameraPosition.bind(this),false);
+    }
 
     onDocumentMouseAction(event) {
         //call function which finds intersected objects
@@ -117,6 +160,7 @@ class SceneInit {
             this.htmlTooltip("hide");
         }
 
+
     }
 
 
@@ -124,13 +168,12 @@ class SceneInit {
         //IMPLEMENT DOUBLE CLICK FUNCTION HERE
     }
 
-
     htmlTooltip(status) {
 
         let tooltip = null;
         status = (!status) ? "show" : status;
 
-        if (status === "show") {
+        if (status === "show" && this.sceneOptions.tooltip) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");
@@ -140,10 +183,9 @@ class SceneInit {
 
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
-
-                "<h4>" + this.INTERSECTED.name + "</h4>" +
-                "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)" + "<br />" +
-                "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
+                `<h4>${this.INTERSECTED.name}</h4>
+                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />
+                     <b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
 
             let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
             tooltip.style.position = "absolute";
@@ -195,6 +237,61 @@ class SceneInit {
             document.body.removeChild(document.getElementById("tooltip"));
         }
     }
+
+
+    entryAnimation() {
+        let cam = this.camera;
+        let startPos = {x: cam.position.x, y: cam.position.y, z: cam.position.z};
+        let endPos = {x: 0, y: -10, z: 7};
+
+        new TWEEN.Tween(startPos)
+            .to({x: endPos.x, y: endPos.y, z: endPos.z}, 2500)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .onUpdate(function () {
+                cam.position.setY(startPos.y);
+                cam.position.setZ(startPos.z);
+            })
+            .delay(800)
+            .start();
+
+    }
+
+
+    resetCameraPosition(){
+        let cam = this.camera;
+        let actualPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
+        let defaultPos = {x: 0, y: -10, z: 7};
+        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+
+        if(!initPos) {
+            new TWEEN.Tween(actualPos)
+                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onUpdate(function () {
+                    cam.position.set(actualPos.x,actualPos.y,actualPos.z);
+                }).start();
+        }
+    }
+
+
+    /*resetObjectPosition(){
+        let object = this.scene.getObjectByName("groupedPieChart", true);
+        let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+        let defaultPos = {x: 0, y: 0, z: 0};
+
+        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+
+        if(!initPos) {
+            new TWEEN.Tween(actualPos)
+                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onUpdate(function () {
+                    object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
+                }).start();
+        }
+    }*/
+
+
 }
 
 
