@@ -1,3 +1,9 @@
+/**
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Michael Fuchs (https://github.com/deKilla)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
+ */
+
 class JsonData {
 
     constructor(file) {

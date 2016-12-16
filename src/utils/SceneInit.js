@@ -1,14 +1,16 @@
 /**
- * Created by Amar on 21.11.2016.
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Michael Fuchs (https://github.com/deKilla)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-"use strict";
+import './OrbitControls';
 
 class SceneInit {
 
-    constructor(domtarget, sceneOptions, camera, scene, controls, renderer, mouse, INTERSECTED) {
+    constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
-        this.sceneOptions = sceneOptions; //custom user options held here
+        this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
@@ -20,12 +22,12 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.sceneOptions.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov, window.innerWidth / window.innerHeight, 1, 1000);
 
-        if(this.sceneOptions.startAnimation) {
+        if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
             this.entryAnimation();
-        }else{
+        } else {
             this.camera.position.set(0, -10, 7);
         }
 
@@ -35,14 +37,16 @@ class SceneInit {
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id
-        this.renderer = new THREE.WebGLRenderer({canvas: document.getElementById(this.domtarget),
-            antialias: this.sceneOptions.antialias, alpha: this.sceneOptions.transparency });
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById(this.domtarget),
+            antialias: this.sceneConfig.antialias, alpha: this.sceneConfig.transparency
+        });
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        if(this.sceneOptions.bgcolor){
-            this.scene.background = new THREE.Color(this.sceneOptions.bgcolor);
+        if (this.sceneConfig.bgcolor) {
+            this.scene.background = new THREE.Color(this.sceneConfig.bgcolor);
         }
 
 
@@ -59,7 +63,7 @@ class SceneInit {
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
-        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this),false);
+        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
         document.ondblclick = this.onDocumentDblClick.bind(this);
 
         //if window resizes
@@ -100,7 +104,6 @@ class SceneInit {
     }
 
 
-
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
@@ -120,7 +123,7 @@ class SceneInit {
                 break;
             case 67:
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
-                this.showOnScreenControls("mouseover",currentChart); //click, mouseover
+                this.showOnScreenControls("mouseover", currentChart); //click, mouseover
         }
     }
 
@@ -129,28 +132,56 @@ class SceneInit {
         let repeater;
         let interval;
 
-        if(method == "hover"){method = "mouseover"}
-        if(method == "mouseover"){interval = 100}
-        
-        
+        if (method == "hover") {
+            method = "mouseover"
+        }
+        if (method == "mouseover") {
+            interval = 100
+        }
+
+
         document.getElementById("controls").innerHTML = `<a id="btnup">&uarr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btnleft">&larr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btnreset">R</a>`;
         document.getElementById("controls").innerHTML += `<a id="btnright">&rarr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
 
-        document.querySelector("#btnreset").addEventListener("click",this.resetCameraPosition.bind(this));
+        document.querySelector("#btnreset").addEventListener("click", this.resetCameraPosition.bind(this));
 
-        document.querySelector("#btnleft").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z -= 0.1},interval)});
-        document.querySelector("#btnup").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x -= 0.1},interval)});
-        document.querySelector("#btnright").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z += 0.1},interval)});
-        document.querySelector("#btndown").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x += 0.1},interval)});
+        document.querySelector("#btnleft").addEventListener(method, function () {
+            repeater = setInterval(function () {
+                currentChart.rotation.z -= 0.1
+            }, interval)
+        });
+        document.querySelector("#btnup").addEventListener(method, function () {
+            repeater = setInterval(function () {
+                currentChart.rotation.x -= 0.1
+            }, interval)
+        });
+        document.querySelector("#btnright").addEventListener(method, function () {
+            repeater = setInterval(function () {
+                currentChart.rotation.z += 0.1
+            }, interval)
+        });
+        document.querySelector("#btndown").addEventListener(method, function () {
+            repeater = setInterval(function () {
+                currentChart.rotation.x += 0.1
+            }, interval)
+        });
 
-        if(method == "mouseover") {
-            document.querySelector("#btnleft").addEventListener("mouseout",function(){clearInterval(repeater)});
-            document.querySelector("#btnup").addEventListener("mouseout",function(){clearInterval(repeater)});
-            document.querySelector("#btnright").addEventListener("mouseout",function(){clearInterval(repeater)});
-            document.querySelector("#btndown").addEventListener("mouseout",function(){clearInterval(repeater)});
+        if (method == "mouseover") {
+            document.querySelector("#btnleft").addEventListener("mouseout", function () {
+                clearInterval(repeater)
+            });
+            document.querySelector("#btnup").addEventListener("mouseout", function () {
+                clearInterval(repeater)
+            });
+            document.querySelector("#btnright").addEventListener("mouseout", function () {
+                clearInterval(repeater)
+            });
+            document.querySelector("#btndown").addEventListener("mouseout", function () {
+                clearInterval(repeater)
+            });
         }
     }
 
@@ -198,7 +229,7 @@ class SceneInit {
         let tooltip = null;
         status = (!status) ? "show" : status;
 
-        if (status === "show" && this.sceneOptions.tooltip) {
+        if (status === "show" && this.sceneConfig.tooltip) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");
@@ -282,39 +313,39 @@ class SceneInit {
     }
 
 
-    resetCameraPosition(){
+    resetCameraPosition() {
         let cam = this.camera;
         let actualPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
         let defaultPos = {x: 0, y: -10, z: 7};
         let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
 
-        if(!initPos) {
+        if (!initPos) {
             new TWEEN.Tween(actualPos)
                 .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
                 .easing(TWEEN.Easing.Cubic.Out)
                 .onUpdate(function () {
-                    cam.position.set(actualPos.x,actualPos.y,actualPos.z);
+                    cam.position.set(actualPos.x, actualPos.y, actualPos.z);
                 }).start();
         }
     }
 
 
     /*resetObjectPosition(){
-        let object = this.scene.getObjectByName("groupedPieChart", true);
-        let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
-        let defaultPos = {x: 0, y: 0, z: 0};
+     let object = this.scene.getObjectByName("groupedPieChart", true);
+     let actualPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
+     let defaultPos = {x: 0, y: 0, z: 0};
 
-        let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
+     let initPos = (actualPos.x == defaultPos.x && actualPos.y == defaultPos.y && actualPos.z == defaultPos.z);
 
-        if(!initPos) {
-            new TWEEN.Tween(actualPos)
-                .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
-                }).start();
-        }
-    }*/
+     if(!initPos) {
+     new TWEEN.Tween(actualPos)
+     .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, 4000)
+     .easing(TWEEN.Easing.Cubic.Out)
+     .onUpdate(function () {
+     object.rotation.set(actualPos.x,actualPos.y,actualPos.z);
+     }).start();
+     }
+     }*/
 
 
 }

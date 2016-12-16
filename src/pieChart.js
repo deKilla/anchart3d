@@ -1,28 +1,26 @@
 /**
- * Created by Amar on 07.11.2016.
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Michael Fuchs (https://github.com/deKilla)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-"use strict";
-
- import * as THREE from '../node_modules/three/build/three';
- import '../src/utils/OrbitControls';
- import {Legend} from './utils/legend';
- import {Chart} from './Chart';
+import {Chart} from './Chart';
+import {Legend} from './utils/legend';
 
 
 class PieChart extends Chart {
 
-    constructor(jsonData,radius, angleStart, angleEnd) {
+    constructor(jsonData,sceneConfig,radius, angleStart, angleEnd) {
 
-        super(jsonData);
+        super();
         this.jsonData = jsonData;
+        this.sceneConfig = sceneConfig;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
         this.object = this.create3DPieChart();
 
     }
-
 
     animateZ(obj,startpos,finpos,) {
         return new TWEEN.Tween(startpos)
@@ -58,7 +56,6 @@ class PieChart extends Chart {
     }
 
     create3DPieChart(jsonData = this.jsonData) {
-
         //calculate percent of every data set in json first
         const calculatedData = jsonData.percent;
         //Group together all pieces
@@ -107,25 +104,30 @@ class PieChart extends Chart {
                     segment.data2.value = data2Value;
                     segment.data2.percent = data2Percent;
 
-                    /**
-                     * Animation with Tween.js (scaling in z-axis)
-                     * @type {number}
-                     */
-                    let finalPos = (data2Percent/ 10);
-                    let startPos = {z: segment.scale.z};
+
+
                     //tween.js animation for the scale on z-axis
-                    let animation = this.animateZ(segment,startPos,finalPos);
-                    animation.delay(3000);
-                    animation.start();
+                    if(this.sceneConfig.chartAnimation) {
+                        let finalPos = (data2Percent / 10);
+                        let startPos = {z: segment.scale.z};
+
+                        let animation = this.animateZ(segment, startPos, finalPos);
+                        animation.delay(3000);
+                        animation.start();
+                    }
+                    else{
+                        segment.scale.z = (data2Percent / 10);
+                    }
 
                 }
-
                 //add new piece to the grouped pieChart
                 pieChart.add(segment);
             }
         }
-        let pieChartLegend = new Legend(legendMap);
+        let pieChartLegend = new Legend(legendMap,this.sceneConfig);
         pieChartLegend.generateLegend();
+
+
         return pieChart;
     }
 }

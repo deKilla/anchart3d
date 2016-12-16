@@ -1,24 +1,20 @@
 /**
- * Created by timo on 22.11.16.
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Michael Fuchs (https://github.com/deKilla)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
+class Legend {
 
-import {Chart} from '../Chart';
-
-class Legend extends Chart{
-
-    constructor(map) {
-        super(sceneConfig); //OMFG NOOOO PLS NO REMOVE
+    constructor(map,sceneConfig) {
         this.map = map;
+        this.sceneConfig = sceneConfig;
     }
 
     generateLegend(map = this.map) {
 
-       let txt = JSON.stringify(sceneConfig); //OMFG NOOOO PLS NO REMOVE
-       let configJSON =JSON.parse(txt);
-
        //checks if the the legend should be enabled
-       if(configJSON.legend == true) {
+       if(this.sceneConfig.legend) {
 
         map.forEach(function createHTML(value, key, map) {
 
@@ -33,12 +29,13 @@ class Legend extends Chart{
 
             document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
             document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
-
         })
-
-
-    }}
-
+    }
+    else{
+           if(document.getElementById('legend'))
+               document.getElementById('legend').remove();
+       }
+    }
 }
 
 

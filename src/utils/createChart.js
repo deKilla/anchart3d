@@ -1,25 +1,28 @@
+/**
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Michael Fuchs (https://github.com/deKilla)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
+ */
+//PieChart import needed because if not imported here, error occurs!
+import {SceneInit} from './SceneInit';
 
- import {SceneInit} from './SceneInit';
- import {JsonData} from './jsonData';
- import {PieChart} from '../pieChart';
- import {Chart} from '../Chart';
- 
+import {PieChart} from '../pieChart';
+import {Chart} from '../Chart';
 
-export const createChart = function(domTarget) {
+export const createChart = function (domTarget) {
     let scene;
-    let sceneOptions;
+    let sceneConfig;
     let chart;
     let chartType;
     let chartData;
-    let chartConfig;
 
     let options = {
         domTarget: domTarget
     };
 
     return {
-        setScene: function (json) {
-            options.scene = json;
+        setScene: function (sceneConfigJson) {
+            options.sceneConfig = sceneConfigJson;
             return this;
         },
         setChart: function (chartType) {
@@ -30,25 +33,18 @@ export const createChart = function(domTarget) {
             options.chartData = json;
             return this;
         },
-        chartConfig: function (configuration) {
-            options.chartConfig = configuration;
-            return this;
-        },
         draw: function () {
-            sceneOptions = options.scene;
+            sceneConfig = options.sceneConfig;
             chartType = options.chartType;
             chartData = options.chartData;
-            chartConfig = options.chartConfig;
-
-
 
             if (chartType && chartData) {
 
-                chart = new Chart(chartType, chartData, chartConfig)
+                chart = new Chart(chartType, chartData, sceneConfig)
                     .createChart();
 
-                if (sceneOptions) { //if config for the sceneInit is available
-                    scene = new SceneInit(domTarget,sceneOptions);
+                if (sceneConfig) { //if config for the sceneInit is available
+                    scene = new SceneInit(domTarget, sceneConfig);
                 }
                 else { //else use default sceneInit settings
                     scene = new SceneInit(domTarget);
@@ -59,7 +55,7 @@ export const createChart = function(domTarget) {
 
             }
             else {
-                console.error("ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!");
+                throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
             }
         }
     };
