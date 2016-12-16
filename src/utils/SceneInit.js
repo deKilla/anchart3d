@@ -22,7 +22,7 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, window.innerWidth / window.innerHeight, 1, 1000);
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
@@ -39,7 +39,7 @@ class SceneInit {
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({
             canvas: document.getElementById(this.domtarget),
-            antialias: this.sceneConfig.antialias, alpha: this.sceneConfig.transparency
+            antialias: this.sceneConfig.antialias || false, alpha: this.sceneConfig.transparency || false
         });
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -68,7 +68,6 @@ class SceneInit {
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-
     }
 
 
