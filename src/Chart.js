@@ -18,7 +18,6 @@ class Chart {
 
     createChart() {
         let chart;
-
         switch (this.chartType) {
             case "pieChart":
                 chart = new PieChart(new JsonData(this.chartData),this.sceneConfig);

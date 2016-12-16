@@ -34,7 +34,8 @@ export const createChart = function (domTarget) {
             return this;
         },
         draw: function () {
-            sceneConfig = options.sceneConfig;
+            //if no config file passed, pass empty object..needed cause if no object passed, undefined error occurs
+            sceneConfig = options.sceneConfig || {};
             chartType = options.chartType;
             chartData = options.chartData;
 
