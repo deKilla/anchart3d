@@ -104,16 +104,16 @@ class SceneInit {
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.z += 0.1;
-                break;
-            case 38: //up arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
-                break;
-            case 39: //right arrow
                 this.scene.getObjectByName("groupedChart", true).rotation.z -= 0.1;
                 break;
-            case 40: //down arrow
+            case 38: //up arrow
                 this.scene.getObjectByName("groupedChart", true).rotation.x -= 0.1;
+                break;
+            case 39: //right arrow
+                this.scene.getObjectByName("groupedChart", true).rotation.z += 0.1;
+                break;
+            case 40: //down arrow
+                this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
                 break;
             case 82: //R button
                 this.resetCameraPosition();
@@ -127,8 +127,10 @@ class SceneInit {
     showOnScreenControls(method = "click", currentChart) {
         console.log(currentChart);
         let repeater;
+        let interval;
 
         if(method == "hover"){method = "mouseover"}
+        if(method == "mouseover"){interval = 100}
         
         
         document.getElementById("controls").innerHTML = `<a id="btnup">&uarr;</a>`;
@@ -139,10 +141,10 @@ class SceneInit {
 
         document.querySelector("#btnreset").addEventListener("click",this.resetCameraPosition.bind(this));
 
-        document.querySelector("#btnleft").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z += 0.1},100)});
-        document.querySelector("#btnup").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x -= 0.1},100)});
-        document.querySelector("#btnright").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z -= 0.1},100)});
-        document.querySelector("#btndown").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x += 0.1},100)});
+        document.querySelector("#btnleft").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z -= 0.1},interval)});
+        document.querySelector("#btnup").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x -= 0.1},interval)});
+        document.querySelector("#btnright").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.z += 0.1},interval)});
+        document.querySelector("#btndown").addEventListener(method,function(){repeater=setInterval(function(){currentChart.rotation.x += 0.1},interval)});
 
         if(method == "mouseover") {
             document.querySelector("#btnleft").addEventListener("mouseout",function(){clearInterval(repeater)});
