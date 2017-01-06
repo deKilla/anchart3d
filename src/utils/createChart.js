@@ -34,8 +34,8 @@ export const createChart = function (domTarget) {
             return this;
         },
         draw: function () {
-            //if no config file passed, pass empty object..needed cause if no object passed, undefined error occurs
-            sceneConfig = options.sceneConfig || {};
+            //check config to either filter incorrect config parameters, or pass default config
+            sceneConfig = checkConfig(options.sceneConfig);
             chartType = options.chartType;
             chartData = options.chartData;
 
@@ -61,3 +61,29 @@ export const createChart = function (domTarget) {
         }
     };
 };
+
+
+function checkConfig(sceneConfig) {
+    let config = {};
+    if(sceneConfig){
+        Object.keys(sceneConfig).forEach(function (propKey) {
+            if(propKey === "fov"){
+                if(isNaN(sceneConfig[propKey]))
+                    console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
+                else config[propKey] = sceneConfig[propKey];
+            }
+            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof sceneConfig[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
+                console.warn("Invalid type for property \"" + propKey + "\": Type has to be 'boolean'!\nProperty was set to \"false\"!");
+                config[propKey] = false;
+            }
+            else{
+                config[propKey] = sceneConfig[propKey];
+            }
+        });
+        return config;
+    }
+    else{//check if valid types are used for config properties
+        console.warn("No configuration passed for Scene.\nUsing default configuration!");
+        return config; //return empty object to use default config in SceneInit
+    }
+}
