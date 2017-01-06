@@ -192,7 +192,8 @@ class SceneInit {
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
             document.getElementById("details").innerHTML = "<h2>" + intersects[0].object.name + "</h2><b>" + intersects[0].object.data1.name + ":</b> " + intersects[0].object.data1.percent.toFixed(2) +
-                "% (" + intersects[0].object.data1.value + ")" + "<br><b>" + intersects[0].object.data2.name + ":</b> " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
+                "% (" + intersects[0].object.data1.value + ")";
+            if(intersects[0].object.hasOwnProperty("data2")) document.getElementById("details").innerHTML += "<br><b>" + intersects[0].object.data2.name + ":</b> " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
         }
         else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
 

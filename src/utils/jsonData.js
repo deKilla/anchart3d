@@ -36,10 +36,8 @@ class JsonData {
             for (let value in values) {
 
                 let total = sums[values[value].name];
-                let percent = values[value].value / (total / 100);
-
                 //set calculated percent and total to the corresponding dataset
-                percentjson[elements].values[value]["percent"] = percent;
+                percentjson[elements].values[value]["percent"] = values[value].value / (total / 100);
                 percentjson[elements].values[value]["total"] = total;
             }
         }

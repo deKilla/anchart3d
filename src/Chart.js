@@ -23,7 +23,7 @@ class Chart {
                 chart = new PieChart(new JsonData(this.chartData),this.sceneConfig);
                 break;
             default:
-                throw "chartTypeError: The chart type '" + this.chartType + "' is not valid!";
+                throw "ChartTypeError: The chart type '" + this.chartType + "' is not valid!";
                 break;
         }
 
