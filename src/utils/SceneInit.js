@@ -20,7 +20,6 @@ class SceneInit {
     }
 
 
-
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, window.innerWidth / window.innerHeight, 1, 1000);
 
@@ -116,17 +115,15 @@ class SceneInit {
             case 40: //down arrow
                 this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
                 break;
-            case 82: //R button
-                this.resetPosition();
+            case 82: //R key
                 break;
-            case 67:
+            case 67: //C key
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
                 this.showOnScreenControls("mouseover", currentChart); //click, mouseover
         }
     }
 
     showOnScreenControls(method = "click", currentChart) {
-        console.log(currentChart);
         let repeater;
         let interval;
 
@@ -136,7 +133,6 @@ class SceneInit {
         if (method == "mouseover") {
             interval = 100
         }
-
 
         document.getElementById("controls").innerHTML = `<a id="btnup">&uarr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btnleft">&larr;</a>`;
@@ -214,7 +210,6 @@ class SceneInit {
 
             this.htmlTooltip("hide");
         }
-
 
     }
 
@@ -310,7 +305,6 @@ class SceneInit {
             .start();
     }
 
-
     resetPosition() {//resets camera and object position
         //Camera Rotation and Position
         let cam = this.camera;
@@ -340,10 +334,8 @@ class SceneInit {
                 .onUpdate(function () {
                     object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
                 }).start();
-
             }
     }
-
 }
 
 
