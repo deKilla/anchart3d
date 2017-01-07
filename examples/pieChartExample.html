@@ -5,17 +5,90 @@
     <title>Pie Chart</title>
 
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-	
+
 </head>
 <body>
+<div id="legend-background">
+    <h4>Piechart Legend</h4>
+    <ul id="legend">
+    </ul>
+</div>
 
+<div id="details"></div>
+<div id="controls"></div>
 
-<canvas id="myThreeJsCanvas"></canvas>
+<canvas id="anchart3d"></canvas>
 
 <script type="text/javascript" src="../node_modules/three/build/three.js"></script>
-<script type="text/javascript" src="../src/utils/TrackballControls.js"></script>
-<script type="text/javascript" src="../src/pieChart.js"></script>
+<!-- IMPORTANT: NEEDS TO BE WEBPACKED BUT STILL ERROR WHEN TRYING TO INCLUDE IN anchart3d.js -->
+<script type='text/javascript' src='../node_modules/tween.js/src/Tween.js'></script>
+<!-- END: IMPORTANT: NEEDS TO BE WEBPACKED BUT STILL ERROR WHEN TRYING TO INCLUDE IN anchart3d.js -->
+<script type="text/javascript" src="../build/anchart3d.js"></script>
 
+<script>
+
+    let jsonData = [
+        {
+            "name":"Österreich",
+            "values": [
+                {"name":"Einwohner", "value":8747000},
+                {"name":"DSGehalt", "value":2670}
+            ]
+        },
+        {
+            "name":"Deutschland",
+            "values": [
+                {"name":"Einwohner", "value":80062000},
+                {"name":"DSGehalt", "value":2790}
+            ]
+        },
+        {
+            "name":"Italien",
+            "values": [
+                {"name":"Einwohner", "value":59083000},
+                {"name":"DSGehalt", "value":2390}
+            ]
+        },
+        {
+            "name":"Russland",
+            "values": [
+                {"name":"Einwohner", "value":143500000},
+                {"name":"DSGehalt", "value":1780}
+            ]
+        },{
+            "name":"Schweiz",
+            "values": [
+                {"name":"Einwohner", "value":8081000},
+                {"name":"DSGehalt", "value":2880}
+            ]
+        },{
+            "name":"Belgien",
+            "values": [
+                {"name":"Einwohner", "value":11200000},
+                {"name":"DSGehalt", "value":2470}
+            ]
+        },{
+            "name":"Frankreich",
+            "values": [
+                {"name":"Einwohner", "value":66030000},
+                {"name":"DSGehalt", "value":2500}
+            ]
+        }
+    ];
+
+let configuration = {"tooltip": true, "legend": true, "bgcolor": "skyblue", "startAnimation":true, "chartAnimation": true, "transparency":false, "antialias": true, "fov":45};
+
+    /**
+    * COMMENT: API kann gechained werden nach beliebieger Reihenfolge AUßER draw!
+     * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
+     **/
+    anchart3d.createChart("anchart3d")
+        .setScene(configuration)
+        .setChart("pieChart")
+        .chartData(jsonData)
+        .draw();
+
+</script>
 
 </body>
 </html>

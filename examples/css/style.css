@@ -1,4 +1,80 @@
 body{
     margin: 0;
-    overflow: hidden
+    overflow: hidden;
+    font-family: Arial;
 }
+
+
+#legend-background {
+    background: #000;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 14px;
+    z-index: 8;
+    /*border:1px dashed #fff;*/
+    padding:10px 15px 5px 10px;
+    border-radius:10px;
+
+}
+
+#legend-background h4 {
+    color:#fff;
+    font-size:25px;
+    display:none;
+}
+
+#legend {
+    list-style: none;
+    padding:0px;
+    margin:0px;
+}
+
+#legend li {
+    color:#fff;
+    margin-bottom:5px;
+    padding:3px 0;
+}
+
+
+.color-box {
+    display: inline-flex;
+    border: 1px solid #fff;
+    width: 14px;
+    height: 14px;
+    margin-right:10px;
+    padding:5px;
+    border-radius:3px;
+}
+
+.legend-block{
+    display:inline;
+}
+
+#details { 
+    z-index:8;
+    color:#fff;
+    position: absolute;
+    top:20px;
+    left:20px;
+     }
+
+#tooltip {
+    z-index: 9999;
+    padding:10px;
+    background: #ccc;
+    border:1px solid #000;
+    border-radius:5px;
+}
+
+#tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
+
+#controls { z-index:9999; position: absolute; width:90px; height:90px; display: block; right:10px; bottom:10px;}
+#controls a { background:#ccc; display: inline-block; border:1px solid #fff; text-align: center; font-weight:bold; color:#000;}
+#controls a:hover { background: #fff; }
+
+#btnup {cursor:pointer; width:28px; height:28px; margin:0 30px; line-height: 30px;}
+#btnleft {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btnreset {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btnright {cursor:pointer; width:28px; height:28px; line-height: 30px;}
+#btndown {cursor:pointer; width: 28px; height:28px; margin:0 30px; line-height: 30px;}
