@@ -234,8 +234,8 @@ class SceneInit {
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>
-                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />
-                     <b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
+                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
+            if(this.INTERSECTED.hasOwnProperty("data2")) tooltip.innerHTML += `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
 
             let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
             tooltip.style.position = "absolute";

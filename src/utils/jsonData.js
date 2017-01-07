@@ -37,7 +37,7 @@ class JsonData {
         let datasetCount = 0;
         let data1Name, data2Name;
         for(let x = 0; x < Object.keys(this.file).length; x++){
-            if(x === 0) datasetCount = Object.keys(this.file[x]).length;
+            if(x === 0) datasetCount = Object.keys(this.file[x].values).length;
 
             if(!this.file[x].hasOwnProperty("name") || !this.file[x].hasOwnProperty("values")){
                 throw "ParseError: Structure of Json not valid!\nDataset number \"" + (x+1) +"\" has an inconsistent property name!";
@@ -51,7 +51,7 @@ class JsonData {
             for(let i = 0; i < Object.keys(this.file[x].values).length; i++){
                 if(x === 0 && i === 0){
                     data1Name = this.file[x].values[i].name;
-                    data2Name = this.file[x].values[i+1].name;
+                    if(datasetCount > 1) data2Name = this.file[x].values[i+1].name;
                 }
                 if(!this.file[x].values[i].hasOwnProperty("name") || !this.file[x].values[i].hasOwnProperty("value")){
                     throw "ParseError: Structure of Json not valid!\nDataset with name \"" + this.file[x].name
