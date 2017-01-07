@@ -11,6 +11,12 @@ class JsonData {
         this.init = this.initFile();
     }
 
+    /**
+     * Initializes all steps, which need to be done, for the json with the data!
+     * 1.) Check consistency of json structure and correct property names!
+     * 2.) Optionally sort data (if sorting was enabled in configuration)
+     * 3.) Calculate sum(s) and percentage of datasets
+     */
     initFile() {
         /*
         TODO: Check if json structure valid
@@ -18,7 +24,6 @@ class JsonData {
          */
         this.getSums();
         this.getPercent();
-
         return this.init;
     }
 
@@ -38,21 +43,19 @@ class JsonData {
     }
 
     /**
-     * Does not need to return object as JavaScript does pass objects by reference IF it is saved under a variable!!
-     * This means that "this.file" will also get changed if "tempJson" does so....
+     * Does not need to return object as JavaScript does pass OBJECTS by reference IF it is saved under a variable!!
      * See link for more info: http://stackoverflow.com/a/6605700/4809932
      */
     getPercent() {
-        let tempJson = this.file;
         let sums = this.getSums();
-        for (let elements in tempJson) {
-            let values = tempJson[elements].values;
+        for (let elements in this.file) {
+            let values = this.file[elements].values;
             for (let value in values) {
 
                 let total = sums[values[value].name];
                 //set calculated percent and total to the corresponding dataset
-                tempJson[elements].values[value]["percent"] = values[value].value / (total / 100);
-                tempJson[elements].values[value]["total"] = total;
+                this.file[elements].values[value]["percent"] = values[value].value / (total / 100);
+                this.file[elements].values[value]["total"] = total;
             }
         }
     }

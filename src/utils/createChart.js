@@ -11,7 +11,7 @@ import {Chart} from '../Chart';
 
 export const createChart = function (domTarget) {
     let scene;
-    let sceneConfig;
+    let configuration;
     let chart;
     let chartType;
     let chartData;
@@ -21,8 +21,8 @@ export const createChart = function (domTarget) {
     };
 
     return {
-        setScene: function (sceneConfigJson) {
-            options.sceneConfig = sceneConfigJson;
+        setScene: function (configJson) {
+            options.configurationJson = configJson;
             return this;
         },
         setChart: function (chartType) {
@@ -35,17 +35,17 @@ export const createChart = function (domTarget) {
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
-            sceneConfig = checkConfig(options.sceneConfig);
+            configuration = checkConfig(options.configurationJson);
             chartType = options.chartType;
             chartData = options.chartData;
 
             if (chartType && chartData) {
 
-                chart = new Chart(chartType, chartData, sceneConfig)
+                chart = new Chart(chartType, chartData, configuration)
                     .createChart();
 
-                if (sceneConfig) { //if config for the sceneInit is available
-                    scene = new SceneInit(domTarget, sceneConfig);
+                if (configuration) { //if config for the sceneInit is available
+                    scene = new SceneInit(domTarget, configuration);
                 }
                 else { //else use default sceneInit settings
                     scene = new SceneInit(domTarget);
@@ -63,27 +63,27 @@ export const createChart = function (domTarget) {
 };
 
 
-function checkConfig(sceneConfig) {
-    let config = {};
-    if(sceneConfig){
-        Object.keys(sceneConfig).forEach(function (propKey) {
+function checkConfig(configJson) {
+    let validConfig = {};
+    if(configJson){
+        Object.keys(configJson).forEach(function (propKey) {
             if(propKey === "fov"){
-                if(isNaN(sceneConfig[propKey]))
+                if(isNaN(configJson[propKey]))
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
-                else config[propKey] = sceneConfig[propKey];
+                else validConfig[propKey] = configJson[propKey];
             }
-            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof sceneConfig[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
+            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
                 console.warn("Invalid type for property \"" + propKey + "\": Type has to be 'boolean'!\nProperty was set to \"false\"!");
-                config[propKey] = false;
+                validConfig[propKey] = false;
             }
             else{
-                config[propKey] = sceneConfig[propKey];
+                validConfig[propKey] = configJson[propKey];
             }
         });
-        return config;
+        return validConfig;
     }
     else{//check if valid types are used for config properties
         console.warn("No configuration passed for Scene.\nUsing default configuration!");
-        return config; //return empty object to use default config in SceneInit
+        return validConfig; //return empty object to use default config in SceneInit
     }
 }
