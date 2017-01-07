@@ -57,11 +57,10 @@ class PieChart extends Chart {
 
     create3DPieChart(jsonData = this.jsonData) {
         //calculate percent of every data set in json first
-        const calculatedData = jsonData.percent;
+        const calculatedData = jsonData.file;
         //Group together all pieces
         let pieChart = new THREE.Group();
         pieChart.name = "groupedChart";
-
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
 
@@ -70,8 +69,8 @@ class PieChart extends Chart {
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let data in calculatedData) {
             let values = calculatedData[data].values;
+            let segment;
             for (let val in values) {
-                var segment;
                 //get first data set of the first object
                 if (val == 0) {
                     let data1Name = values[val].name;

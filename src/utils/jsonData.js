@@ -8,8 +8,18 @@ class JsonData {
 
     constructor(file) {
         this.file = file;
-        this.sums = this.getSums();
-        this.percent = this.getPercent();
+        this.init = this.initFile();
+    }
+
+    initFile() {
+        /*
+        TODO: Check if json structure valid
+        TODO: Implement sorting function to call optionally in Chart.js
+         */
+        this.getSums();
+        this.getPercent();
+
+        return this.init;
     }
 
 
@@ -24,27 +34,28 @@ class JsonData {
                 }
             }, {});
         }
-        this.sums = sums;
-        return this.sums;
+        return sums;
     }
 
+    /**
+     * Does not need to return object as JavaScript does pass objects by reference IF it is saved under a variable!!
+     * This means that "this.file" will also get changed if "tempJson" does so....
+     * See link for more info: http://stackoverflow.com/a/6605700/4809932
+     */
     getPercent() {
-        let percentjson = this.file;
-        let sums = this.sums;
-        for (let elements in percentjson) {
-            let values = percentjson[elements].values;
+        let tempJson = this.file;
+        let sums = this.getSums();
+        for (let elements in tempJson) {
+            let values = tempJson[elements].values;
             for (let value in values) {
 
                 let total = sums[values[value].name];
                 //set calculated percent and total to the corresponding dataset
-                percentjson[elements].values[value]["percent"] = values[value].value / (total / 100);
-                percentjson[elements].values[value]["total"] = total;
+                tempJson[elements].values[value]["percent"] = values[value].value / (total / 100);
+                tempJson[elements].values[value]["total"] = total;
             }
         }
-        this.percentjson = percentjson;
-        return this.percentjson;
     }
-
 }
 
 
