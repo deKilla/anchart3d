@@ -83,7 +83,7 @@ let configuration = {"tooltip": true, "legend": true, "bgcolor": "skyblue", "sta
      * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
      **/
     anchart3d.createChart("anchart3d")
-        .setScene(configuration)
+        .setConfig(configuration)
         .setChart("pieChart")
         .chartData(jsonData)
         .draw();

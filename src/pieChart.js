@@ -67,15 +67,15 @@ class PieChart extends Chart {
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
-        for (let data in calculatedData) {
-            let values = calculatedData[data].values;
+        for (let dataset = 0; dataset < calculatedData.length; dataset++) {
+            let values = calculatedData[dataset].values;
             let segment;
-            for (let val in values) {
+            for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
-                if (val == 0) {
-                    let data1Name = values[val].name;
-                    let data1Value = values[val].value;
-                    let data1Percent = values[val].percent;
+                if (value == 0) {
+                    let data1Name = values[value].name;
+                    let data1Value = values[value].value;
+                    let data1Percent = values[value].percent;
 
                     //call function which creates one segment at a time
                     segment = this.createSegment(3, lastThetaStart, lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6));
@@ -84,19 +84,19 @@ class PieChart extends Chart {
                     lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
 
                     //adding elements to the legendMap
-                    legendMap.set(calculatedData[data].name, segment.material.color.getHexString());
+                    legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
-                    segment.name = calculatedData[data].name;
+                    segment.name = calculatedData[dataset].name;
                     segment.data1 = {};
                     segment.data1.name = data1Name;
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
 
                 }
-                else if (val == 1) {
-                    let data2Name = values[val].name;
-                    let data2Value = values[val].value;
-                    let data2Percent = values[val].percent;
+                else if (value == 1) {
+                    let data2Name = values[value].name;
+                    let data2Value = values[value].value;
+                    let data2Percent = values[value].percent;
 
                     segment.data2 = {};
                     segment.data2.name = data2Name;

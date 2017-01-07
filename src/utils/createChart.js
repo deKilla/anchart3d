@@ -21,7 +21,7 @@ export const createChart = function (domTarget) {
     };
 
     return {
-        setScene: function (configJson) {
+        setConfig: function (configJson) {
             options.configurationJson = configJson;
             return this;
         },
