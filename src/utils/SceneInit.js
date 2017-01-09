@@ -144,7 +144,7 @@ class SceneInit {
 
         document.querySelector("#btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
-                currentChart.rotation.z -= 0.1
+                currentChart.rotation.z += 0.1
             }, interval)
         });
         document.querySelector("#btnup").addEventListener(method, function () {
@@ -154,7 +154,7 @@ class SceneInit {
         });
         document.querySelector("#btnright").addEventListener(method, function () {
             repeater = setInterval(function () {
-                currentChart.rotation.z += 0.1
+                currentChart.rotation.z -= 0.1
             }, interval)
         });
         document.querySelector("#btndown").addEventListener(method, function () {
