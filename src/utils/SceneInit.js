@@ -144,8 +144,8 @@ class SceneInit {
         document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
 
         document.querySelector("#btnreset").addEventListener("click", function () {
-            resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
+            resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
         });
         document.querySelector("#btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
