@@ -9,18 +9,21 @@ import {JsonData} from './utils/jsonData';
 
 class Chart {
 
-    constructor(chartType, chartData, sceneConfig) {
+    constructor(chartType, chartData, configuration) {
         this.chartType = chartType;
         this.chartData = chartData;
-        this.sceneConfig = sceneConfig;
+        this.configuration = configuration;
     }
 
 
     createChart() {
         let chart;
+        let data = new JsonData(this.chartData);
+        (this.configuration.sortDataBy) ? data.sortData(this.configuration.sortDataBy) : data;
+
         switch (this.chartType) {
             case "pieChart":
-                chart = new PieChart(new JsonData(this.chartData),this.sceneConfig);
+                chart = new PieChart(data,this.configuration);
                 break;
             default:
                 throw "ChartTypeError: The chart type '" + this.chartType + "' is not valid!";
