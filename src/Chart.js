@@ -4,8 +4,8 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-import {PieChart} from './pieChart';
-import {JsonData} from './utils/jsonData';
+import {PieChart} from './PieChart';
+import {JsonData} from './utils/JsonData';
 
 class Chart {
 

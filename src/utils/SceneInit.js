@@ -5,6 +5,7 @@
  */
 
 import './OrbitControls';
+import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
 
 class SceneInit {
 
@@ -25,7 +26,8 @@ class SceneInit {
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
-            this.entryAnimation();
+            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
+            entryAnimation(this.camera,endPos,2500,800);
         } else {
             this.camera.position.set(0, -10, 7);
         }
@@ -119,11 +121,12 @@ class SceneInit {
                 break;
             case 67: //C key
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
-                this.showOnScreenControls("mouseover", currentChart); //click, mouseover
+                let camera = this.camera;
+                this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
 
-    showOnScreenControls(method = "click", currentChart) {
+    showOnScreenControls(method = "click", currentChart, camera) {
         let repeater;
         let interval;
 
@@ -140,8 +143,10 @@ class SceneInit {
         document.getElementById("controls").innerHTML += `<a id="btnright">&rarr;</a>`;
         document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
 
-        document.querySelector("#btnreset").addEventListener("click", this.resetPosition.bind(this));
-
+        document.querySelector("#btnreset").addEventListener("click", function () {
+            resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
+            resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
+        });
         document.querySelector("#btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
                 currentChart.rotation.z += 0.1
@@ -288,22 +293,6 @@ class SceneInit {
         }
     }
 
-
-    entryAnimation() {
-        let cam = this.camera;
-        let startPos = {x: cam.position.x, y: cam.position.y, z: cam.position.z};
-        let endPos = {x: 0, y: -10, z: 7};
-
-        new TWEEN.Tween(startPos)
-            .to({x: endPos.x, y: endPos.y, z: endPos.z}, 2500)
-            .easing(TWEEN.Easing.Cubic.Out)
-            .onUpdate(function () {
-                cam.position.setY(startPos.y);
-                cam.position.setZ(startPos.z);
-            })
-            .delay(800)
-            .start();
-    }
 
     resetPosition() {//resets camera and object position
         //Camera Rotation and Position

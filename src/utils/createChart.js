@@ -6,7 +6,7 @@
 //PieChart import needed because if not imported here, error occurs!
 import {SceneInit} from './SceneInit';
 
-import {PieChart} from '../pieChart';
+import {PieChart} from '../PieChart';
 import {Chart} from '../Chart';
 
 export const createChart = function (domTarget) {

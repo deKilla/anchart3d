@@ -5,7 +5,8 @@
  */
 
 import {Chart} from './Chart';
-import {Legend} from './utils/legend';
+import {Legend} from './utils/Legend';
+import {animateZ} from "./utils/animation";
 
 
 class PieChart extends Chart {
@@ -20,15 +21,6 @@ class PieChart extends Chart {
         this.angleEnd = angleEnd;
         this.object = this.create3DPieChart();
 
-    }
-
-    animateZ(obj,startpos,finpos,) {
-        return new TWEEN.Tween(startpos)
-            .to({z: finpos}, 3000)
-            .easing(TWEEN.Easing.Cubic.Out)
-            .onUpdate(function () {
-                obj.scale.z = startpos.z;
-            });
     }
 
 
@@ -107,12 +99,10 @@ class PieChart extends Chart {
 
                     //tween.js animation for the scale on z-axis
                     if(this.sceneConfig.chartAnimation) {
-                            let finalPos = (data2Percent / 10);
-                            let startPos = {z: segment.scale.z};
+                        let finalPos = (data2Percent / 10);
+                        let startPos = {z: segment.scale.z};
 
-                            let animation = this.animateZ(segment, startPos, finalPos);
-                            animation.delay(3000);
-                            animation.start();
+                        animateZ(segment, startPos, finalPos,3000,3000);
                     }
                     else{
                         segment.scale.z = (data2Percent / 10);
