@@ -5,7 +5,7 @@
  */
 
 import {PieChart} from './PieChart';
-import {JsonData} from './utils/JsonData';
+import {JsonData} from './utils/jsonData';
 
 class Chart {
 

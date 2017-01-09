@@ -5,7 +5,7 @@
  */
 
 import {Chart} from './Chart';
-import {Legend} from './utils/Legend';
+import {Legend} from './utils/legend';
 import {animateZ} from "./utils/animation";
 
 
