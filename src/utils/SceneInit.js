@@ -205,20 +205,39 @@ class SceneInit {
             }
 
             if (this.INTERSECTED != intersects[0].object) {
-                if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex);
+                if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
                 this.INTERSECTED = intersects[0].object;
-                this.currentHex = this.INTERSECTED.material.emissive.getHex();
-                this.INTERSECTED.material.emissive.setHex(0xa9a8a8);
+                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.02));
             }
         }
         else {
-            if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex);
+            if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
             this.INTERSECTED = null;
 
             this.htmlTooltip("hide");
         }
 
     }
+
+
+    colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
+
+    // validate hex string
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    }
+    lum = lum || 0;
+
+    // convert to decimal and change luminosity
+    let threeHex = "0x", c, i;
+    for (i = 0; i < 3; i++) {
+        c = parseInt(hex.substr(i*2,2), 16);
+        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+        threeHex += ("00"+c).substr(c.length);
+    }
+    return threeHex;
+}
 
 
     onDocumentDblClick() {

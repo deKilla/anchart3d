@@ -40,9 +40,8 @@ class PieChart extends Chart {
         let segmentGeom = new THREE.ExtrudeGeometry(shape, extrudeOptions);
         let segmentMat = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
-            shading: THREE.FlatShading,
-            specular: 0xffffff,
-            shininess: 0.7,
+            shading: THREE.SmoothShading,
+            shininess: 0.8,
         });
 
         return new THREE.Mesh(segmentGeom, segmentMat);
