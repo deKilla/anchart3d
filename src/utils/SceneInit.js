@@ -4,8 +4,10 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
+import * as THREE from '../../node_modules/three/build/three.min';
 import './OrbitControls';
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+import * as TWEEN from "../../node_modules/tween.js/src/Tween";
 
 class SceneInit {
 

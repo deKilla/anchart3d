@@ -4,6 +4,7 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
+import * as THREE from '../node_modules/three/build/three.min';
 import {Chart} from './Chart';
 import {Legend} from './utils/legend';
 import {animateZ} from "./utils/animation";

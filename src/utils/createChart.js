@@ -3,11 +3,12 @@
  * @author Michael Fuchs (https://github.com/deKilla)
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
-//PieChart import needed because if not imported here, error occurs!
-import {SceneInit} from './SceneInit';
 
+import {SceneInit} from './SceneInit';
+//PieChart import needed because if not imported here, error occurs!
 import {PieChart} from '../PieChart';
 import {Chart} from '../Chart';
+
 
 export const createChart = function (domTarget) {
     let scene;

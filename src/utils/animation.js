@@ -2,7 +2,7 @@
  * @author Amar Bajric (https://github.com/amarbajric)
  */
 
-//import '../../node_modules/tween.js/src/Tween';
+import * as TWEEN from "../../node_modules/tween.js/src/Tween";
 
 export function resetChartPosition(object,defaultPos,animTime){
     let actualObjPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
