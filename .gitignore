@@ -1,6 +1,4 @@
-#Ignore node_modules directory
 node_modules
-
-#Ignore the specific idea settings
 .idea/
 build/
+npm-debug.log

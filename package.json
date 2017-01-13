@@ -1,40 +1,45 @@
 {
   "name": "anchart3d",
   "version": "1.0.0",
-  "description": "A library featuring 3D-Charts which is built with the help of the three.js library",
-  "main": "build/anchart3d.js",
-  "directories": {
-    "example": "examples",
-    "test": "test"
-  },
+  "description": "A library to create 3D-charts using three.js",
+  "main": "index.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch",
-    "minify": "webpack && uglifyjs ./build/anchart3d.js -c -m -o ./build/anchart3d.min.js --source-map ./build/anchart3d.min.js.map"
+    "build": "webpack --progress --colors -d",
+    "start": "webpack --progress --colors --watch -d",
+    "minify": "webpack && uglifyjs ./build/anchart3d.js -c -m -o ./build/anchart3d.min.js --source-map ./build/anchart3d.min.js.map",
+    "test": "jest --watch src/"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/deKilla/anchart3d.git"
-  },
-  "keywords": [
-    "charts",
-    "3d",
-    "threejs",
-    "anchart3d"
+  "homepage": "https://deKilla.github.io/antchart3d",
+  "repository": "github:deKilla/anchart3d",
+  "contributors": [
+    "Amar Bajric",
+    "Michael Fuchs",
+    "Timo Hasenbichler"
   ],
-  "author": "Amar Bajric",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/deKilla/anchart3d/issues"
   },
-  "homepage": "https://github.com/deKilla/anchart3d#readme",
   "devDependencies": {
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.8",
+    "babel": "^6.5.2",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "^18.0.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.18.0",
-    "expose-loader": "^0.7.1",
-    "three": "^0.82.1",
-    "tween.js": "^16.3.5",
+    "babel-preset-latest": "^6.16.0",
+    "browser-sync": "^2.18.5",
+    "browser-sync-webpack-plugin": "^1.1.3",
+    "eslint": "^3.12.2",
+    "eslint-loader": "^1.6.1",
+    "jest": "^18.0.0",
+    "jest-cli": "^18.0.0",
+    "jest-loader": "0.0.0",
     "uglify-js": "^2.7.5",
-    "webpack": "^1.13.3"
+    "webpack": "^1.14.0",
+    "three": "^0.82.1",
+    "three-orbit-controls": "^82.1.0",
+    "tween.js": "^16.3.5"
   }
 }

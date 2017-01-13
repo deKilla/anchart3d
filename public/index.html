@@ -19,11 +19,11 @@
 
 <canvas id="anchart3d"></canvas>
 
-<script type="text/javascript" src="../build/anchart3d.js"></script>
+<script type="text/javascript" src="./../build/anchart3d.js"></script>
 
 <script>
 
-    let jsonData = [
+    var jsonData = [
         {
             "name":"Österreich",
             "values": [
@@ -72,17 +72,13 @@
         }
     ];
 
-let configuration = {"sortDataBy": "data1", "tooltip": true, "legend": true, "bgcolor": "skyblue", "startAnimation": true, "chartAnimation": true, "transparency": false, "antialias": true, "fov": 45};
+var configuration = {"sortDataBy": "data1", "tooltip": true, "legend": true, "bgcolor": "skyblue", "startAnimation": true, "chartAnimation": true, "transparency": false, "antialias": true, "fov": 45};
 
-    /**
-    * COMMENT: API kann gechained werden nach beliebieger Reihenfolge AUßER draw!
-     * Die .draw() methode MUSS immer zum Schluss aufgerufen werden!
-     **/
     anchart3d.createChart("anchart3d")
         .setConfig(configuration)
         .setChart("pieChart")
         .chartData(jsonData)
-        .draw();
+        .draw(); //.draw() must be last
 
 </script>
 

@@ -4,8 +4,8 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-import {PieChart} from './PieChart';
-import {JsonData} from './utils/jsonData';
+import PieChart from './PieChart';
+import JsonData from './utils/jsonData';
 
 class Chart {
 
@@ -21,6 +21,7 @@ class Chart {
         let data = new JsonData(this.chartData);
         (this.configuration.sortDataBy) ? data.sortData(this.configuration.sortDataBy) : data;
 
+        // https://sourcemaking.com/refactoring/smells/switch-statements => TODO
         switch (this.chartType) {
             case "pieChart":
                 chart = new PieChart(data,this.configuration);
@@ -34,4 +35,4 @@ class Chart {
     }
 }
 
-export {Chart}
+export default Chart;

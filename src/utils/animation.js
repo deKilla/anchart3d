@@ -2,7 +2,7 @@
  * @author Amar Bajric (https://github.com/amarbajric)
  */
 
-import * as TWEEN from "../../node_modules/tween.js/src/Tween";
+import TWEEN from "tween.js";
 
 export function resetChartPosition(object,defaultPos,animTime){
     let actualObjPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
@@ -47,7 +47,7 @@ export function entryAnimation(camera,endPos,animTime,delayTime){
             camera.position.setY(startPos.y);
             camera.position.setZ(startPos.z);
         })
-        .delay(delayTime)//was 800
+        .delay(delayTime) //was 800
         .start();
 }
 

@@ -4,17 +4,19 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-import * as THREE from '../node_modules/three/build/three.min';
-import {Chart} from './Chart';
-import {Legend} from './utils/legend';
-import {animateZ} from "./utils/animation";
+import Chart from './Chart';
+import Legend from './utils/Legend';
+import animateZ from "./utils/animation";
 
+import TWEEN from "tween.js";
+var THREE = require('three');
+THREE.orbitControls = require('three-orbit-controls')(THREE);
 
-class PieChart extends Chart {
+class PieChart {
 
+    //TODO: maybe use object ...
     constructor(jsonData,sceneConfig,radius, angleStart, angleEnd) {
 
-        super();
         this.jsonData = jsonData;
         this.sceneConfig = sceneConfig;
         this.radius = radius;
@@ -26,7 +28,7 @@ class PieChart extends Chart {
 
 
     createSegment(radius, angleStart, angleEnd) {
-        let extrudeOptions = {
+        const extrudeOptions = {
             curveSegments: 50,
             steps: 1,
             amount: 1.0,
@@ -59,6 +61,7 @@ class PieChart extends Chart {
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
+        //TODO: I don't like this - needs review
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
@@ -102,7 +105,8 @@ class PieChart extends Chart {
                         let finalPos = (data2Percent / 10);
                         let startPos = {z: segment.scale.z};
 
-                        animateZ(segment, startPos, finalPos,3000,3000);
+                        // broken
+                        // animateZ(segment, startPos, finalPos,3000,3000);
                     }
                     else{
                         segment.scale.z = (data2Percent / 10);
@@ -123,4 +127,4 @@ class PieChart extends Chart {
 
 
 
-export {PieChart}
+export default PieChart

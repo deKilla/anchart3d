@@ -6,7 +6,7 @@
 
 class Legend {
 
-    constructor(map,sceneConfig) {
+    constructor(map, sceneConfig) {
         this.map = map;
         this.sceneConfig = sceneConfig;
     }
@@ -39,4 +39,4 @@ class Legend {
 }
 
 
-export {Legend}
+export default Legend

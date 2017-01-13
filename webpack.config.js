@@ -1,23 +1,32 @@
-module.exports = {
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
-  entry: './src/utils/createChart.js',
+module.exports = {
+  entry: './src/index.js',
   output: {
-    filename: 'build/anchart3d.js',
-      libraryTarget: 'var',
-      library: 'anchart3d'
+    path: './build',
+    filename: 'anchart3d.js',
+    libraryTarget: 'var',
+    library: 'anchart3d'
   },
-  devtool: 'source-map',
   module: {
     loaders: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-          //Thanks to this answer, was able to bundle tween.js: http://stackoverflow.com/a/36987685/4809932
+        test: /(\.js)$/,
+        loader: 'babel',
         exclude: /(node_modules|bower_components)/,
-        query: {
-          presets: ['es2015']
-        }
       }
     ]
-  }
+  },
+  plugins: [
+    new BrowserSyncPlugin({
+      host: 'localhost',
+      port: 8080,
+      server: { baseDir: ['public'] },
+      files: ['./build/*','./public/css/styles.css'],
+      serveStatic: [{
+        route: 'build',
+        dir: 'build'
+      }]
+    })
+  ]
 };

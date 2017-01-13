@@ -108,4 +108,4 @@ class JsonData {
 }
 
 
-export {JsonData}
+export default JsonData

@@ -4,13 +4,15 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-import * as THREE from '../../node_modules/three/build/three.min';
-import './OrbitControls';
+import TWEEN from "tween.js";
+var THREE = require("three");
+THREE.OrbitControls = require("three-orbit-controls")(THREE);
+
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
-import * as TWEEN from "../../node_modules/tween.js/src/Tween";
 
 class SceneInit {
 
+    //TODO: ebenfalls object ...
     constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
         this.sceneConfig = sceneConfig; //custom user options held here
@@ -105,6 +107,7 @@ class SceneInit {
     }
 
 
+    //TODO: switch smellt noch immer :D
     onDocumentKeyAction(event) {
         switch (event.keyCode) {
             case 37: //left arrow
@@ -349,4 +352,4 @@ class SceneInit {
 }
 
 
-export {SceneInit}
+export default SceneInit

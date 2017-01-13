@@ -4,13 +4,11 @@
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
-import {SceneInit} from './SceneInit';
-//PieChart import needed because if not imported here, error occurs!
-import {PieChart} from '../PieChart';
-import {Chart} from '../Chart';
+import SceneInit from './SceneInit';
+import Chart from './../Chart';
 
 
-export const createChart = function (domTarget) {
+export default function createChart (domTarget) {
     let scene;
     let configuration;
     let chart;
