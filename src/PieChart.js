@@ -6,7 +6,7 @@
 
 import Chart from './Chart';
 import Legend from './utils/Legend';
-import animateZ from "./utils/animation";
+import {animateZ} from "./utils/animation";
 
 import TWEEN from "tween.js";
 var THREE = require('three');
