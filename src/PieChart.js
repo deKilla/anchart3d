@@ -7,10 +7,9 @@
 import Chart from './Chart';
 import Legend from './utils/Legend';
 import {animateZ} from "./utils/animation";
-
-import TWEEN from "tween.js";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
+
 
 class PieChart {
 
@@ -105,8 +104,8 @@ class PieChart {
                         let finalPos = (data2Percent / 10);
                         let startPos = {z: segment.scale.z};
 
-                        // broken
-                        // animateZ(segment, startPos, finalPos,3000,3000);
+
+                        animateZ(segment, startPos, finalPos,3000,3000);
                     }
                     else{
                         segment.scale.z = (data2Percent / 10);

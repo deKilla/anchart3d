@@ -1,7 +1,7 @@
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/utils/index.js',
   output: {
     path: './build',
     filename: 'anchart3d.js',
@@ -13,7 +13,7 @@ module.exports = {
       {
         test: /(\.js)$/,
         loader: 'babel',
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
       }
     ]
   },

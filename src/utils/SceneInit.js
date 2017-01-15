@@ -7,8 +7,8 @@
 import TWEEN from "tween.js";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
-
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+
 
 class SceneInit {
 
@@ -38,6 +38,12 @@ class SceneInit {
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
+
+        //OrbitControls custom settings
+        this.controls.enableKeys = false; //disable keys (arrow keys on keyboard) because we have a D-Pad
+        this.controls.enablePan = false;  // disable panning (right mouse button moving chart)
+
+
 
         this.scene = new THREE.Scene();
 
@@ -107,21 +113,9 @@ class SceneInit {
     }
 
 
-    //TODO: switch smellt noch immer :D
     onDocumentKeyAction(event) {
+       // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
-            case 37: //left arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.z -= 0.1;
-                break;
-            case 38: //up arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.x -= 0.1;
-                break;
-            case 39: //right arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.z += 0.1;
-                break;
-            case 40: //down arrow
-                this.scene.getObjectByName("groupedChart", true).rotation.x += 0.1;
-                break;
             case 82: //R key
                 break;
             case 67: //C key
@@ -130,6 +124,7 @@ class SceneInit {
                 this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
+
 
     showOnScreenControls(method = "click", currentChart, camera) {
         let repeater;
@@ -210,7 +205,7 @@ class SceneInit {
             if (this.INTERSECTED != intersects[0].object) {
                 if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
                 this.INTERSECTED = intersects[0].object;
-                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.02));
+                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
             }
         }
         else {
@@ -246,6 +241,7 @@ class SceneInit {
     onDocumentDblClick() {
         //IMPLEMENT DOUBLE CLICK FUNCTION HERE
     }
+
 
     htmlTooltip(status) {
 
