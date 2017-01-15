@@ -6,6 +6,7 @@
 
 import SceneInit from './SceneInit';
 import Chart from './../Chart';
+import JsonData from "./JsonData";
 
 
 export default function createChart (domTarget) {
@@ -28,9 +29,15 @@ export default function createChart (domTarget) {
             options.chartType = chartType;
             return this;
         },
-        chartData: function (json) {
-            options.chartData = json;
+        chartData: function (jsonData, sortBy) {
+            if(sortBy){
+                options.chartData = new JsonData(jsonData).sortData(sortBy);
+            }
+            else {
+                options.chartData = new JsonData(jsonData);
+            }
             return this;
+
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
@@ -71,16 +78,7 @@ function checkConfig(configJson) {
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
                 else validConfig[propKey] = configJson[propKey];
             }
-            else if(propKey === "sortDataBy"){
-                if(typeof configJson[propKey] === "string" && ["data1","data2"].indexOf(configJson[propKey]) >= 0){
-                    validConfig[propKey] = configJson[propKey];
-                }
-                else{
-                    console.warn("Invalid type for property \"" + propKey + "\": Type has to be \"string\"!\nProperty was set to \"undefined\"!");
-                    validConfig[propKey] = undefined;
-                }
-            }
-            else if(["sortDataBy","fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
+            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
                 console.warn("Invalid type for property \"" + propKey + "\": Type has to be \"boolean\"!\nProperty was set to \"false\"!");
                 validConfig[propKey] = false;
             }

@@ -56,7 +56,6 @@ class PieChart {
         pieChart.name = "groupedChart";
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
-
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.

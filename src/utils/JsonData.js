@@ -95,10 +95,16 @@ class JsonData {
 
 
     sortData(sortBy){
+        let dataSetIndex;
         if(sortBy && typeof sortBy === "string"){
-            if(sortBy === "data1") this.file.sort(function(a,b){return a.values[0].value - b.values[0].value});
-            else if(sortBy === "data2") this.file.sort(function(a,b){return a.values[1].value - b.values[1].value});
+            dataSetIndex = parseInt(this.file[0].values.map(function(e) { return e.name}).indexOf(sortBy));
+            if(typeof dataSetIndex == "number"){
+            this.file.sort(function(a,b){return a.values[dataSetIndex].value - b.values[dataSetIndex].value});
             return new JsonData(this.file);
+            }
+            else{
+                console.error("Sorting the data has failed!\nDataset with name \"" + sortBy + "\" not found!");
+            }
         }
         else{
             console.error("Wrong type of argument passed for sorting data!\nType found: " + typeof sortBy + ".\nType required: \"string\".");
