@@ -18,7 +18,6 @@ export default function createChart (domTarget) {
 
     let options = {
         domTarget: domTarget
-
     };
 
     return {
@@ -48,25 +47,26 @@ export default function createChart (domTarget) {
             chartType = options.chartType;
             chartData = options.chartData;
 
-            if (chartType && chartData) {
+            if(document.getElementById(domTarget)) {
+                if (chartType && chartData) {
 
-                chart = new Chart(chartType, chartData, configuration)
+                    chart = new Chart(chartType, chartData, configuration)
                         .createChart();
 
-                if (configuration) { //if config for the sceneInit is available
-                    scene = new SceneInit(domTarget, configuration);
+                    if (configuration) { //if config for the sceneInit is available
+                        scene = new SceneInit(domTarget, configuration);
+                    }
+                    else { //else use default sceneInit settings
+                        scene = new SceneInit(domTarget);
+                    }
+                    scene.initScene();
+                    scene.animate();
+                    scene.scene.add(chart.object);
                 }
-                else { //else use default sceneInit settings
-                    scene = new SceneInit(domTarget);
-                }
-                scene.initScene();
-                scene.animate();
-                scene.scene.add(chart.object);
+                else throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
 
             }
-            else {
-                throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
-            }
+            else throw "API Error: Element with id \"" + domTarget + "\" not found!";
         }
     };
 };

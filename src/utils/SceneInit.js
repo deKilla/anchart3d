@@ -205,7 +205,7 @@ class SceneInit {
             if (this.INTERSECTED != intersects[0].object) {
                 if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
                 this.INTERSECTED = intersects[0].object;
-                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.007));
             }
         }
         else {
