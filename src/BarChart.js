@@ -25,7 +25,7 @@ class BarChart {
 
     }
 
-    createSegment(lastBarStartX, lastBarStartY, height) {
+    createSegment(segmentCounter, lastBarStartX, lastBarStartY, height) {
 
         let barGeometry = new THREE.CubeGeometry(0.5, 0.5, height);
         let segmentMat = new THREE.MeshPhongMaterial({
@@ -35,11 +35,31 @@ class BarChart {
         });
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
-        bar.position.x = lastBarStartX+0.5+0.2;
+
+        //set rows here
+        console.log(segmentCounter+" = Segment Counter");
+        var row = 0;
+        if(segmentCounter%3==0){
+            console.log("row 2");
+            bar.position.x = 0;
+            bar.position.y = bar.position.y +1;
+            bar.position.z = height*0.5;
+
+        }
+       else {
+            let firstPos = bar.position.x;
+            console.log(firstPos);
+            bar.position.x = lastBarStartX+0.5+0.2;
+
+            bar.position.z = height*0.5;
+        }
+
+
+
         //bar.position.x = lastBarStartX+2;
         //bar.position.y = 2;
         //  lastBarStartX += 2;
-        console.log(bar.position.y);
+        console.log("z posi"+bar.position.z);
         return bar;
     }
 
@@ -51,7 +71,7 @@ class BarChart {
         //Group together all pieces
         let barChart = new THREE.Group();
         barChart.name = "groupedChart";
-        barChart.position.x = -5;
+        barChart.position.x = -3;
         console.log(barChart.position);
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
@@ -60,10 +80,16 @@ class BarChart {
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
+        var segmentCounter = 1;
+
         //TODO: I don't like this - needs review
+
+
+
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
+
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
                 if (value == 0) {
@@ -71,13 +97,11 @@ class BarChart {
                     let data1Value = values[value].value;
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
-                    segment = this.createSegment(lastBarStartX,lastBarStartY, data1Percent /10);
+                    segment = this.createSegment(segmentCounter,lastBarStartX,lastBarStartY, data1Percent /10);
                     lastBarStartX = lastBarStartX+0.5+0.2;
-                    console.log(lastBarStartX);
-
+                    segmentCounter += 1;
                     //set the lastThetaStart to the length of the last segment, in order to not overlap segments
                     //lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
-                    console.log("segment klappt   jop")
                     //adding elements to the legendMap
                     legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
@@ -88,7 +112,7 @@ class BarChart {
                     segment.data1.percent = data1Percent;
 
                 }
-                else if (value == 1) {
+                /*else if (value == 1) {
                     let data2Name = values[value].name;
                     let data2Value = values[value].value;
                     let data2Percent = values[value].percent;
@@ -111,7 +135,7 @@ class BarChart {
                         segment.scale.z = (data2Percent / 10);
                     }
 
-                }
+                }*/
                 //add new piece to the grouped pieChart
                 //add new piece to the grouped pieChart
                 barChart.add(segment);
