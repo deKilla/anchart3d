@@ -14,7 +14,9 @@ class SceneInit {
 
     //TODO: ebenfalls object ...
     constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
-        this.domtarget = domtarget;
+        this.domnode = document.getElementById(domtarget);
+        this.parentWidth = window.getComputedStyle(this.domnode.parentElement).getPropertyValue("width").slice(0,-2);
+        this.parentHeight = window.getComputedStyle(this.domnode.parentElement).getPropertyValue("height").slice(0,-2);
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
@@ -26,7 +28,8 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, window.innerWidth / window.innerHeight, 1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
+        if (document.getElementById("details").innerHTML = "") { document.getElementById("details").style.background = "transparent" }
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
@@ -43,25 +46,22 @@ class SceneInit {
         this.controls.enableKeys = false; //disable keys (arrow keys on keyboard) because we have a D-Pad
         this.controls.enablePan = false;  // disable panning (right mouse button moving chart)
 
-
-
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.getElementById(this.domtarget),
-            antialias: this.sceneConfig.antialias || false, alpha: this.sceneConfig.transparency || false
+            canvas: this.domnode,
+            antialias: this.sceneConfig.antialias || false,
+            alpha: this.sceneConfig.transparency || false
         });
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
+        this.renderer.setSize(this.parentWidth, this.parentHeight);
+        this.domnode.parentElement.appendChild(this.renderer.domElement);
 
-        if (this.sceneConfig.bgcolor) {
-            this.scene.background = new THREE.Color(this.sceneConfig.bgcolor);
-        }
-
+        this.scene.background = new THREE.Color((this.sceneConfig.bgcolor || window.getComputedStyle(this.domnode.parentElement).getPropertyValue("background-color")) || window.getComputedStyle(document.body).getPropertyValue("background-color"));
+        
         //ambient light which is for the whole scene
-        let ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        let ambientLight = new THREE.AmbientLight(0xffffff, 0.0);
         ambientLight.castShadow = false;
         this.scene.add(ambientLight);
 
@@ -95,9 +95,9 @@ class SceneInit {
 
 
     onWindowResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.aspect = this.parentWidth / this.parentHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(this.parentWidth, this.parentHeight);
     }
 
 
@@ -188,6 +188,8 @@ class SceneInit {
         //call function which finds intersected objects
         let intersects = this.findIntersections(event);
 
+        console.log("yahoooooooooooo" + document.getElementById("details").innerHTML + "oooooooooooooooooooohay")
+        
         if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
             //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
             //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
