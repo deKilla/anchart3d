@@ -18,6 +18,7 @@ export default function createChart (domTarget) {
 
     let options = {
         domTarget: domTarget
+
     };
 
     return {
@@ -25,8 +26,11 @@ export default function createChart (domTarget) {
             options.configurationJson = configJson;
             return this;
         },
-        setChart: function (chartType) {
-            options.chartType = chartType;
+        pieChart: function () {
+            if(!options.chartType){
+                options.chartType = "pieChart";
+            }
+            else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
             return this;
         },
         chartData: function (jsonData, sortBy) {
@@ -37,7 +41,6 @@ export default function createChart (domTarget) {
                 options.chartData = new JsonData(jsonData);
             }
             return this;
-
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
@@ -48,7 +51,7 @@ export default function createChart (domTarget) {
             if (chartType && chartData) {
 
                 chart = new Chart(chartType, chartData, configuration)
-                    .createChart();
+                        .createChart();
 
                 if (configuration) { //if config for the sceneInit is available
                     scene = new SceneInit(domTarget, configuration);
