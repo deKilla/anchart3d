@@ -5,6 +5,7 @@
  */
 
 import TWEEN from "tween.js";
+import Chart from "../Chart";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
@@ -13,8 +14,9 @@ import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animati
 class SceneInit {
 
     //TODO: ebenfalls object ...
-    constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
+    constructor(domtarget, dataArray, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
+        this.dataArray = dataArray;
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
@@ -103,10 +105,9 @@ class SceneInit {
 
     findIntersections(event) {
         let raycaster = new THREE.Raycaster();
-        this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+        this.mouse.x = ( event.pageX / this.renderer.domElement.clientWidth ) * 2 - 1;
+        this.mouse.y = -( event.pageY / this.renderer.domElement.clientHeight ) * 2 + 1;
         raycaster.setFromCamera(this.mouse, this.camera);
-
 
         //search for our object by name which we declared before and return it
         return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
@@ -117,6 +118,8 @@ class SceneInit {
        // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
             case 82: //R key
+                console.log(this.scene.getObjectByName("groupedChart", true));
+                // new Chart();
                 break;
             case 67: //C key
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
@@ -183,6 +186,7 @@ class SceneInit {
             });
         }
     }
+
 
     onDocumentMouseAction(event) {
         //call function which finds intersected objects

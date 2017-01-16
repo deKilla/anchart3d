@@ -11,18 +11,19 @@ import JsonData from "./JsonData";
 
 export default function createChart (domTarget) {
     let scene;
-    let configuration;
+    let configJson;
     let chart;
     let chartType;
-    let chartData;
+    let chartData = [];
 
     let options = {
-        domTarget: domTarget
+        domTarget: domTarget,
+        chartData: chartData
     };
 
     return {
         setConfig: function (configJson) {
-            options.configurationJson = configJson;
+            options.configJson = configJson;
             return this;
         },
         pieChart: function () {
@@ -34,30 +35,32 @@ export default function createChart (domTarget) {
         },
         chartData: function (jsonData, sortBy) {
             if(sortBy){
-                options.chartData = new JsonData(jsonData).sortData(sortBy);
+                options.chartData.push(new JsonData(jsonData).sortData(sortBy));
             }
             else {
-                options.chartData = new JsonData(jsonData);
+                options.chartData.push(new JsonData(jsonData));
             }
             return this;
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
-            configuration = checkConfig(options.configurationJson);
+            configJson = checkConfig(options.configJson);
             chartType = options.chartType;
             chartData = options.chartData;
 
             if(document.getElementById(domTarget)) {
                 if (chartType && chartData) {
 
-                    chart = new Chart(chartType, chartData, configuration)
+                    chart = new Chart(chartType, chartData[0], configJson)
                         .createChart();
+                    //define type of chart...necessary for live data swapping
+                    chart.object.chartType = chartType;
 
-                    if (configuration) { //if config for the sceneInit is available
-                        scene = new SceneInit(domTarget, configuration);
+                    if (configJson) { //if config for the sceneInit is available
+                        scene = new SceneInit(domTarget, chartData , configJson);
                     }
                     else { //else use default sceneInit settings
-                        scene = new SceneInit(domTarget);
+                        scene = new SceneInit(domTarget, chartData);
                     }
                     scene.initScene();
                     scene.animate();
