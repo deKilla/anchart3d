@@ -8,7 +8,7 @@ import TWEEN from "tween.js";
 import Chart from "../Chart";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
-import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+import {entryAnimation, resetCameraPosition, resetChartPosition, dataSwapAnimation} from "./animation";
 
 
 class SceneInit {
@@ -118,8 +118,7 @@ class SceneInit {
        // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
             case 82: //R key
-                console.log(this.scene.getObjectByName("groupedChart", true));
-                // new Chart();
+                this.swapData();
                 break;
             case 67: //C key
                 let currentChart = this.scene.getObjectByName("groupedChart", true);
@@ -318,38 +317,27 @@ class SceneInit {
     }
 
 
-    resetPosition() {//resets camera and object position
-        //Camera Rotation and Position
-        let cam = this.camera;
-        let actualCamPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
-        let defaultCamPos = {x: 0, y: -10, z: 7};
-        let initCam = (actualCamPos.x == defaultCamPos.x && actualCamPos.y == defaultCamPos.y && actualCamPos.z == defaultCamPos.z);
-
-        if (!initCam) {
-            new TWEEN.Tween(actualCamPos)
-                .to({x: defaultCamPos.x, y: defaultCamPos.y, z: defaultCamPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    cam.position.set(actualCamPos.x, actualCamPos.y, actualCamPos.z);
-                }).start();
-        }
-
-        //Object Rotation and Position
-        let object = this.scene.getObjectByName("groupedChart", true);
-        let actualObjPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
-        let defaultObjPos = {x: 0, y: 0, z: 0};
-        let initObj = (actualObjPos.x == defaultObjPos.x && actualObjPos.y == defaultObjPos.y && actualObjPos.z == defaultObjPos.z);
-
-        if (!initObj) {
-            new TWEEN.Tween(actualObjPos)
-                .to({x: defaultObjPos.x, y: defaultObjPos.y, z: defaultObjPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
-                }).start();
-            }
+    swapData(){
+        let newChart = new Chart(this.scene.getObjectByName("groupedChart", true).chartType,this.dataArray[1],this.sceneConfig).createChart().object;
+        let oldChart = this.scene.getObjectByName("groupedChart", true);
+        this.scene.add(newChart);
+        newChart.position.set(50,0,0);
+        let anim1 = dataSwapAnimation(oldChart,{x:0,y:0,z:0},{x:-50,y:0,z:0},4000,50);
+        dataSwapAnimation(newChart,{x:50,y:0,z:0},{x:0,y:0,z:0},4000,50);
+        anim1.onComplete(function(){
+        });
+      
     }
+
 }
+
+
+
+
+
+
+
+
 
 
 export default SceneInit

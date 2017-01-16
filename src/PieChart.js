@@ -54,6 +54,8 @@ class PieChart {
         //Group together all pieces
         let pieChart = new THREE.Group();
         pieChart.name = "groupedChart";
+        //define type of chart...necessary for live data swapping
+        pieChart.chartType = "pieChart";
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
         let legendMap = new Map();

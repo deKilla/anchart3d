@@ -53,8 +53,6 @@ export default function createChart (domTarget) {
 
                     chart = new Chart(chartType, chartData[0], configJson)
                         .createChart();
-                    //define type of chart...necessary for live data swapping
-                    chart.object.chartType = chartType;
 
                     if (configJson) { //if config for the sceneInit is available
                         scene = new SceneInit(domTarget, chartData , configJson);

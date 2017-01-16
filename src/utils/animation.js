@@ -53,12 +53,26 @@ export function entryAnimation(camera,endPos,animTime,delayTime){
 
 
 
-export function animateZ(obj,startpos,finpos,animTime,delayTime) {
+export function animateZ(obj,startpos,endPosition,animTime,delayTime) {
     return new TWEEN.Tween(startpos)
-        .to({z: finpos}, animTime)
+        .to({z: endPosition}, animTime)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(function () {
             obj.scale.z = startpos.z;
+        })
+        .delay(delayTime)
+        .start();
+}
+
+
+
+
+export function dataSwapAnimation(obj, startpos,endPosition,animTime,delayTime) {
+    return new TWEEN.Tween(startpos)
+        .to({x: endPosition.x}, animTime)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onUpdate(function () {
+            obj.position.x = startpos.x;
         })
         .delay(delayTime)
         .start();
