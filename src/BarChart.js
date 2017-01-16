@@ -35,7 +35,11 @@ class BarChart {
         });
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
-        bar.translateX(2+lastBarStartX);
+        bar.position.x = lastBarStartX+0.5+0.2;
+        //bar.position.x = lastBarStartX+2;
+        //bar.position.y = 2;
+        //  lastBarStartX += 2;
+        console.log(bar.position.y);
         return bar;
     }
 
@@ -47,6 +51,8 @@ class BarChart {
         //Group together all pieces
         let barChart = new THREE.Group();
         barChart.name = "groupedChart";
+        barChart.position.x = -5;
+        console.log(barChart.position);
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
         let lastBarStartY = 0.0;
@@ -66,6 +72,8 @@ class BarChart {
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
                     segment = this.createSegment(lastBarStartX,lastBarStartY, data1Percent /10);
+                    lastBarStartX = lastBarStartX+0.5+0.2;
+                    console.log(lastBarStartX);
 
                     //set the lastThetaStart to the length of the last segment, in order to not overlap segments
                     //lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
