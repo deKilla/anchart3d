@@ -326,7 +326,11 @@ class SceneInit {
         dataSwapAnimation(newChart,{x:50,y:0,z:0},{x:0,y:0,z:0},4000,50);
         anim1.onComplete(function(){
         });
-      
+        //TODO: 1.) next remove here old chart!
+        //TODO: 2.) remove old Legend and replace with new one => should be done in Legend.js (pre check if exists and delete)!
+        //TODO  3.) pass this function (swapData), which data should be taken
+        //TODO  4.) clean up this mess here and ez finish!
+        //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
     }
 
 }
