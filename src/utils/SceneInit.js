@@ -331,6 +331,8 @@ class SceneInit {
         //TODO  3.) pass this function (swapData), which data should be taken
         //TODO  4.) clean up this mess here and ez finish!
         //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
+        //IMPORTANT2 => dpad call (with keypress c) will not work when data swapped, as chart only is set in switch statement for C press!!
+        //this means we need to press C on every dataswap completion!!!!
     }
 
 }
