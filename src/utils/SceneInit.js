@@ -16,7 +16,7 @@ class SceneInit {
     //TODO: ebenfalls object ...
     constructor(domtarget, dataArray, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
         this.domtarget = domtarget;
-        this.dataArray = dataArray;
+        this.dataArray = dataArray;     //array with all datasets from user => needed for live data swapping
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
@@ -30,22 +30,12 @@ class SceneInit {
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, window.innerWidth / window.innerHeight, 1, 1000);
 
-        if (this.sceneConfig.startAnimation) {
-            this.camera.position.set(0, -10, 1100);
-            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
-            entryAnimation(this.camera,endPos,2500,800);
-        } else {
-            this.camera.position.set(0, -10, 7);
-        }
-
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
 
         //OrbitControls custom settings
         this.controls.enableKeys = false; //disable keys (arrow keys on keyboard) because we have a D-Pad
         this.controls.enablePan = false;  // disable panning (right mouse button moving chart)
-
-
 
         this.scene = new THREE.Scene();
 
@@ -72,6 +62,16 @@ class SceneInit {
         spotLight.castShadow = true;
         spotLight.position.set(0, 40, 10);
         this.scene.add(spotLight);
+
+        if (this.sceneConfig.startAnimation) {
+            this.camera.position.set(0, -10, 1100);
+            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
+            entryAnimation(this.camera, endPos, 2500, 800);
+        }
+         else {
+            this.camera.position.set(0, -10, 7);
+        }
+
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
@@ -318,32 +318,27 @@ class SceneInit {
 
 
     swapData(){
+        let controls = this.controls;
+        let scene = this.scene;
         let newChart = new Chart(this.scene.getObjectByName("groupedChart", true).chartType,this.dataArray[1],this.sceneConfig).createChart().object;
         let oldChart = this.scene.getObjectByName("groupedChart", true);
-        this.scene.add(newChart);
+        scene.add(newChart);
         newChart.position.set(50,0,0);
-        let anim1 = dataSwapAnimation(oldChart,{x:0,y:0,z:0},{x:-50,y:0,z:0},4000,50);
-        dataSwapAnimation(newChart,{x:50,y:0,z:0},{x:0,y:0,z:0},4000,50);
-        anim1.onComplete(function(){
+        controls.enableZoom = false;
+        let anim1 = dataSwapAnimation(oldChart,{x:-50,y:0,z:0},newChart,3700,50);
+        anim1.onComplete(function () {
+           scene.remove(scene.getObjectById(oldChart.id));
+           controls.enableZoom = true;
         });
-        //TODO: 1.) next remove here old chart!
         //TODO: 2.) remove old Legend and replace with new one => should be done in Legend.js (pre check if exists and delete)!
         //TODO  3.) pass this function (swapData), which data should be taken
         //TODO  4.) clean up this mess here and ez finish!
         //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
-        //IMPORTANT2 => dpad call (with keypress c) will not work when data swapped, as chart only is set in switch statement for C press!!
-        //this means we need to press C on every dataswap completion!!!!
+
     }
 
 }
 
 
-
-
-
-
-
-
-
-
 export default SceneInit
+
