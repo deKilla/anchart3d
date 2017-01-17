@@ -14,9 +14,9 @@ class SceneInit {
 
     //TODO: ebenfalls object ...
     constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
-        this.domnode = document.getElementById(domtarget);
-        this.parentWidth = window.getComputedStyle(this.domnode.parentElement).getPropertyValue("width").slice(0,-2);
-        this.parentHeight = window.getComputedStyle(this.domnode.parentElement).getPropertyValue("height").slice(0,-2);
+        this.domNode = document.getElementById(domtarget);
+        this.parentWidth = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("width").slice(0,-2);
+        this.parentHeight = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("height").slice(0,-2);
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
@@ -29,7 +29,7 @@ class SceneInit {
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
-        if (document.getElementById("details").innerHTML = "") { document.getElementById("details").style.background = "transparent" }
+        if(document.getElementById("details")) document.getElementById("details").style.visibility = "hidden";
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
@@ -50,18 +50,27 @@ class SceneInit {
 
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({
-            canvas: this.domnode,
-            antialias: this.sceneConfig.antialias || false,
-            alpha: this.sceneConfig.transparency || false
+            canvas: this.domNode,
+            antialias: this.sceneConfig.antialias,
+            alpha: this.sceneConfig.transparency
         });
 
         this.renderer.setSize(this.parentWidth, this.parentHeight);
-        this.domnode.parentElement.appendChild(this.renderer.domElement);
+        this.domNode.parentElement.appendChild(this.renderer.domElement);
 
-        this.scene.background = new THREE.Color((this.sceneConfig.bgcolor || window.getComputedStyle(this.domnode.parentElement).getPropertyValue("background-color")) || window.getComputedStyle(document.body).getPropertyValue("background-color"));
-        
+        //transparent background won't work when a background-color is defined
+        if(this.sceneConfig.transparency == true) {
+            this.renderer.setClearColor( 0xffffff, 0 );
+        } else {
+            this.scene.background = new THREE.Color(
+                this.sceneConfig.bgcolor ||
+                window.getComputedStyle(this.domNode.parentElement).getPropertyValue("background-color")// ||
+                //window.getComputedStyle(document.body).getPropertyValue("background-color") // pseudo transparency
+            );
+        }
+
         //ambient light which is for the whole scene
-        let ambientLight = new THREE.AmbientLight(0xffffff, 0.0);
+        let ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         ambientLight.castShadow = false;
         this.scene.add(ambientLight);
 
@@ -80,13 +89,11 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
     }
 
-
     animate() {
         requestAnimationFrame(this.animate.bind(this));
         this.render();
         this.controls.update();
     }
-
 
     render() {
         this.renderer.render(this.scene, this.camera);
@@ -103,10 +110,10 @@ class SceneInit {
 
     findIntersections(event) {
         let raycaster = new THREE.Raycaster();
-        this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
+        this.mouse.x = (( event.pageX - this.domNode.parentElement.offsetLeft ) / this.domNode.width ) * 2 - 1;
+        this.mouse.y = - (( event.pageY - this.domNode.parentElement.offsetTop ) / this.domNode.height ) * 2 + 1;
+        //console.log(this.mouse)
         raycaster.setFromCamera(this.mouse, this.camera);
-
 
         //search for our object by name which we declared before and return it
         return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
@@ -185,72 +192,57 @@ class SceneInit {
     }
 
     onDocumentMouseAction(event) {
-        //call function which finds intersected objects
-        let intersects = this.findIntersections(event);
 
-        console.log("yahoooooooooooo" + document.getElementById("details").innerHTML + "oooooooooooooooooooohay")
-        
-        if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
-            //print percentage of the clicked section + the name of the object assigned in the 'create3DPieChart' function
-            //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-            document.getElementById("details").innerHTML = "<h2>" + intersects[0].object.name + "</h2><b>" + intersects[0].object.data1.name + ":</b> " + intersects[0].object.data1.percent.toFixed(2) +
-                "% (" + intersects[0].object.data1.value + ")";
-            if(intersects[0].object.hasOwnProperty("data2")) document.getElementById("details").innerHTML += "<br><b>" + intersects[0].object.data2.name + ":</b> " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
-        }
-        else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
-
-            //call the html tooltip whenever there is an intersected object. if it is the same call again to update position
-            if (this.INTERSECTED) {
-                this.htmlTooltip("show");
-            }
-
-            if (this.INTERSECTED != intersects[0].object) {
-                if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
-                this.INTERSECTED = intersects[0].object;
-                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
-            }
-        }
-        else {
-            if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
+        let intersectedObject = this.findIntersections(event);
+        if(intersectedObject[0]) {
+            this.INTERSECTED = intersectedObject[0].object;    
+        } else {
             this.INTERSECTED = null;
-
-            this.htmlTooltip("hide");
+        }
+        
+        //click event
+        if (this.INTERSECTED && event.type == "mousedown") {
+            this.showDetails(true);
+        } else if (!this.INTERSECTED && event.type == "mousedown") { //click elsewhere
+            this.showDetails(false);
         }
 
+        //hover event
+        if (this.INTERSECTED && event.type == "mousemove") {
+            this.showTooltip(true);
+            this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+        } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
+            //this.INTERSECTED.material.emissive.setHex();
+            this.showTooltip(false);
+        }
     }
 
+    showDetails(status) {
+        
+        let details = document.getElementById("details");
+        if (!details) {
+            throw "The tooltip requires a <div id=\"tooltip\"></div> in order to work!";
+        }
 
-    colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
-
-    // validate hex string
-    hex = String(hex).replace(/[^0-9a-f]/gi, '');
-    if (hex.length < 6) {
-        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    }
-    lum = lum || 0;
-
-    // convert to decimal and change luminosity
-    let threeHex = "0x", c, i;
-    for (i = 0; i < 3; i++) {
-        c = parseInt(hex.substr(i*2,2), 16);
-        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-        threeHex += ("00"+c).substr(c.length);
-    }
-    return threeHex;
-}
-
-
-    onDocumentDblClick() {
-        //IMPLEMENT DOUBLE CLICK FUNCTION HERE
+        if (status & this.sceneConfig.details) {
+            details.innerHTML = 
+            `<h2>${this.INTERSECTED.name}</h2>
+            <b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})`;
+            if(this.INTERSECTED.hasOwnProperty("data2")) {
+                details.innerHTML += 
+                `<br><b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
+            }
+            details.style.visibility = "visible";
+        } else if (!status && details) {
+            details.style.visibility = "hidden";
+        }
     }
 
+    showTooltip(status) {
 
-    htmlTooltip(status) {
-
-        let tooltip = null;
-        status = (!status) ? "show" : status;
-
-        if (status === "show" && this.sceneConfig.tooltip) {
+        let tooltip = document.getElementById("tooltip") || null;
+        
+        if (status && this.sceneConfig.tooltip) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");
@@ -261,60 +253,43 @@ class SceneInit {
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>
-                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
-            if(this.INTERSECTED.hasOwnProperty("data2")) tooltip.innerHTML += `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
-
-            let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
+                 <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
+            if(this.INTERSECTED.hasOwnProperty("data2")) {
+                tooltip.innerHTML += 
+                `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
+            }
             tooltip.style.position = "absolute";
-
-            let posX = 0;
-            let posY = 0;
-            let q = "";
-
-            if (vector.x >= 0 && vector.y >= 0) {
-                q = "q1"
-            }
-            if (vector.x <= 0 && vector.y >= 0) {
-                q = "q2"
-            }
-            if (vector.x <= 0 && vector.y <= 0) {
-                q = "q3"
-            }
-            if (vector.x >= 0 && vector.y <= 0) {
-                q = "q4"
-            }
-
-            if (q == "q1") {
-                posX = ((Math.abs(vector.x)) * 50) + 50;
-                posY = ((1 - Math.abs(vector.y)) * 50);
-            }
-
-            if (q == "q2") {
-                posX = ((1 - Math.abs(vector.x)) * 50);
-                posY = ((1 - Math.abs(vector.y)) * 50);
-            }
-
-            if (q == "q3") {
-                posX = ((1 - Math.abs(vector.x)) * 50);
-                posY = ((Math.abs(vector.y)) * 50) + 50;
-            }
-
-            if (q == "q4") {
-                posX = ((Math.abs(vector.x)) * 50) + 50;
-                posY = ((Math.abs(vector.y)) * 50) + 50;
-            }
-
-            tooltip.style.left = posX + '%';
-            tooltip.style.top = posY + '%';
+            tooltip.style.left = event.pageX + 'px';
+            tooltip.style.top = event.pageY + 'px';
 
             document.body.appendChild(tooltip);
-        }
-        //remove tooltip if mouse does not hover over the pie or a pie segment
-        else if (status === "hide" && document.getElementById("tooltip")) {
-            document.body.removeChild(document.getElementById("tooltip"));
+        } else if (!status && tooltip) {
+            document.body.removeChild(tooltip);
         }
     }
 
+    colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
+
+    // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        let threeHex = "0x", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            threeHex += ("00"+c).substr(c.length);
+        }
+    return threeHex;
+    }
+
+
+    onDocumentDblClick() {
+    }
 
     resetPosition() {//resets camera and object position
         //Camera Rotation and Position
@@ -348,6 +323,8 @@ class SceneInit {
             }
     }
 }
+
+
 
 
 export default SceneInit

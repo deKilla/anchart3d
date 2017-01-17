@@ -78,7 +78,18 @@ if ommited, then the chart will take all available space
         }
     ];
 
-var configuration = {"sortDataBy": "data1", "tooltip": true, "legend": true, "startAnimation": true, "chartAnimation": true, "transparency": false, "antialias": true, "fov": 45};
+var configuration = {
+    "sortDataBy": "data1",
+    "details": true,
+    "tooltip": true,
+    "legend": true,
+    //"bgcolor": "#f00",
+    "startAnimation": true,
+    "chartAnimation": true,
+    "transparency": true,
+    "antialias": true,
+    "fov": 45
+};
 
     anchart3d.createChart("anchart3d")
         .setConfig(configuration)

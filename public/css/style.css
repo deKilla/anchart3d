@@ -9,6 +9,8 @@ body{
     width:500px;
     height:400px;
     margin:200px auto;
+    border-radius:10px;
+    border-color:#fff;
 }
 
 #legend-background {
