@@ -202,9 +202,16 @@ class SceneInit {
     onDocumentMouseAction(event) {
 
         let intersectedObject = this.findIntersections(event);
+
         if(intersectedObject[0]) {
-            this.INTERSECTED = intersectedObject[0].object;    
-        } else {
+            // remove luminance if different segment is hovered
+            if (this.INTERSECTED && this.INTERSECTED != intersectedObject[0].object) {
+                this.INTERSECTED.material.emissive.setHex();
+            }
+            this.INTERSECTED = intersectedObject[0].object;
+        } else if (this.INTERSECTED) {
+            //remove luminance if no segment is hovered
+            this.INTERSECTED.material.emissive.setHex();
             this.INTERSECTED = null;
         }
         
@@ -228,7 +235,7 @@ class SceneInit {
         
         let details = document.getElementById("details");
         if (!details) {
-            throw "The tooltip requires a <div id=\"tooltip\"></div> in order to work!";
+            throw "The tooltip requires a <div id=\"detailpane\"></div> in order to work!";
         }
 
         if (status & this.sceneConfig.details) {
