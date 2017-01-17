@@ -90,7 +90,7 @@ class SceneInit {
 
         if (this.sceneConfig.showOnScreenControls) {
             this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
-            // was this.scene.getObjectByName("groupedChart", true) but the Object has no name!!
+            // was this.scene.getObjectByName("groupedChart", true) but is broken ?!!
         }
     }
 
