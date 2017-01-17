@@ -140,8 +140,8 @@ class SceneInit {
 
 
     showOnScreenControls(method = "click", currentChart, camera) {
-        console.log(this.scene)
-        console.log(currentChart);
+        //console.log(this.scene)
+        //console.log(currentChart);
         let repeater;
         let interval;
 
@@ -201,14 +201,15 @@ class SceneInit {
 
     onDocumentMouseAction(event) {
 
-        let intersectedObject = this.findIntersections(event);
+        let intersectedObjects = this.findIntersections(event);
+        //let scaled = false;
 
-        if(intersectedObject[0]) {
+        if(intersectedObjects[0]) {
             // remove luminance if different segment is hovered
-            if (this.INTERSECTED && this.INTERSECTED != intersectedObject[0].object) {
+            if (this.INTERSECTED && this.INTERSECTED != intersectedObjects[0].object) {
                 this.INTERSECTED.material.emissive.setHex();
             }
-            this.INTERSECTED = intersectedObject[0].object;
+            this.INTERSECTED = intersectedObjects[0].object;
         } else if (this.INTERSECTED) {
             //remove luminance if no segment is hovered
             this.INTERSECTED.material.emissive.setHex();
@@ -226,6 +227,8 @@ class SceneInit {
         if (this.INTERSECTED && event.type == "mousemove") {
             this.showTooltip(true);
             this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+            //console.log(intersectedObjects[0]);           
+
         } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
             this.showTooltip(false);
         }
