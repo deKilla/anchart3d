@@ -82,12 +82,52 @@ body{
 
 #tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
 
-#controls { z-index:9999; position: absolute; width:90px; height:90px; display: block; right:10px; bottom:10px;}
-#controls a { background:#ccc; display: inline-block; border:1px solid #fff; text-align: center; font-weight:bold; color:#000;}
-#controls a:hover { background: #fff; }
+#controlcontainer { position:absolute; bottom:30px; right:30px; width:90px; height:90px; display:block; }
 
-#btnup {cursor:pointer; width:28px; height:28px; margin:0 30px; line-height: 30px;}
-#btnleft {cursor:pointer; width:28px; height:28px; line-height: 30px;}
-#btnreset {cursor:pointer; width:28px; height:28px; line-height: 30px;}
-#btnright {cursor:pointer; width:28px; height:28px; line-height: 30px;}
-#btndown {cursor:pointer; width: 28px; height:28px; margin:0 30px; line-height: 30px;}
+#controls { z-index:9999; position: relative; }
+#controls a { padding:0px; margin:0px; position:absolute; background:#000; border:1px solid #fff; text-align: center; font-weight:bold; color:#fff; cursor:pointer; width:28px; height:28px; line-height: 28px;}
+#controls a:hover { background: #333; }
+
+#btnup { top:0px; left:30px; }
+#btnleft { top:30px; left:0px; }
+#btnreset { top:30px; left:30px; }
+#btnright { top:30px; left:60px; }
+#btndown { top:60px; left:30px; }
+
+#btnup {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+#btnleft {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+#btnright {
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#btndown {
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+#controls > a#btnreset { border:0px none; }
