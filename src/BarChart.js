@@ -111,7 +111,8 @@ class BarChart {
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
 
-                }
+                }//second data set
+
                 /*else if (value == 1) {
                  let data2Name = values[value].name;
                  let data2Value = values[value].value;
