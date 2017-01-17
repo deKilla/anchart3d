@@ -86,6 +86,7 @@ class PieChart {
                     segment.data1.name = data1Name;
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
+                    console.log("Segment name: "+segment.name);
 
                 }
                 else if (value == 1) {
@@ -118,6 +119,7 @@ class PieChart {
             }
         }
         let pieChartLegend = new Legend(legendMap,this.sceneConfig);
+        pieChartLegend.removeLegend();
         pieChartLegend.generateLegend();
 
 
