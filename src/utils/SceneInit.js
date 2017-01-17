@@ -87,6 +87,11 @@ class SceneInit {
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
+        if (this.sceneConfig.showOnScreenControls) {
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
+            // was this.scene.getObjectByName("groupedChart", true) but the Object has no name!!
+        }
     }
 
     animate() {
@@ -126,14 +131,17 @@ class SceneInit {
             case 82: //R key
                 break;
             case 67: //C key
-                let currentChart = this.scene.getObjectByName("groupedChart", true);
-                let camera = this.camera;
-                this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
+                break;
+                //let currentChart = this.scene.getObjectByName("groupedChart", true);
+                //let camera = this.camera;
+                ///this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
 
 
     showOnScreenControls(method = "click", currentChart, camera) {
+        console.log(this.scene)
+        console.log(currentChart);
         let repeater;
         let interval;
 
@@ -212,7 +220,6 @@ class SceneInit {
             this.showTooltip(true);
             this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
         } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
-            //this.INTERSECTED.material.emissive.setHex();
             this.showTooltip(false);
         }
     }
@@ -323,8 +330,6 @@ class SceneInit {
             }
     }
 }
-
-
 
 
 export default SceneInit
