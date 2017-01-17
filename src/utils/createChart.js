@@ -63,6 +63,7 @@ export default function createChart (domTarget) {
                     scene.initScene();
                     scene.animate();
                     scene.scene.add(chart.object);
+
                 }
                 else throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
 

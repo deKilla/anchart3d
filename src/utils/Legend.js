@@ -26,7 +26,6 @@ class Legend {
 
                 let nameElem = document.createElement("i");
                 nameElem.textContent = key;
-                console.log("adding Name: "+key);
 
                 document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
                 document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
@@ -42,14 +41,7 @@ class Legend {
     removeLegend() {
 
         try {  //resets the elem
-            var myNode = document.getElementById("legend");
-            console.log("removing the legend");
-            while (myNode.firstChild) {
-                myNode.removeChild(myNode.firstChild);
-                }
-
-
-
+            document.getElementById("legend").innerHTML = "";
         }
         catch (err) {
             console.log("Childs do not exist. Error:" + err);
