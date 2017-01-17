@@ -37,29 +37,23 @@ class BarChart {
         let bar = new THREE.Mesh(barGeometry, segmentMat);
 
         //set rows here
-        console.log(segmentCounter+" = Segment Counter");
-        var row = 0;
-        if(segmentCounter%3==0){
-            console.log("row 2");
-            bar.position.x = 0;
-            bar.position.y = bar.position.y +1;
-            bar.position.z = height*0.5;
+        console.log(segmentCounter + " = Segment Counter");
+        /*if (segmentCounter % 3 == 0) {
+            lastBarStartX = 0;
+            console.log("reset of lastBarStartX");
+            lastBarStartY += 1;
 
-        }
-       else {
-            let firstPos = bar.position.x;
-            console.log(firstPos);
-            bar.position.x = lastBarStartX+0.5+0.2;
-
-            bar.position.z = height*0.5;
-        }
+        }*/
 
 
 
-        //bar.position.x = lastBarStartX+2;
-        //bar.position.y = 2;
-        //  lastBarStartX += 2;
-        console.log("z posi"+bar.position.z);
+        bar.position.x = lastBarStartX + 0.5 + 0.2; //0.5 cube side length + distance between the bars
+        bar.position.y = lastBarStartY;
+        console.log(lastBarStartY);
+        bar.position.z = height * 0.5;
+
+
+        console.log("z posi = " + bar.position.z);
         return bar;
     }
 
@@ -85,7 +79,6 @@ class BarChart {
         //TODO: I don't like this - needs review
 
 
-
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
@@ -97,8 +90,15 @@ class BarChart {
                     let data1Value = values[value].value;
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
-                    segment = this.createSegment(segmentCounter,lastBarStartX,lastBarStartY, data1Percent /10);
-                    lastBarStartX = lastBarStartX+0.5+0.2;
+                    segment = this.createSegment(segmentCounter, lastBarStartX, lastBarStartY, data1Percent / 10);
+                    lastBarStartX = lastBarStartX + 0.5 + 0.2;
+                    if (segmentCounter%3==0){
+                        lastBarStartY +=0.5+0.2;
+                        console.log(lastBarStartY+" = Y");
+                        lastBarStartX =0;
+
+
+                    }
                     segmentCounter += 1;
                     //set the lastThetaStart to the length of the last segment, in order to not overlap segments
                     //lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
@@ -113,29 +113,29 @@ class BarChart {
 
                 }
                 /*else if (value == 1) {
-                    let data2Name = values[value].name;
-                    let data2Value = values[value].value;
-                    let data2Percent = values[value].percent;
+                 let data2Name = values[value].name;
+                 let data2Value = values[value].value;
+                 let data2Percent = values[value].percent;
 
-                    segment.data2 = {};
-                    segment.data2.name = data2Name;
-                    segment.data2.value = data2Value;
-                    segment.data2.percent = data2Percent;
-
-
-                    //tween.js animation for the scale on z-axis
-                    if (this.sceneConfig.chartAnimation) {
-                        let finalPos = (data2Percent / 10);
-                        let startPos = {z: segment.scale.z};
+                 segment.data2 = {};
+                 segment.data2.name = data2Name;
+                 segment.data2.value = data2Value;
+                 segment.data2.percent = data2Percent;
 
 
-                        animateZ(segment, startPos, finalPos, 3000, 3000);
-                    }
-                    else {
-                        segment.scale.z = (data2Percent / 10);
-                    }
+                 //tween.js animation for the scale on z-axis
+                 if (this.sceneConfig.chartAnimation) {
+                 let finalPos = (data2Percent / 10);
+                 let startPos = {z: segment.scale.z};
 
-                }*/
+
+                 animateZ(segment, startPos, finalPos, 3000, 3000);
+                 }
+                 else {
+                 segment.scale.z = (data2Percent / 10);
+                 }
+
+                 }*/
                 //add new piece to the grouped pieChart
                 //add new piece to the grouped pieChart
                 barChart.add(segment);
