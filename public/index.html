@@ -16,9 +16,17 @@
 
 
 <div id="details"></div>
-<div id="controls"></div>
+<div id="controlcontainer"> <!-- not required and used for positionioning purposes only -->
+    <div id="controls"></div>
+</div>
 
-<canvas id="anchart3d"></canvas>
+<!-- 
+the name "canvasparent" is an example and can be any name or even omitted 
+if ommited, then the chart will take all available space
+-->
+<div id="canvasparent">
+    <canvas id="anchart3d"></canvas>
+</div>
 
 
 <script>
@@ -72,8 +80,6 @@
         }
     ];
 
-
-
     var jsonData2 = [
         {
             "name":"Uganda",
@@ -112,14 +118,23 @@
         }
     ];
 
-
-
-var configuration = {"tooltip": true, "legend": true, "bgcolor": "skyblue", "startAnimation": true, "chartAnimation": true, "transparency": false, "antialias": true, "fov": 45};
+var configuration = {
+    "details": true,
+    "tooltip": true,
+    "showOnScreenControls": true,
+    "legend": true,
+    //"bgcolor": "#f00",
+    "startAnimation": true,
+    "chartAnimation": true,
+    "transparency": true,
+    "antialias": true,
+    "fov": 45
+};
 
     anchart3d.createChart("anchart3d")
         .setConfig(configuration)
         .pieChart()
-        .chartData(jsonData)
+        .chartData(jsonData) // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
         .chartData(jsonData2)
         .draw(); //.draw() must be last
 
