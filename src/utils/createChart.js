@@ -33,6 +33,13 @@ export default function createChart (domTarget) {
             else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
             return this;
         },
+        barChart: function () {
+            if(!options.chartType){
+                options.chartType = "barChart";
+            }
+            else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
+            return this;
+        },
         chartData: function (jsonData, sortBy) {
             if(sortBy){
                 options.chartData.push(new JsonData(jsonData).sortData(sortBy));
