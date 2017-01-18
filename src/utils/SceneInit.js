@@ -328,6 +328,8 @@ class SceneInit {
                     controls.enableZoom = true;
                 });
         });
+    }
+
 
         //TODO  3.) clean up this mess here and ez finish!
         //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
