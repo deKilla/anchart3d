@@ -5,7 +5,7 @@
     <title>Pie Chart</title>
 
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-
+    <script type="text/javascript" src="./../build/anchart3d.js"></script>
 </head>
 <body>
 <div id="legend-background">
@@ -14,12 +14,20 @@
     </ul>
 </div>
 
+
 <div id="details"></div>
-<div id="controls"></div>
+<div id="controlcontainer"> <!-- not required and used for positionioning purposes only -->
+    <div id="controls"></div>
+</div>
 
-<canvas id="anchart3d"></canvas>
+<!-- 
+the name "canvasparent" is an example and can be any name or even omitted 
+if ommited, then the chart will take all available space
+-->
+<div id="canvasparent">
+    <canvas id="anchart3d"></canvas>
+</div>
 
-<script type="text/javascript" src="./../build/anchart3d.js"></script>
 
 <script>
 
@@ -51,19 +59,22 @@
                 {"name":"Einwohner", "value":143500000},
                 {"name":"DSGehalt", "value":1780}
             ]
-        },{
+        },
+        {
             "name":"Schweiz",
             "values": [
                 {"name":"Einwohner", "value":8081000},
                 {"name":"DSGehalt", "value":2880}
             ]
-        },{
+        },
+        {
             "name":"Belgien",
             "values": [
                 {"name":"Einwohner", "value":11200000},
                 {"name":"DSGehalt", "value":2470}
             ]
-        },{
+        },
+        {
             "name":"Frankreich",
             "values": [
                 {"name":"Einwohner", "value":66030000},
@@ -72,12 +83,62 @@
         }
     ];
 
-var configuration = {"sortDataBy": "data1", "tooltip": true, "legend": true, "bgcolor": "skyblue", "startAnimation": true, "chartAnimation": true, "transparency": false, "antialias": true, "fov": 45};
+    var jsonData2 = [
+        {
+            "name":"Uganda",
+            "values": [
+                {"name":"Einwohner", "value":37580000},
+                {"name":"DSGehalt", "value":1020}
+            ]
+        },
+        {
+            "name":"Usbekistan",
+            "values": [
+                {"name":"Einwohner", "value":30240000},
+                {"name":"DSGehalt", "value":1320}
+            ]
+        },
+        {
+            "name":"Spanien",
+            "values": [
+                {"name":"Einwohner", "value":46770000},
+                {"name":"DSGehalt", "value":2120}
+            ]
+        },
+        {
+            "name":"Polen",
+            "values": [
+                {"name":"Einwohner", "value":38350000},
+                {"name":"DSGehalt", "value":1970}
+            ]
+        },
+        {
+            "name":"Türkei",
+            "values": [
+                {"name":"Einwohner", "value":74930000},
+                {"name":"DSGehalt", "value":2075}
+            ]
+        }
+    ];
+
+var configuration = {
+    "details": true,
+    "tooltip": true,
+    "showOnScreenControls": true,
+    "legend": true,
+    //"bgcolor": "#f00",
+    "startAnimation": true,
+    "chartAnimation": true,
+    "transparency": true,
+    "antialias": true,
+    "fov": 45
+};
 
     anchart3d.createChart("anchart3d")
         .setConfig(configuration)
-        .setChart("barChart")
-        .chartData(jsonData)
+        .pieChart()
+        .chartData(jsonData) // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+        .chartData(jsonData2)
         .draw(); //.draw() must be last
 
 </script>

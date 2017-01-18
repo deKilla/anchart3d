@@ -5,16 +5,21 @@
  */
 
 import TWEEN from "tween.js";
+import Chart from "../Chart";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
-import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+import {entryAnimation, resetCameraPosition, resetChartPosition, dataSwapAnimation} from "./animation";
 
 
 class SceneInit {
 
     //TODO: ebenfalls object ...
-    constructor(domtarget, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
-        this.domtarget = domtarget;
+    constructor(domtarget, dataArray, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
+        
+        this.domNode = document.getElementById(domtarget);
+        this.parentWidth = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("width").slice(0,-2);
+        this.parentHeight = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("height").slice(0,-2);
+        this.dataArray = dataArray;     //array with all datasets from user => needed for live data swapping
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
         this.scene = scene;
@@ -26,15 +31,8 @@ class SceneInit {
 
 
     initScene() {
-        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, window.innerWidth / window.innerHeight, 1, 1000);
-
-        if (this.sceneConfig.startAnimation) {
-            this.camera.position.set(0, -10, 1100);
-            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
-            entryAnimation(this.camera,endPos,2500,800);
-        } else {
-            this.camera.position.set(0, -10, 7);
-        }
+        this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
+        if(document.getElementById("details")) document.getElementById("details").style.visibility = "hidden";
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
@@ -43,21 +41,27 @@ class SceneInit {
         this.controls.enableKeys = false; //disable keys (arrow keys on keyboard) because we have a D-Pad
         this.controls.enablePan = false;  // disable panning (right mouse button moving chart)
 
-
-
         this.scene = new THREE.Scene();
 
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.getElementById(this.domtarget),
-            antialias: this.sceneConfig.antialias || false, alpha: this.sceneConfig.transparency || false
+            canvas: this.domNode,
+            antialias: this.sceneConfig.antialias,
+            alpha: this.sceneConfig.transparency
         });
 
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
+        this.renderer.setSize(this.parentWidth, this.parentHeight);
+        this.domNode.parentElement.appendChild(this.renderer.domElement);
 
-        if (this.sceneConfig.bgcolor) {
-            this.scene.background = new THREE.Color(this.sceneConfig.bgcolor);
+        //transparent background won't work when a background-color is defined
+        if(this.sceneConfig.transparency == true) {
+            this.renderer.setClearColor( 0xffffff, 0 );
+        } else {
+            this.scene.background = new THREE.Color(
+                this.sceneConfig.bgcolor ||
+                window.getComputedStyle(this.domNode.parentElement).getPropertyValue("background-color")// ||
+                //window.getComputedStyle(document.body).getPropertyValue("background-color") // pseudo transparency
+            );
         }
 
         //ambient light which is for the whole scene
@@ -71,6 +75,16 @@ class SceneInit {
         spotLight.position.set(0, 40, 10);
         this.scene.add(spotLight);
 
+        if (this.sceneConfig.startAnimation) {
+            this.camera.position.set(0, -10, 1100);
+            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
+            entryAnimation(this.camera, endPos, 2500, 800);
+        }
+         else {
+            this.camera.position.set(0, -10, 7);
+        }
+
+
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
@@ -78,15 +92,18 @@ class SceneInit {
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-    }
 
+        if (this.sceneConfig.showOnScreenControls) {
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
+            // was this.scene.getObjectByName("groupedChart", true) but is broken ?!!
+        }
+    }
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
         this.render();
         this.controls.update();
     }
-
 
     render() {
         this.renderer.render(this.scene, this.camera);
@@ -95,18 +112,19 @@ class SceneInit {
 
 
     onWindowResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.aspect = this.parentWidth / this.parentHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(this.parentWidth, this.parentHeight);
     }
 
 
     findIntersections(event) {
         let raycaster = new THREE.Raycaster();
-        this.mouse.x = ( event.clientX / this.renderer.domElement.clientWidth ) * 2 - 1;
-        this.mouse.y = -( event.clientY / this.renderer.domElement.clientHeight ) * 2 + 1;
-        raycaster.setFromCamera(this.mouse, this.camera);
+        this.mouse.x = (( event.pageX - this.domNode.parentElement.offsetLeft ) / this.domNode.width ) * 2 - 1;
+        this.mouse.y = - (( event.pageY - this.domNode.parentElement.offsetTop ) / this.domNode.height ) * 2 + 1;
+        //console.log(this.mouse)
 
+        raycaster.setFromCamera(this.mouse, this.camera);
 
         //search for our object by name which we declared before and return it
         return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
@@ -117,16 +135,20 @@ class SceneInit {
        // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
             case 82: //R key
+                this.swapData(1);
                 break;
             case 67: //C key
-                let currentChart = this.scene.getObjectByName("groupedChart", true);
-                let camera = this.camera;
-                this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
+                break;
+                //let currentChart = this.scene.getObjectByName("groupedChart", true);
+                //let camera = this.camera;
+                ///this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
 
 
     showOnScreenControls(method = "click", currentChart, camera) {
+        //console.log(this.scene)
+        //console.log(currentChart);
         let repeater;
         let interval;
 
@@ -184,71 +206,68 @@ class SceneInit {
         }
     }
 
+
     onDocumentMouseAction(event) {
-        //call function which finds intersected objects
-        let intersects = this.findIntersections(event);
 
-        if (intersects[0] !== undefined && event.type === "mousedown") {//if the event type is a mouse click (one click)
-            //print percentage of the clicked section + the name of the object assigned in the 'create3DBarChart' function
-            //intersects[0] because we want the first intersected object and every other object which may lies in the background is unnecessary
-            document.getElementById("details").innerHTML = "<h2>" + intersects[0].object.name + "</h2><b>" + intersects[0].object.data1.name + ":</b> " + intersects[0].object.data1.percent.toFixed(2) +
-                "% (" + intersects[0].object.data1.value + ")";
-            if(intersects[0].object.hasOwnProperty("data2")) document.getElementById("details").innerHTML += "<br><b>" + intersects[0].object.data2.name + ":</b> " + intersects[0].object.data2.percent.toFixed(2) + "% (" + intersects[0].object.data2.value + ")";
-        }
-        else if (intersects[0] !== undefined && event.type == "mousemove") {//if the event type is a mouse move (hover)
+        let intersectedObjects = this.findIntersections(event);
+        //let scaled = false;
 
-            //call the html tooltip whenever there is an intersected object. if it is the same call again to update position
-            if (this.INTERSECTED) {
-                this.htmlTooltip("show");
+        if(intersectedObjects[0]) {
+            // remove luminance if different segment is hovered
+            if (this.INTERSECTED && this.INTERSECTED != intersectedObjects[0].object) {
+                this.INTERSECTED.material.emissive.setHex();
             }
-
-            if (this.INTERSECTED != intersects[0].object) {
-                if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
-                this.INTERSECTED = intersects[0].object;
-                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
-            }
-        }
-        else {
-            if (this.INTERSECTED) this.INTERSECTED.material.emissive.setHex();
+            this.INTERSECTED = intersectedObjects[0].object;
+        } else if (this.INTERSECTED) {
+            //remove luminance if no segment is hovered
+            this.INTERSECTED.material.emissive.setHex();
             this.INTERSECTED = null;
-
-            this.htmlTooltip("hide");
+        }
+        
+        //click event
+        if (this.INTERSECTED && event.type == "mousedown") {
+            this.showDetails(true);
+        } else if (!this.INTERSECTED && event.type == "mousedown") { //click elsewhere
+            this.showDetails(false);
         }
 
+        //hover event
+        if (this.INTERSECTED && event.type == "mousemove") {
+            this.showTooltip(true);
+            this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+            //console.log(intersectedObjects[0]);           
+
+        } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
+            this.showTooltip(false);
+        }
     }
 
+    showDetails(status) {
+        
+        let details = document.getElementById("details");
+        if (!details) {
+            throw "The tooltip requires a <div id=\"detailpane\"></div> in order to work!";
+        }
 
-    colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
-
-    // validate hex string
-    hex = String(hex).replace(/[^0-9a-f]/gi, '');
-    if (hex.length < 6) {
-        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    }
-    lum = lum || 0;
-
-    // convert to decimal and change luminosity
-    let threeHex = "0x", c, i;
-    for (i = 0; i < 3; i++) {
-        c = parseInt(hex.substr(i*2,2), 16);
-        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-        threeHex += ("00"+c).substr(c.length);
-    }
-    return threeHex;
-}
-
-
-    onDocumentDblClick() {
-        //IMPLEMENT DOUBLE CLICK FUNCTION HERE
+        if (status & this.sceneConfig.details) {
+            details.innerHTML = 
+            `<h2>${this.INTERSECTED.name}</h2>
+            <b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})`;
+            if(this.INTERSECTED.hasOwnProperty("data2")) {
+                details.innerHTML += 
+                `<br><b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
+            }
+            details.style.visibility = "visible";
+        } else if (!status && details) {
+            details.style.visibility = "hidden";
+        }
     }
 
+    showTooltip(status) {
 
-    htmlTooltip(status) {
-
-        let tooltip = null;
-        status = (!status) ? "show" : status;
-
-        if (status === "show" && this.sceneConfig.tooltip) {
+        let tooltip = document.getElementById("tooltip") || null;
+        
+        if (status && this.sceneConfig.tooltip) {
 
             if (!document.getElementById("tooltip")) {
                 tooltip = document.createElement("div");
@@ -259,93 +278,67 @@ class SceneInit {
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>
-                     <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
-            if(this.INTERSECTED.hasOwnProperty("data2")) tooltip.innerHTML += `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
-
-            let vector = new THREE.Vector3(this.mouse.x, this.mouse.y);
+                 <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
+            if(this.INTERSECTED.hasOwnProperty("data2")) {
+                tooltip.innerHTML += 
+                `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
+            }
             tooltip.style.position = "absolute";
-
-            let posX = 0;
-            let posY = 0;
-            let q = "";
-
-            if (vector.x >= 0 && vector.y >= 0) {
-                q = "q1"
-            }
-            if (vector.x <= 0 && vector.y >= 0) {
-                q = "q2"
-            }
-            if (vector.x <= 0 && vector.y <= 0) {
-                q = "q3"
-            }
-            if (vector.x >= 0 && vector.y <= 0) {
-                q = "q4"
-            }
-
-            if (q == "q1") {
-                posX = ((Math.abs(vector.x)) * 50) + 50;
-                posY = ((1 - Math.abs(vector.y)) * 50);
-            }
-
-            if (q == "q2") {
-                posX = ((1 - Math.abs(vector.x)) * 50);
-                posY = ((1 - Math.abs(vector.y)) * 50);
-            }
-
-            if (q == "q3") {
-                posX = ((1 - Math.abs(vector.x)) * 50);
-                posY = ((Math.abs(vector.y)) * 50) + 50;
-            }
-
-            if (q == "q4") {
-                posX = ((Math.abs(vector.x)) * 50) + 50;
-                posY = ((Math.abs(vector.y)) * 50) + 50;
-            }
-
-            tooltip.style.left = posX + '%';
-            tooltip.style.top = posY + '%';
+            tooltip.style.left = event.pageX + 'px';
+            tooltip.style.top = event.pageY + 'px';
 
             document.body.appendChild(tooltip);
-        }
-        //remove tooltip if mouse does not hover over the pie or a pie segment
-        else if (status === "hide" && document.getElementById("tooltip")) {
-            document.body.removeChild(document.getElementById("tooltip"));
+        } else if (!status && tooltip) {
+            document.body.removeChild(tooltip);
         }
     }
 
+    colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
 
-    resetPosition() {//resets camera and object position
-        //Camera Rotation and Position
-        let cam = this.camera;
-        let actualCamPos = {x: cam.position.x, y: cam.position.y, z: Math.ceil(cam.position.z)}; //ceiling upwards cause of minimal variety
-        let defaultCamPos = {x: 0, y: -10, z: 7};
-        let initCam = (actualCamPos.x == defaultCamPos.x && actualCamPos.y == defaultCamPos.y && actualCamPos.z == defaultCamPos.z);
-
-        if (!initCam) {
-            new TWEEN.Tween(actualCamPos)
-                .to({x: defaultCamPos.x, y: defaultCamPos.y, z: defaultCamPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    cam.position.set(actualCamPos.x, actualCamPos.y, actualCamPos.z);
-                }).start();
+    // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
         }
+        lum = lum || 0;
 
-        //Object Rotation and Position
-        let object = this.scene.getObjectByName("groupedChart", true);
-        let actualObjPos = {x: object.rotation.x, y: object.rotation.y, z: object.rotation.z};
-        let defaultObjPos = {x: 0, y: 0, z: 0};
-        let initObj = (actualObjPos.x == defaultObjPos.x && actualObjPos.y == defaultObjPos.y && actualObjPos.z == defaultObjPos.z);
-
-        if (!initObj) {
-            new TWEEN.Tween(actualObjPos)
-                .to({x: defaultObjPos.x, y: defaultObjPos.y, z: defaultObjPos.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(function () {
-                    object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
-                }).start();
-            }
+        // convert to decimal and change luminosity
+        let threeHex = "0x", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            threeHex += ("00"+c).substr(c.length);
+        }
+    return threeHex;
     }
+
+    swapData(arrayIndex){
+        let camera = this.camera;
+        let controls = this.controls;
+        let scene = this.scene;
+        let newChart = new Chart(this.scene.getObjectByName("groupedChart", true).chartType,this.dataArray[arrayIndex],this.sceneConfig).createChart().object;
+        let oldChart = this.scene.getObjectByName("groupedChart", true);
+        controls.enableZoom = false;
+        resetCameraPosition(camera,{x:0,y:-10,z:7},1000).onComplete(function () {
+            scene.add(newChart);
+            newChart.position.set(50,0,0);
+            dataSwapAnimation(oldChart,{x:-50,y:0,z:0},newChart,2500,10)
+                .onComplete(function () {
+                    scene.remove(scene.getObjectById(oldChart.id));
+                    controls.enableZoom = true;
+                });
+        });
+    }
+
+
+        //TODO  3.) clean up this mess here and ez finish!
+        //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
+        //IMPORTANT2 => "C" has to be pressed after swapping cause new object in scene only set when c key pressed!
+
+    onDocumentDblClick() {
+    }
+
 }
 
-
 export default SceneInit
+

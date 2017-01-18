@@ -5,7 +5,6 @@
  */
 
 import PieChart from './PieChart';
-import JsonData from './utils/JsonData';
 import BarChart from './BarChart'
 
 class Chart {
@@ -19,8 +18,7 @@ class Chart {
 
     createChart() {
         let chart;
-        let data = new JsonData(this.chartData);
-        (this.configuration.sortDataBy) ? data.sortData(this.configuration.sortDataBy) : data;
+        let data = this.chartData;
 
         // https://sourcemaking.com/refactoring/smells/switch-statements => TODO
         switch (this.chartType) {

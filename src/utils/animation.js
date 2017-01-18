@@ -9,7 +9,7 @@ export function resetChartPosition(object,defaultPos,animTime){
     let initObj = (actualObjPos.x == defaultPos.x && actualObjPos.y == defaultPos.y && actualObjPos.z == defaultPos.z);
 
     if (!initObj) {
-        new TWEEN.Tween(actualObjPos)
+       return new TWEEN.Tween(actualObjPos)
             .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, animTime)
             .easing(TWEEN.Easing.Cubic.Out)
             .onUpdate(function () {
@@ -25,13 +25,14 @@ export function resetCameraPosition(cameraObj,defaultPos,animTime){
     let initCam = (actualCamPos.x == defaultPos.x && actualCamPos.y == defaultPos.y && actualCamPos.z == defaultPos.z);
 
     if (!initCam) {
-        new TWEEN.Tween(actualCamPos)
+        return new TWEEN.Tween(actualCamPos)
             .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, animTime)
             .easing(TWEEN.Easing.Cubic.Out)
             .onUpdate(function () {
                 cameraObj.position.set(actualCamPos.x, actualCamPos.y, actualCamPos.z);
             }).start();
     }
+    else return new TWEEN.Tween().to(0,0).start(); //return dummy tween
 }
 
 
@@ -40,7 +41,7 @@ export function entryAnimation(camera,endPos,animTime,delayTime){
     let startPos = {x: camera.position.x, y: camera.position.y, z: camera.position.z};
     let endPosition = {x: endPos.x, y: endPos.y, z: endPos.z};
 
-    new TWEEN.Tween(startPos)
+    return new TWEEN.Tween(startPos)
         .to({x: endPosition.x, y: endPosition.y, z: endPosition.z}, animTime)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(function () {
@@ -53,13 +54,33 @@ export function entryAnimation(camera,endPos,animTime,delayTime){
 
 
 
-export function animateZ(obj,startpos,finpos,animTime,delayTime) {
+export function animateZ(obj,startpos,endPosition,animTime,delayTime) {
     return new TWEEN.Tween(startpos)
-        .to({z: finpos}, animTime)
+        .to({z: endPosition}, animTime)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(function () {
             obj.scale.z = startpos.z;
         })
         .delay(delayTime)
         .start();
+}
+
+
+
+
+export function dataSwapAnimation(oldChart, oldChartEndPos, newChart, animTime, delayTime) {
+    let oldChartInitPos = oldChart.position;
+
+    return new TWEEN.Tween(oldChartInitPos)
+                .to({x: oldChartEndPos.x}, animTime)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onStart(function () {
+                    new TWEEN.Tween(newChart.position)
+                        .to({x: oldChartInitPos.x}, animTime)
+                        .easing(TWEEN.Easing.Cubic.Out)
+                        .delay(delayTime)
+                        .start()
+                })
+                .delay(delayTime)
+                .start();
 }

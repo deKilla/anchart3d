@@ -6,57 +6,69 @@
 
 import SceneInit from './SceneInit';
 import Chart from './../Chart';
+import JsonData from "./JsonData";
 
 
 export default function createChart (domTarget) {
     let scene;
-    let configuration;
+    let configJson;
     let chart;
     let chartType;
-    let chartData;
+    let chartData = [];
 
     let options = {
-        domTarget: domTarget
+        domTarget: domTarget,
+        chartData: chartData
     };
 
     return {
         setConfig: function (configJson) {
-            options.configurationJson = configJson;
+            options.configJson = configJson;
             return this;
         },
-        setChart: function (chartType) {
-            options.chartType = chartType;
+        pieChart: function () {
+            if(!options.chartType){
+                options.chartType = "pieChart";
+            }
+            else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
             return this;
         },
-        chartData: function (json) {
-            options.chartData = json;
+        chartData: function (jsonData, sortBy) {
+            if(sortBy){
+                options.chartData.push(new JsonData(jsonData).sortData(sortBy));
+            }
+            else {
+                options.chartData.push(new JsonData(jsonData));
+            }
             return this;
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
-            configuration = checkConfig(options.configurationJson);
+            configJson = checkConfig(options.configJson);
             chartType = options.chartType;
             chartData = options.chartData;
 
-            if (chartType && chartData) {
+            if(document.getElementById(domTarget)) {
+                if (chartType && chartData) {
 
-                chart = new Chart(chartType, chartData, configuration)
-                    .createChart();
+                    chart = new Chart(chartType, chartData[0], configJson)
+                        .createChart();
 
-                if (configuration) { //if config for the sceneInit is available
-                    scene = new SceneInit(domTarget, configuration);
+                    if (configJson) { //if config for the sceneInit is available
+                        scene = new SceneInit(domTarget, chartData , configJson);
+                    }
+                    else { //else use default sceneInit settings
+                        scene = new SceneInit(domTarget, chartData);
+                    }
+                    scene.initScene();
+                    scene.animate();
+                    scene.scene.add(chart.object);
+
                 }
-                else { //else use default sceneInit settings
-                    scene = new SceneInit(domTarget);
-                }
-                scene.initScene();
-                scene.animate();
-                scene.scene.add(chart.object);
+                else throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
 
             }
-            else {
-                throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
-            }
+            else throw "API Error: Element with id \"" + domTarget + "\" not found!";
         }
     };
 };
@@ -71,16 +83,7 @@ function checkConfig(configJson) {
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
                 else validConfig[propKey] = configJson[propKey];
             }
-            else if(propKey === "sortDataBy"){
-                if(typeof configJson[propKey] === "string" && ["data1","data2"].indexOf(configJson[propKey]) >= 0){
-                    validConfig[propKey] = configJson[propKey];
-                }
-                else{
-                    console.warn("Invalid type for property \"" + propKey + "\": Type has to be \"string\"!\nProperty was set to \"undefined\"!");
-                    validConfig[propKey] = undefined;
-                }
-            }
-            else if(["sortDataBy","fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
+            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
                 console.warn("Invalid type for property \"" + propKey + "\": Type has to be \"boolean\"!\nProperty was set to \"false\"!");
                 validConfig[propKey] = false;
             }

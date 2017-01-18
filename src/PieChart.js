@@ -55,9 +55,10 @@ class PieChart {
         //Group together all pieces
         let pieChart = new THREE.Group();
         pieChart.name = "groupedChart";
+        //define type of chart...necessary for live data swapping
+        pieChart.chartType = "pieChart";
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
-
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
@@ -86,7 +87,6 @@ class PieChart {
                     segment.data1.name = data1Name;
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
-
                 }
                 else if (value == 1) {
                     let data2Name = values[value].name;
@@ -99,12 +99,10 @@ class PieChart {
                     segment.data2.percent = data2Percent;
 
 
-
                     //tween.js animation for the scale on z-axis
                     if(this.sceneConfig.chartAnimation) {
                         let finalPos = (data2Percent / 10);
                         let startPos = {z: segment.scale.z};
-
 
                         animateZ(segment, startPos, finalPos,3000,3000);
                     }
@@ -118,6 +116,7 @@ class PieChart {
             }
         }
         let pieChartLegend = new Legend(legendMap,this.sceneConfig);
+        pieChartLegend.removeLegend();
         pieChartLegend.generateLegend();
 
 
