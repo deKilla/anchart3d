@@ -5,6 +5,7 @@
  */
 
 import PieChart from './PieChart';
+import BarChart from './BarChart'
 
 class Chart {
 
@@ -23,6 +24,9 @@ class Chart {
         switch (this.chartType) {
             case "pieChart":
                 chart = new PieChart(data,this.configuration);
+                break;
+            case "barChart":
+                chart = new BarChart(data,this.configuration);
                 break;
             default:
                 throw "ChartTypeError: The chart type '" + this.chartType + "' is not valid!";

@@ -51,6 +51,7 @@ class PieChart {
     create3DPieChart(jsonData = this.jsonData) {
         //calculate percent of every data set in json first
         const calculatedData = jsonData.file;
+
         //Group together all pieces
         let pieChart = new THREE.Group();
         pieChart.name = "groupedChart";
