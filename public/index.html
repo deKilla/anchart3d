@@ -137,7 +137,7 @@ var configuration = {
  var chart3D = anchart3d.createChart("anchart3d")
     .setConfig(configuration)
     .pieChart()
-    .chartData(jsonData) // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .chartData(jsonData,"sad") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
     setTimeout(function () {
