@@ -131,12 +131,16 @@ var configuration = {
     "fov": 45
 };
 
-    anchart3d.createChart("anchart3d")
-        .setConfig(configuration)
-        .pieChart()
-        .chartData(jsonData) // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
-        .chartData(jsonData2)
-        .draw(); //.draw() must be last
+ var chart3D = anchart3d.createChart("anchart3d")
+    .setConfig(configuration)
+    .pieChart()
+    .chartData(jsonData) // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .draw(); //.draw() must be last
+
+    setTimeout(function () {
+        chart3D.swapData(jsonData2,"DSGehalt");
+        chart3D.swapData(jsonData2,"DSGehalt"); //only here for demonstration of preventing chaining of this method!
+    },7000);
 
 </script>
 

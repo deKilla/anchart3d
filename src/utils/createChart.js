@@ -7,6 +7,7 @@
 import SceneInit from './SceneInit';
 import Chart from './../Chart';
 import JsonData from "./JsonData";
+import {resetCameraPosition, dataSwapAnimation} from "./animation";
 
 
 export default function createChart (domTarget) {
@@ -14,11 +15,11 @@ export default function createChart (domTarget) {
     let configJson;
     let chart;
     let chartType;
-    let chartData = [];
+    let chartData;
+    let swapActive;//boolean for preventing chain call of swapData()
 
     let options = {
         domTarget: domTarget,
-        chartData: chartData
     };
 
     return {
@@ -35,10 +36,10 @@ export default function createChart (domTarget) {
         },
         chartData: function (jsonData, sortBy) {
             if(sortBy){
-                options.chartData.push(new JsonData(jsonData).sortData(sortBy));
+                options.chartData = new JsonData(jsonData).sortData(sortBy);
             }
             else {
-                options.chartData.push(new JsonData(jsonData));
+                options.chartData = new JsonData(jsonData);
             }
             return this;
         },
@@ -51,7 +52,7 @@ export default function createChart (domTarget) {
             if(document.getElementById(domTarget)) {
                 if (chartType && chartData) {
 
-                    chart = new Chart(chartType, chartData[0], configJson)
+                    chart = new Chart(chartType, chartData, configJson)
                         .createChart();
 
                     if (configJson) { //if config for the sceneInit is available
@@ -63,15 +64,43 @@ export default function createChart (domTarget) {
                     scene.initScene();
                     scene.animate();
                     scene.scene.add(chart.object);
+                    return this;
 
                 }
                 else throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
 
             }
             else throw "API Error: Element with id \"" + domTarget + "\" not found!";
+        },
+
+        swapData : function(data,sortBy){
+            if(!swapActive) {
+                swapActive = true;
+                this.chartData(data, sortBy);
+                let camera = scene.camera;
+                let controls = scene.controls;
+                let newChart = new Chart(options.chartType, options.chartData, checkConfig(options.configJson)).createChart().object;
+                let oldChart = scene.scene.getObjectByName("groupedChart", true);
+                controls.enableZoom = false;
+                resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
+                    scene.scene.add(newChart);
+                    newChart.position.set(50, 0, 0);
+                    dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart, 2500, 10)
+                        .onComplete(function () {
+                            scene.scene.remove(scene.scene.getObjectById(oldChart.id));
+                            controls.enableZoom = true;
+                            swapActive = false;
+                        });
+                });
+            }
+            else{
+                console.warn("The method \"swapData()\" was already called and cannot be chained!\nIgnoring chain call of method!");
+            }
+            }
+
         }
+
     };
-};
 
 
 function checkConfig(configJson) {

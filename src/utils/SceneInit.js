@@ -5,10 +5,9 @@
  */
 
 import TWEEN from "tween.js";
-import Chart from "../Chart";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
-import {entryAnimation, resetCameraPosition, resetChartPosition, dataSwapAnimation} from "./animation";
+import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
 
 
 class SceneInit {
@@ -135,7 +134,6 @@ class SceneInit {
        // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
             case 82: //R key
-                this.swapData(1);
                 break;
             case 67: //C key
                 break;
@@ -312,28 +310,7 @@ class SceneInit {
     return threeHex;
     }
 
-    swapData(arrayIndex){
-        let camera = this.camera;
-        let controls = this.controls;
-        let scene = this.scene;
-        let newChart = new Chart(this.scene.getObjectByName("groupedChart", true).chartType,this.dataArray[arrayIndex],this.sceneConfig).createChart().object;
-        let oldChart = this.scene.getObjectByName("groupedChart", true);
-        controls.enableZoom = false;
-        resetCameraPosition(camera,{x:0,y:-10,z:7},1000).onComplete(function () {
-            scene.add(newChart);
-            newChart.position.set(50,0,0);
-            dataSwapAnimation(oldChart,{x:-50,y:0,z:0},newChart,2500,10)
-                .onComplete(function () {
-                    scene.remove(scene.getObjectById(oldChart.id));
-                    controls.enableZoom = true;
-                });
-        });
-    }
 
-
-        //TODO  3.) clean up this mess here and ez finish!
-        //IMPORTANT => every *chart.js class should add .chartType = "name of chart", in order to use properly swapData()!!!
-        //IMPORTANT2 => "C" has to be pressed after swapping cause new object in scene only set when c key pressed!
 
     onDocumentDblClick() {
     }
