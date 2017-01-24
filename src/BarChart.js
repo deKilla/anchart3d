@@ -27,7 +27,7 @@ class BarChart {
 
     createSegment(lastBarStartX, height) {
 
-        let barGeometry = new THREE.CubeGeometry(0.7, 0.7, height);
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, height);
         let segmentMat = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
@@ -39,7 +39,19 @@ class BarChart {
         bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
         bar.position.z = height * 0.5; //needed in order to align them on the same height
 
-        // console.log("z posi = " + bar.position.z);
+
+        /*//tween.js animation for the scale on z-axis
+        if (this.sceneConfig.chartAnimation) {
+            let finalPos = height;
+            let startPos = {z: 0};
+
+            animateZ(bar, startPos, finalPos, 3000, 3000);
+        }
+        else {
+            bar.scale.z = height;
+        }*/
+
+
         return bar;
     }
 
@@ -101,19 +113,6 @@ class BarChart {
                     segment2.data2.value = data2Value;
                     segment2.data2.percent = data2Percent;
 
-                    /*
-                     //tween.js animation for the scale on z-axis
-                     if (this.sceneConfig.chartAnimation) {
-                     let finalPos = (data2Percent / 10);
-                     let startPos = {z: segment.scale.z};
-
-
-                     animateZ(segment, startPos, finalPos, 3000, 3000);
-                     }
-                     else {
-                     segment.scale.z = (data2Percent / 10);
-                     }
-                     */
                     barChart.add(segment2);
                 }
                 barChart.add(segment);
