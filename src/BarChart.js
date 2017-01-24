@@ -25,9 +25,9 @@ class BarChart {
 
     }
 
-    createSegment(segmentCounter, lastBarStartX, lastBarStartY, height) {
+    createSegment(lastBarStartX, height) {
 
-        let barGeometry = new THREE.CubeGeometry(0.5, 0.5, height);
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, height);
         let segmentMat = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
@@ -36,52 +36,43 @@ class BarChart {
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
 
-        //set rows here
-        console.log(segmentCounter + " = Segment Counter");
-        /*if (segmentCounter % 3 == 0) {
-            lastBarStartX = 0;
-            console.log("reset of lastBarStartX");
-            lastBarStartY += 1;
+        bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
+        bar.position.z = height * 0.5; //needed in order to align them on the same height
 
+
+        /*//tween.js animation for the scale on z-axis
+        if (this.sceneConfig.chartAnimation) {
+            let finalPos = height;
+            let startPos = {z: 0};
+
+            animateZ(bar, startPos, finalPos, 3000, 3000);
+        }
+        else {
+            bar.scale.z = height;
         }*/
 
 
-
-        bar.position.x = lastBarStartX + 0.5 + 0.2; //0.5 cube side length + distance between the bars
-        bar.position.y = lastBarStartY;
-        console.log(lastBarStartY);
-        bar.position.z = height * 0.5;
-
-
-        console.log("z posi = " + bar.position.z);
         return bar;
     }
 
 
     create3DBarChart(jsonData = this.jsonData) {
-        //calculate percent of every data set in json first
         const calculatedData = jsonData.file;
         console.log(calculatedData);
         //Group together all pieces
         let barChart = new THREE.Group();
         barChart.name = "groupedChart";
-        barChart.position.x = -3;
-        console.log(barChart.position);
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
-        let lastBarStartY = 0.0;
         //Saves the Color and the name of the chart
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
-        var segmentCounter = 1;
-
-        //TODO: I don't like this - needs review
-
 
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
+            let segment2;
 
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
@@ -90,18 +81,12 @@ class BarChart {
                     let data1Value = values[value].value;
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
-                    segment = this.createSegment(segmentCounter, lastBarStartX, lastBarStartY, data1Percent / 10);
-                    lastBarStartX = lastBarStartX + 0.5 + 0.2;
-                    if (segmentCounter%3==0){
-                        lastBarStartY +=0.5+0.2;
-                        console.log(lastBarStartY+" = Y");
-                        lastBarStartX =0;
-
-
+                    segment = this.createSegment(lastBarStartX, data1Percent / 10);
+                    if (values.length < 2) {
+                        lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
                     }
-                    segmentCounter += 1;
-                    //set the lastThetaStart to the length of the last segment, in order to not overlap segments
-                    //lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
+
+
                     //adding elements to the legendMap
                     legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
@@ -111,43 +96,39 @@ class BarChart {
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
 
-                }//second data set
 
-                /*else if (value == 1) {
-                 let data2Name = values[value].name;
-                 let data2Value = values[value].value;
-                 let data2Percent = values[value].percent;
+                }
+                if (value == 1) {
+                    let data2Name = values[value].name;
+                    let data2Value = values[value].value;
+                    let data2Percent = values[value].percent;
 
-                 segment.data2 = {};
-                 segment.data2.name = data2Name;
-                 segment.data2.value = data2Value;
-                 segment.data2.percent = data2Percent;
+                    segment2 = this.createSegment(lastBarStartX, data2Percent / 10);
+                    segment2.position.y = 1; //set second dataset behind first one
+                    lastBarStartX = lastBarStartX + 0.7 + 0.2; //0.7 cause one bar is that long + 0.2 to set gaps between
 
+                    segment2.name = calculatedData[dataset].name;
+                    segment2.data2 = {};
+                    segment2.data2.name = data2Name;
+                    segment2.data2.value = data2Value;
+                    segment2.data2.percent = data2Percent;
 
-                 //tween.js animation for the scale on z-axis
-                 if (this.sceneConfig.chartAnimation) {
-                 let finalPos = (data2Percent / 10);
-                 let startPos = {z: segment.scale.z};
-
-
-                 animateZ(segment, startPos, finalPos, 3000, 3000);
-                 }
-                 else {
-                 segment.scale.z = (data2Percent / 10);
-                 }
-
-                 }*/
-                //add new piece to the grouped pieChart
-                //add new piece to the grouped pieChart
+                    barChart.add(segment2);
+                }
                 barChart.add(segment);
             }
         }
+        //half the position and align the segments to the center
+        barChart.position.x = -(lastBarStartX / 2);
+
         let barChartLegend = new Legend(legendMap, this.sceneConfig);
         barChartLegend.generateLegend();
 
 
         return barChart;
     }
+
+
 }
 
 
