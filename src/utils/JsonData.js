@@ -99,8 +99,8 @@ class JsonData {
         if(sortBy && typeof sortBy === "string"){
             dataSetIndex = parseInt(this.file[0].values.map(function(e) { return e.name}).indexOf(sortBy));
             if(dataSetIndex > -1){//if index -1 => dataset with given name not available in jsonData!!
-            this.file.sort(function(a,b){return a.values[dataSetIndex].value - b.values[dataSetIndex].value});
-            return new JsonData(this.file);
+                this.file.sort(function(a,b){return a.values[dataSetIndex].value - b.values[dataSetIndex].value});
+                return new JsonData(this.file);
             }
             else{
                 console.error("Sorting data has failed!\nDataset with name \"" + sortBy + "\" not found!");

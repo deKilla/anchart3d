@@ -79,30 +79,31 @@ export default function createChart (domTarget) {
             }
             else throw "API Error: Element with id \"" + domTarget + "\" not found!";
         },
-
         swapData : function(data,sortBy){
             if(!swapActive) {
                 swapActive = true;
-                this.chartData(data, sortBy);
-                let camera = scene.camera;
-                let controls = scene.controls;
-                let newChart = new Chart(options.chartType, options.chartData, checkConfig(options.configJson)).createChart().object;
-                let oldChart = scene.scene.getObjectByName("groupedChart", true);
-                controls.enableZoom = false;
-                resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
-                    scene.scene.add(newChart);
-                    newChart.position.set(50, 0, 0);
-                    dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart, 2500, 10)
-                        .onComplete(function () {
-                            scene.scene.remove(scene.scene.getObjectById(oldChart.id));
-                            controls.enableZoom = true;
-                            swapActive = false;
-                        });
-                });
+                if(scene) {
+                    this.chartData(data, sortBy);
+                    let camera = scene.camera;
+                    let controls = scene.controls;
+                    let newChart = new Chart(options.chartType, options.chartData, checkConfig(options.configJson)).createChart().object;
+                    let oldChart = scene.scene.getObjectByName("groupedChart", true);
+                    controls.enableZoom = false;
+                    resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
+                        scene.scene.add(newChart);
+                        newChart.position.set(50, 0, 0);
+                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart, 2500, 10)
+                            .onComplete(function () {
+                                scene.scene.remove(scene.scene.getObjectById(oldChart.id));
+                                controls.enableZoom = true;
+                                swapActive = false;
+                            });
+                    });
+                }
+                else throw "API Error: The method \"swapData()\" cannot be called before the \"draw()\" method!";
             }
-            else{
-                console.warn("The method \"swapData()\" was already called and cannot be chained!\nIgnoring chain call of method!");
-            }
+            else console.warn("The method \"swapData()\" was already called and cannot be chained!\nIgnoring chain call of method!");
+
             }
 
         }

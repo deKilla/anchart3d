@@ -137,13 +137,15 @@ var configuration = {
  var chart3D = anchart3d.createChart("anchart3d")
     .setConfig(configuration)
     .pieChart()
-    .chartData(jsonData,"sad") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .chartData(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
+    /* UNCOMMENT FOR LIVE DATA SWAPPING
     setTimeout(function () {
         chart3D.swapData(jsonData2,"DSGehalt");
-        chart3D.swapData(jsonData2,"DSGehalt"); //only here for demonstration of preventing chaining of this method!
+        chart3D.swapData(jsonData2,"Einwohner"); //only here for demonstration of preventing chaining of this method!
     },7000);
+    */
 
 </script>
 
