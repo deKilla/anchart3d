@@ -5,40 +5,23 @@ body{
     background:#888;
 }
 
-#canvasparent {
+#pieChart {
     width:500px;
     height:400px;
-    margin:200px auto;
-    border-radius:10px;
-    border-color:#fff;
+    border:2px solid #fff;
 }
 
-#legend-background {
+.legend {
     background: #000;
     position: absolute;
     top: 20px;
     right: 20px;
     font-size: 14px;
     z-index: 8;
-    /*border:1px dashed #fff;*/
-    padding:10px 15px 5px 10px;
-    border-radius:10px;
-
-}
-
-#legend-background h4 {
-    color:#fff;
-    font-size:25px;
-    display:none;
-}
-
-#legend {
     list-style: none;
-    padding:0px;
-    margin:0px;
 }
 
-#legend li {
+.legend li {
     color:#fff;
     margin-bottom:5px;
     padding:3px 0;
@@ -59,7 +42,7 @@ body{
     display:inline;
 }
 
-#details { 
+.details { 
     z-index:8;
     background: #000;
     color:#fff;
@@ -70,9 +53,9 @@ body{
     border-radius:10px;
 }
 
-#details h2 { margin-top:0px; }
+.details h2 { margin-top:0px; }
 
-#tooltip {
+.tooltip {
     z-index: 9999;
     padding:10px;
     background: #ccc;
@@ -80,21 +63,19 @@ body{
     border-radius:5px;
 }
 
-#tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
+.tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
 
-#controlcontainer { position:absolute; bottom:30px; right:30px; width:90px; height:90px; display:block; }
+.controls { z-index:9999; position: relative; }
+.controls a { padding:0px; margin:0px; position:absolute; background:#000; border:1px solid #fff; text-align: center; font-weight:bold; color:#fff; cursor:pointer; width:28px; height:28px; line-height: 28px;}
+.controls a:hover { background: #333; }
 
-#controls { z-index:9999; position: relative; }
-#controls a { padding:0px; margin:0px; position:absolute; background:#000; border:1px solid #fff; text-align: center; font-weight:bold; color:#fff; cursor:pointer; width:28px; height:28px; line-height: 28px;}
-#controls a:hover { background: #333; }
+.btnup { top:1px; left:30px; }
+.btnleft { top:30px; left:1px; }
+.btnreset { top:31px; left:31px; }
+.btnright { top:30px; left:59px; }
+.btndown { top:59px; left:30px; }
 
-#btnup { top:1px; left:30px; }
-#btnleft { top:30px; left:1px; }
-#btnreset { top:31px; left:31px; }
-#btnright { top:30px; left:59px; }
-#btndown { top:59px; left:30px; }
-
-#btnup {
+.btnup {
     -webkit-border-top-left-radius: 3px;
     -webkit-border-top-right-radius: 3px;
     -moz-border-radius-topleft: 3px;
@@ -103,7 +84,7 @@ body{
     border-top-right-radius: 3px;
 }
 
-#btnleft {
+.btnleft {
     -webkit-border-top-left-radius: 3px;
     -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-topleft: 3px;
@@ -112,7 +93,7 @@ body{
     border-bottom-left-radius: 3px;
 }
 
-#btnright {
+.btnright {
     -webkit-border-top-right-radius: 3px;
     -webkit-border-bottom-right-radius: 3px;
     -moz-border-radius-topright: 3px;
@@ -121,7 +102,7 @@ body{
     border-bottom-right-radius: 3px;
 }
 
-#btndown {
+.btndown {
     -webkit-border-bottom-right-radius: 3px;
     -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-bottomright: 3px;
@@ -130,4 +111,4 @@ body{
     border-bottom-left-radius: 3px;
 }
 
-#controls > a#btnreset { border:0px none; width:29px; height:29px; }
+.controls > a.btnreset { border:0px none; width:29px; height:29px; }

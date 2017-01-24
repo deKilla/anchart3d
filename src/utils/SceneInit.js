@@ -345,6 +345,10 @@ class SceneInit {
                 // http://stackoverflow.com/questions/37339375/how-to-add-closing-tag-for-canvas-in-three-js-rendered-canvas#answer-37375664
                 returnNode = document.createElement(name);
                 create = true;
+            } else if (name == "legend") {
+                returnNode = document.createElement("ul");
+                create = true;
+                returnNode.className = name;
             } else {
                 returnNode = document.createElement("div");
                 create = true;
