@@ -27,7 +27,7 @@ class BarChart {
 
     createSegment(segmentCounter, lastBarStartX, lastBarStartY, height) {
 
-        let barGeometry = new THREE.CubeGeometry(0.5, 0.5, height);
+        let barGeometry = new THREE.CubeGeometry(0.7, 0.7, height);
         let segmentMat = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
@@ -36,36 +36,22 @@ class BarChart {
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
 
-        //set rows here
-        console.log(segmentCounter + " = Segment Counter");
-        /*if (segmentCounter % 3 == 0) {
-            lastBarStartX = 0;
-            console.log("reset of lastBarStartX");
-            lastBarStartY += 1;
-
-        }*/
-
-
-
-        bar.position.x = lastBarStartX + 0.5 + 0.2; //0.5 cube side length + distance between the bars
+        bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
         bar.position.y = lastBarStartY;
         console.log(lastBarStartY);
         bar.position.z = height * 0.5;
 
-
-        console.log("z posi = " + bar.position.z);
+        // console.log("z posi = " + bar.position.z);
         return bar;
     }
 
 
     create3DBarChart(jsonData = this.jsonData) {
-        //calculate percent of every data set in json first
         const calculatedData = jsonData.file;
         console.log(calculatedData);
         //Group together all pieces
         let barChart = new THREE.Group();
         barChart.name = "groupedChart";
-        barChart.position.x = -3;
         console.log(barChart.position);
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
@@ -74,7 +60,7 @@ class BarChart {
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
-        var segmentCounter = 1;
+        let segmentCounter = 1;
 
         //TODO: I don't like this - needs review
 
@@ -91,14 +77,14 @@ class BarChart {
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
                     segment = this.createSegment(segmentCounter, lastBarStartX, lastBarStartY, data1Percent / 10);
-                    lastBarStartX = lastBarStartX + 0.5 + 0.2;
-                    if (segmentCounter%3==0){
-                        lastBarStartY +=0.5+0.2;
+                    lastBarStartX = lastBarStartX + 0.7 + 0.2;
+                    /*if (segmentCounter%3==0){
+                        lastBarStartY +=0.7+0.2;
                         console.log(lastBarStartY+" = Y");
                         lastBarStartX =0;
 
 
-                    }
+                    }*/
                     segmentCounter += 1;
                     //set the lastThetaStart to the length of the last segment, in order to not overlap segments
                     //lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
@@ -110,6 +96,7 @@ class BarChart {
                     segment.data1.name = data1Name;
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
+
 
                 }//second data set
 
@@ -139,6 +126,7 @@ class BarChart {
                  }*/
                 //add new piece to the grouped pieChart
                 //add new piece to the grouped pieChart
+                barChart.position.x = (lastBarStartX/2)*-1;
                 barChart.add(segment);
             }
         }
@@ -148,6 +136,73 @@ class BarChart {
 
         return barChart;
     }
+
+
+    drawYLabel(y, length) {
+    //Marks 1-10 on the graph
+    let title = this.alignPlane(this.createText2D(y + 1), THREE.CenterAlign, THREE.CenterAlign);
+    title.scale.set(0.25, 0.25, 0.25);
+    title.position.x = (-1 - (length.x - 1) / 2) * 16;
+    title.position.z = -(y - (length.y - 1) / 2) * 16;
+    title.position.y = 1;
+    title.rotation.x = -Math.PI / 2;
+    return title;
+}
+
+    drawXLabel(x, length) {
+    //Marks A-J on the graph
+    let c = String.fromCharCode(x + 65);
+    let title = this.alignPlane(this.createText2D(c), THREE.CenterAlign, THREE.CenterAlign);
+    title.scale.set(0.25, 0.25, 0.25);
+    title.position.x = (x - (length.x - 1) / 2) * 16;
+    title.position.z = -(-1 - (length.y - 1) / 2) * 16;
+    title.position.y = 1;
+    title.rotation.x = -Math.PI / 2;
+    return title;
+}
+
+    createTextCanvas(text, color, font, size) {
+    size = size || 24;
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+    let fontStr = (size + 'px ') + (font || 'Arial');
+    ctx.font = fontStr;
+    let w = ctx.measureText(text).width;
+    let h = Math.ceil(size * 1.25);
+    canvas.width = w;
+    canvas.height = h;
+    ctx.font = fontStr;
+    ctx.fillStyle = color || 'black';
+    ctx.fillText(text, 0, size);
+    return canvas;
+}
+
+    createText2D(text, color, font, size, segW, segH) {
+    let canvas = this.createTextCanvas(text, color, font, size);
+    let plane = new THREE.PlaneGeometry(canvas.width, canvas.height, segW, segH);
+    let tex = new THREE.Texture(canvas);
+    tex.needsUpdate = true;
+    let planeMat = new THREE.MeshBasicMaterial({
+        map:tex, color:0xffffff, transparent:true
+    });
+    let mesh = new THREE.Mesh(plane, planeMat);
+    mesh.doubleSided = true;
+    return mesh;
+}
+
+    alignPlane(plane, horizontalAlign, verticalAlign) {
+    let obj = new THREE.Object3D();
+    let u = plane.geometry.vertices[0];
+    let v = plane.geometry.vertices[plane.geometry.vertices.length - 1];
+    let width = Math.abs(u.x - v.x);
+    let height = Math.abs(u.y - v.y);
+    plane.position.x = (width / 2) * horizontalAlign;
+    plane.position.y = (height / 2) * verticalAlign;
+    obj.add(plane);
+    return obj;
+}
+
+
 }
 
 

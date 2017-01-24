@@ -126,17 +126,17 @@ var configuration = {
     "tooltip": true,
     "showOnScreenControls": true,
     "legend": true,
-    //"bgcolor": "#f00",
+    "bgcolor": "skyblue",
     "startAnimation": true,
     "chartAnimation": true,
-    "transparency": true,
+    "transparency": false,
     "antialias": true,
     "fov": 45
 };
 
  var chart3D = anchart3d.createChart("anchart3d")
     .setConfig(configuration)
-    .pieChart()
+    .barChart()
     .chartData(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
