@@ -32,10 +32,10 @@ class SceneInit {
         this.INTERSECTED = INTERSECTED;
 
         this.canvas = this.createDomElement("canvas");
-        this.tooltip = this.createDomElement("tooltip");
         this.details = this.createDomElement("details");
         this.control = this.createDomElement("control");
         this.legend = this.createDomElement("legend");
+        this.tooltip = null
 
     }
 
@@ -43,7 +43,6 @@ class SceneInit {
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
         this.details.style.visibility = "hidden";
-        this.domNode.removeChild(this.tooltip);
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
@@ -277,18 +276,27 @@ class SceneInit {
 
     showTooltip(status) {
 
+        let tooltip = document.getElementById("tooltip") || null;
+        
         if (status && this.sceneConfig.tooltip) {
 
-            this.tooltip.innerHTML =
+            if (!document.getElementById("tooltip")) {
+                tooltip = document.createElement("div");
+            } else {
+                tooltip = document.getElementById("tooltip");
+            }
+
+            tooltip.setAttribute("id", "tooltip");
+            tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>
                  <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
             if(this.INTERSECTED.hasOwnProperty("data2")) {
-                this.tooltip.innerHTML += 
+                tooltip.innerHTML += 
                 `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
             }
-            this.tooltip.style.position = "absolute";
-            this.tooltip.style.left = event.pageX + 'px';
-            this.tooltip.style.top = event.pageY + 'px';
+            tooltip.style.position = "absolute";
+            tooltip.style.left = event.pageX + 'px';
+            tooltip.style.top = event.pageY + 'px';
 
             document.body.appendChild(tooltip);
         } else if (!status && tooltip) {
@@ -322,24 +330,24 @@ class SceneInit {
 
 
     createDomElement(name) {
-        let elementById = document.getElementById(name);
+        let elementByClass = this.domNode.getElementsByClassName(name)[0];
         let elementByTag = this.domNode.getElementsByTagName(name)[0];
         let returnNode = null;
         let create = false;
 
-        if(elementById && elementByTag) {
+        if(elementByClass && elementByTag) {
             throw "multiple elements found - make sure you only have either an element with id or with the tagname";
         }
 
-        if(elementById && !elementByTag) {
+        if(elementByClass && !elementByTag) {
             returnNode = elementById;
         }
 
-        if(!elementById && elementByTag) {
+        if(!elementByClass && elementByTag) {
             returnNode = elementByTag;
         }
         
-        if(!elementById && !elementByTag) {
+        if(!elementByClass && !elementByTag) {
 
             if(name == "canvas") {
                 // http://stackoverflow.com/questions/37339375/how-to-add-closing-tag-for-canvas-in-three-js-rendered-canvas#answer-37375664
