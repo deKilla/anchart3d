@@ -9,27 +9,30 @@ import BarChart from './BarChart'
 
 class Chart {
 
-    constructor(chartType, chartData, configuration) {
-        this.chartType = chartType;
-        this.chartData = chartData;
+    constructor(type, data, configuration) {
+        this.type = type;
+        this.data = data;
         this.configuration = configuration;
+        this.legendMap = null;
     }
 
 
     createChart() {
         let chart;
-        let data = this.chartData;
+        let data = this.data;
 
         // https://sourcemaking.com/refactoring/smells/switch-statements => TODO
-        switch (this.chartType) {
+        switch (this.type) {
             case "pieChart":
-                chart = new PieChart(data,this.configuration);
+                chart = new PieChart(this.type, data, this.configuration);
+                this.legendMap = chart.legendMap;
                 break;
             case "barChart":
-                chart = new BarChart(data,this.configuration);
+                chart = new BarChart(this.type, data, this.configuration);
+                this.legendMap = chart.legendMap;
                 break;
             default:
-                throw "ChartTypeError: The chart type '" + this.chartType + "' is not valid!";
+                throw "ChartTypeError: The chart type '" + this.type + "' is not valid!";
                 break;
         }
 

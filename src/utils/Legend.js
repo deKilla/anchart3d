@@ -6,17 +6,20 @@
 
 class Legend {
 
-    constructor(map, sceneConfig) {
+    constructor(map, sceneConfig, chartName) {
         this.map = map;
         this.sceneConfig = sceneConfig;
+        this.chartName = chartName;
+        this.legendNode = document.getElementById(chartName).getElementsByClassName('legend')[0];
     }
 
-    generateLegend(map = this.map) {
+    generateLegend() {
 
         //checks if the the legend should be enabled
         if (this.sceneConfig.legend) {
 
-            map.forEach(function createHTML(value, key, map) {
+            let chartName = this.chartName;
+            this.map.forEach(function createHTML(value, key, map) {
 
                 let containerElem = document.createElement("li");
 
@@ -27,21 +30,18 @@ class Legend {
                 let nameElem = document.createElement("i");
                 nameElem.textContent = key;
 
-                document.getElementById('legend').appendChild(containerElem).appendChild(colorElem);
-                document.getElementById('legend').appendChild(containerElem).appendChild(nameElem);
+                document.getElementById(chartName).getElementsByClassName('legend')[0].appendChild(containerElem).appendChild(colorElem);
+                document.getElementById(chartName).getElementsByClassName('legend')[0].appendChild(containerElem).appendChild(nameElem);
             })
         }
 
     }
 
 
-
-
-
     removeLegend() {
 
         try {  //resets the elem
-            document.getElementById("legend").innerHTML = "";
+            this.legend.innerHTML = "";
         }
         catch (err) {
             console.log("Childs do not exist. Error:" + err);

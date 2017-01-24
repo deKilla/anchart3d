@@ -14,8 +14,8 @@ export default function createChart (domTarget) {
     let scene;
     let configJson;
     let chart;
-    let chartType;
-    let chartData;
+    let type = domTarget;
+    let data;
     let swapActive;//boolean for preventing chain call of swapData()
 
     let options = {
@@ -30,44 +30,39 @@ export default function createChart (domTarget) {
             else console.warn("Configuration already set!\nIgnoring additional configuration passed to the API");
             return this;
         },
-        pieChart: function () {
-            options.chartType = "pieChart";
-            return this;
-        },
-        barChart: function () {
-            options.chartType = "barChart";
-            return this;
-        },
-        chartData: function (jsonData, sortBy) {
+        data: function (jsonData, sortBy) {
             if(sortBy){
-                options.chartData = new JsonData(jsonData).sortData(sortBy);
+                options.data = new JsonData(jsonData).sortData(sortBy);
             }
             else {
-                options.chartData = new JsonData(jsonData);
+                options.data = new JsonData(jsonData);
             }
             return this;
         },
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
             configJson = checkConfig(options.configJson);
-            chartType = options.chartType;
-            chartData = options.chartData;
+            data = options.data;
 
             if(document.getElementById(domTarget)) {
-                if (chartType && chartData) {
+                if (type && data) {
 
-                    chart = new Chart(chartType, chartData, configJson)
+                    chart = new Chart(type, data, configJson)
                         .createChart();
 
                     if (configJson) { //if config for the sceneInit is available
-                        scene = new SceneInit(domTarget, chartData , configJson);
+                        scene = new SceneInit(domTarget, data, configJson, chart.legendMap, chart.type);
                     }
                     else { //else use default sceneInit settings
-                        scene = new SceneInit(domTarget, chartData);
+                        scene = new SceneInit(domTarget, data, chart.legendMap, chart.type);
                     }
                     scene.initScene();
                     scene.animate();
+                    console.log(chart.object);
+                    console.log(scene);
                     scene.scene.add(chart.object);
+                    console.log(scene);
+
                     return this;
 
                 }
@@ -84,8 +79,8 @@ export default function createChart (domTarget) {
                     chartData = options.chartData;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(chartType, chartData, configJson).createChart().object;
-                    let oldChart = scene.scene.getObjectByName("groupedChart", true);
+                    let newChart = new Chart(type, data, configJson).createChart().object;
+                    let oldChart = scene.scene.object[0];
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
                         scene.scene.add(newChart);
@@ -116,6 +111,11 @@ function checkConfig(configJson) {
             if(propKey === "fov"){
                 if(isNaN(configJson[propKey]))
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
+                else validConfig[propKey] = configJson[propKey];
+            }
+            else if(propKey === "name"){
+                if(typeof configJson[propKey] != "string")
+                    console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'string'!\nProperty was set to default value!");
                 else validConfig[propKey] = configJson[propKey];
             }
             else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically

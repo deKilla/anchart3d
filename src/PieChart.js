@@ -5,7 +5,6 @@
  */
 
 import Chart from './Chart';
-import Legend from './utils/Legend';
 import {animateZ} from "./utils/animation";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
@@ -14,15 +13,16 @@ THREE.orbitControls = require('three-orbit-controls')(THREE);
 class PieChart {
 
     //TODO: maybe use object ...
-    constructor(jsonData,sceneConfig,radius, angleStart, angleEnd) {
+    constructor(type, jsonData, sceneConfig, radius, angleStart, angleEnd) {
 
+        this.type = type;
         this.jsonData = jsonData;
         this.sceneConfig = sceneConfig;
         this.radius = radius;
         this.angleStart = angleStart;
         this.angleEnd = angleEnd;
+        this.legendMap = new Map();
         this.object = this.create3DPieChart();
-
     }
 
 
@@ -53,13 +53,13 @@ class PieChart {
         const calculatedData = jsonData.file;
 
         //Group together all pieces
-        let pieChart = new THREE.Group();
-        pieChart.name = "groupedChart";
+        let chart = new THREE.Group();
+        
         //define type of chart...necessary for live data swapping
-        pieChart.chartType = "pieChart";
+        chart.chartType = this.type;
+        chart.name = chart.chartType;
         //variable holds last position of the inserted segment of the pie
         let lastThetaStart = 0.0;
-        let legendMap = new Map();
         //iterate over the jsonData and create for every data a new pie segment
         //data = one object in the json which holds the props "amount","percent" in this case.
         //TODO: I don't like this - needs review
@@ -80,7 +80,11 @@ class PieChart {
                     lastThetaStart = lastThetaStart + THREE.Math.degToRad(data1Percent * 3.6);
 
                     //adding elements to the legendMap
-                    legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+                    this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+
+                    /*this.legendMap.forEach(function createHTML(value, key, map) {
+                        console.log(key + " => " + value);
+                    })*/
 
                     segment.name = calculatedData[dataset].name;
                     segment.data1 = {};
@@ -112,15 +116,10 @@ class PieChart {
 
                 }
                 //add new piece to the grouped pieChart
-                pieChart.add(segment);
+                chart.add(segment);
             }
         }
-        let pieChartLegend = new Legend(legendMap,this.sceneConfig);
-        pieChartLegend.removeLegend();
-        pieChartLegend.generateLegend();
-
-
-        return pieChart;
+        return chart;
     }
 }
 

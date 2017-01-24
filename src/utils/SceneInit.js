@@ -8,30 +8,42 @@ import TWEEN from "tween.js";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+import Legend from './Legend';
 
 
 class SceneInit {
 
     //TODO: ebenfalls object ...
-    constructor(domtarget, dataArray, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
-        
+    constructor(domtarget, dataArray, sceneConfig, legendMap, chartName, camera, scene, controls, renderer, mouse, INTERSECTED) {
+
         this.domNode = document.getElementById(domtarget);
-        this.parentWidth = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("width").slice(0,-2);
-        this.parentHeight = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("height").slice(0,-2);
+
+        this.parentWidth = window.getComputedStyle(this.domNode).getPropertyValue("width").slice(0,-2);
+        this.parentHeight = window.getComputedStyle(this.domNode).getPropertyValue("height").slice(0,-2);
         this.dataArray = dataArray;     //array with all datasets from user => needed for live data swapping
         this.sceneConfig = sceneConfig; //custom user options held here
+        this.legendMap = legendMap;
+        this.chartName = chartName;
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
         this.renderer = renderer;
         this.mouse = new THREE.Vector2();
         this.INTERSECTED = INTERSECTED;
+
+        this.canvas = this.createDomElement("canvas");
+        this.tooltip = this.createDomElement("tooltip");
+        this.details = this.createDomElement("details");
+        this.control = this.createDomElement("control");
+        this.legend = this.createDomElement("legend");
+
     }
 
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
-        if(document.getElementById("details")) document.getElementById("details").style.visibility = "hidden";
+        this.details.style.visibility = "hidden";
+        this.domNode.removeChild(this.tooltip);
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
@@ -44,13 +56,15 @@ class SceneInit {
 
         //specify a canvas which is already created in the HTML file and tagged by an id
         this.renderer = new THREE.WebGLRenderer({
-            canvas: this.domNode,
+            canvas: this.canvas,
             antialias: this.sceneConfig.antialias,
             alpha: this.sceneConfig.transparency
         });
 
         this.renderer.setSize(this.parentWidth, this.parentHeight);
-        this.domNode.parentElement.appendChild(this.renderer.domElement);
+        this.domNode.appendChild(this.renderer.domElement);
+
+        console.log(this.renderer.domElement);
 
         //transparent background won't work when a background-color is defined
         if(this.sceneConfig.transparency == true) {
@@ -58,7 +72,7 @@ class SceneInit {
         } else {
             this.scene.background = new THREE.Color(
                 this.sceneConfig.bgcolor ||
-                window.getComputedStyle(this.domNode.parentElement).getPropertyValue("background-color")// ||
+                window.getComputedStyle(this.domNode).getPropertyValue("background-color")// ||
                 //window.getComputedStyle(document.body).getPropertyValue("background-color") // pseudo transparency
             );
         }
@@ -96,6 +110,11 @@ class SceneInit {
             this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
             // was this.scene.getObjectByName("groupedChart", true) but is broken ?!!
         }
+
+        let legend = new Legend(this.legendMap, this.sceneConfig, this.chartName);
+        legend.removeLegend();
+        legend.generateLegend();
+
     }
 
     animate() {
@@ -119,14 +138,14 @@ class SceneInit {
 
     findIntersections(event) {
         let raycaster = new THREE.Raycaster();
-        this.mouse.x = (( event.pageX - this.domNode.parentElement.offsetLeft ) / this.domNode.width ) * 2 - 1;
-        this.mouse.y = - (( event.pageY - this.domNode.parentElement.offsetTop ) / this.domNode.height ) * 2 + 1;
+        this.mouse.x = (( event.pageX - this.domNode.offsetLeft ) / this.canvas.width ) * 2 - 1;
+        this.mouse.y = - (( event.pageY - this.domNode.offsetTop ) / this.canvas.height ) * 2 + 1;
         //console.log(this.mouse)
 
         raycaster.setFromCamera(this.mouse, this.camera);
 
         //search for our object by name which we declared before and return it
-        return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
+        return raycaster.intersectObjects(this.scene.getObjectByName(this.sceneConfig.name, true).children);
     }
 
 
@@ -157,48 +176,48 @@ class SceneInit {
             interval = 100
         }
 
-        document.getElementById("controls").innerHTML = `<a id="btnup">&uarr;</a>`;
-        document.getElementById("controls").innerHTML += `<a id="btnleft">&larr;</a>`;
-        document.getElementById("controls").innerHTML += `<a id="btnreset">R</a>`;
-        document.getElementById("controls").innerHTML += `<a id="btnright">&rarr;</a>`;
-        document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
+        this.control.innerHTML = `<a class="btnup">&uarr;</a>`;
+        this.control.innerHTML += `<a class="btnleft">&larr;</a>`;
+        this.control.innerHTML += `<a class="btnreset">R</a>`;
+        this.control.innerHTML += `<a class="btnright">&rarr;</a>`;
+        this.control.innerHTML += `<a class="btndown">&darr;</a>`;
 
-        document.querySelector("#btnreset").addEventListener("click", function () {
+        this.domNode.querySelector(".btnreset").addEventListener("click", function () {
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
             resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
         });
-        document.querySelector("#btnleft").addEventListener(method, function () {
+        this.domNode.querySelector(".btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
                 currentChart.rotation.z += 0.1
             }, interval)
         });
-        document.querySelector("#btnup").addEventListener(method, function () {
+        this.domNode.querySelector(".btnup").addEventListener(method, function () {
             repeater = setInterval(function () {
                 currentChart.rotation.x -= 0.1
             }, interval)
         });
-        document.querySelector("#btnright").addEventListener(method, function () {
+        this.domNode.querySelector(".btnright").addEventListener(method, function () {
             repeater = setInterval(function () {
                 currentChart.rotation.z -= 0.1
             }, interval)
         });
-        document.querySelector("#btndown").addEventListener(method, function () {
+        this.domNode.querySelector(".btndown").addEventListener(method, function () {
             repeater = setInterval(function () {
                 currentChart.rotation.x += 0.1
             }, interval)
         });
 
         if (method == "mouseover") {
-            document.querySelector("#btnleft").addEventListener("mouseout", function () {
+            this.domNode.querySelector(".btnleft").addEventListener("mouseout", function () {
                 clearInterval(repeater)
             });
-            document.querySelector("#btnup").addEventListener("mouseout", function () {
+            this.domNode.querySelector(".btnup").addEventListener("mouseout", function () {
                 clearInterval(repeater)
             });
-            document.querySelector("#btnright").addEventListener("mouseout", function () {
+            this.domNode.querySelector(".btnright").addEventListener("mouseout", function () {
                 clearInterval(repeater)
             });
-            document.querySelector("#btndown").addEventListener("mouseout", function () {
+            this.domNode.querySelector(".btndown").addEventListener("mouseout", function () {
                 clearInterval(repeater)
             });
         }
@@ -242,48 +261,34 @@ class SceneInit {
 
     showDetails(status) {
         
-        let details = document.getElementById("details");
-        if (!details) {
-            throw "The tooltip requires a <div id=\"detailpane\"></div> in order to work!";
-        }
-
         if (status & this.sceneConfig.details) {
-            details.innerHTML = 
+            this.details.innerHTML = 
             `<h2>${this.INTERSECTED.name}</h2>
             <b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})`;
             if(this.INTERSECTED.hasOwnProperty("data2")) {
-                details.innerHTML += 
+                this.details.innerHTML += 
                 `<br><b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
             }
-            details.style.visibility = "visible";
+            this.details.style.visibility = "visible";
         } else if (!status && details) {
-            details.style.visibility = "hidden";
+            this.details.style.visibility = "hidden";
         }
     }
 
     showTooltip(status) {
 
-        let tooltip = document.getElementById("tooltip") || null;
-        
         if (status && this.sceneConfig.tooltip) {
 
-            if (!document.getElementById("tooltip")) {
-                tooltip = document.createElement("div");
-            } else {
-                tooltip = document.getElementById("tooltip");
-            }
-
-            tooltip.setAttribute("id", "tooltip");
-            tooltip.innerHTML =
+            this.tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>
                  <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
             if(this.INTERSECTED.hasOwnProperty("data2")) {
-                tooltip.innerHTML += 
+                this.tooltip.innerHTML += 
                 `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
             }
-            tooltip.style.position = "absolute";
-            tooltip.style.left = event.pageX + 'px';
-            tooltip.style.top = event.pageY + 'px';
+            this.tooltip.style.position = "absolute";
+            this.tooltip.style.left = event.pageX + 'px';
+            this.tooltip.style.top = event.pageY + 'px';
 
             document.body.appendChild(tooltip);
         } else if (!status && tooltip) {
@@ -314,6 +319,47 @@ class SceneInit {
 
     onDocumentDblClick() {
     }
+
+
+    createDomElement(name) {
+        let elementById = document.getElementById(name);
+        let elementByTag = this.domNode.getElementsByTagName(name)[0];
+        let returnNode = null;
+        let create = false;
+
+        if(elementById && elementByTag) {
+            throw "multiple elements found - make sure you only have either an element with id or with the tagname";
+        }
+
+        if(elementById && !elementByTag) {
+            returnNode = elementById;
+        }
+
+        if(!elementById && elementByTag) {
+            returnNode = elementByTag;
+        }
+        
+        if(!elementById && !elementByTag) {
+
+            if(name == "canvas") {
+                // http://stackoverflow.com/questions/37339375/how-to-add-closing-tag-for-canvas-in-three-js-rendered-canvas#answer-37375664
+                returnNode = document.createElement(name);
+                create = true;
+            } else {
+                returnNode = document.createElement("div");
+                create = true;
+                returnNode.className = name;
+            }
+
+        }    
+
+    if (create) {
+        this.domNode.appendChild(returnNode);
+    }
+    return returnNode;
+    }
+
+
 
 }
 

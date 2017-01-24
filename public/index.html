@@ -8,6 +8,8 @@
     <script type="text/javascript" src="./../build/anchart3d.js"></script>
 </head>
 <body>
+
+<!--
 <div id="legend-background">
     <h4>Piechart Legend</h4>
     <ul id="legend">
@@ -16,18 +18,18 @@
 
 
 <div id="details"></div>
-<div id="controlcontainer"> <!-- not required and used for positionioning purposes only -->
+<div id="controlcontainer">
     <div id="controls"></div>
 </div>
 
-<!-- 
-the name "canvasparent" is an example and can be any name or even omitted 
-if ommited, then the chart will take all available space
--->
 <div id="canvasparent">
     <canvas id="anchart3d"></canvas>
 </div>
 
+-->
+
+<div id="pieChart"></div>
+<div id="barChart"></div>
 
 <script>
 
@@ -121,7 +123,8 @@ if ommited, then the chart will take all available space
         }
     ];
 
-var configuration = {
+var configuration_pc = {
+    "name": "pieChart",
     "details": true,
     "tooltip": true,
     "showOnScreenControls": true,
@@ -134,11 +137,31 @@ var configuration = {
     "fov": 45
 };
 
- var chart3D = anchart3d.createChart("anchart3d")
-    .setConfig(configuration)
-    .pieChart()
-    .chartData(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+var configuration_bc = {
+    "name": "barChart",
+    "details": true,
+    "tooltip": true,
+    "showOnScreenControls": true,
+    "legend": true,
+    //"bgcolor": "#f00",
+    "startAnimation": true,
+    "chartAnimation": true,
+    "transparency": true,
+    "antialias": true,
+    "fov": 45
+};
+
+ var pieChart = anchart3d.createChart("pieChart")
+    .setConfig(configuration_pc)
+    .data(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
+
+/*
+ var barChart = anchart3d.createChart("barChart")
+    .setConfig(configuration_bc)
+    .data(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .draw(); //.draw() must be last
+*/
 
     /* UNCOMMENT FOR LIVE DATA SWAPPING
     setTimeout(function () {
