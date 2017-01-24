@@ -24,21 +24,18 @@ export default function createChart (domTarget) {
 
     return {
         setConfig: function (configJson) {
-            options.configJson = configJson;
+            if(!options.configJson) {
+                options.configJson = configJson;
+            }
+            else console.warn("Configuration already set!\nIgnoring additional configuration passed to the API");
             return this;
         },
         pieChart: function () {
-            if(!options.chartType){
-                options.chartType = "pieChart";
-            }
-            else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
+            options.chartType = "pieChart";
             return this;
         },
         barChart: function () {
-            if(!options.chartType){
-                options.chartType = "barChart";
-            }
-            else console.warn("Chart type was already set!\nIgnoring additional chart method in API");
+            options.chartType = "barChart";
             return this;
         },
         chartData: function (jsonData, sortBy) {
@@ -79,14 +76,15 @@ export default function createChart (domTarget) {
             }
             else throw "API Error: Element with id \"" + domTarget + "\" not found!";
         },
-        swapData : function(data,sortBy){
+        swapData : function(){
             if(!swapActive) {
                 swapActive = true;
                 if(scene) {
-                    this.chartData(data, sortBy);
+                    chartType = options.chartType;
+                    chartData = options.chartData;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(options.chartType, options.chartData, checkConfig(options.configJson)).createChart().object;
+                    let newChart = new Chart(chartType, chartData, configJson).createChart().object;
                     let oldChart = scene.scene.getObjectByName("groupedChart", true);
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
