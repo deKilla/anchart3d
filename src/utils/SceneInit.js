@@ -93,8 +93,7 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
         if (this.sceneConfig.showOnScreenControls) {
-            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
-            // was this.scene.getObjectByName("groupedChart", true) but is broken ?!!
+            this.showOnScreenControls("mouseover", this.scene, this.camera);
         }
     }
 
@@ -247,13 +246,15 @@ class SceneInit {
             throw "The tooltip requires a <div id=\"detailpane\"></div> in order to work!";
         }
 
-        if (status & this.sceneConfig.details) {
+        if (status && this.sceneConfig.details) {
             details.innerHTML = 
-            `<h2>${this.INTERSECTED.name}</h2>
-            <b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})`;
+            `<h2>${this.INTERSECTED.name}</h2>`;
+            if(this.INTERSECTED.hasOwnProperty("data1")){
+            details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
+            }
             if(this.INTERSECTED.hasOwnProperty("data2")) {
                 details.innerHTML += 
-                `<br><b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
+                `<b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
             }
             details.style.visibility = "visible";
         } else if (!status && details) {
@@ -275,8 +276,10 @@ class SceneInit {
 
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
-                `<h4>${this.INTERSECTED.name}</h4>
-                 <b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br />`;
+                `<h4>${this.INTERSECTED.name}</h4>`;
+            if(this.INTERSECTED.hasOwnProperty("data1")){
+                tooltip.innerHTML += `<b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br/>`;
+                }
             if(this.INTERSECTED.hasOwnProperty("data2")) {
                 tooltip.innerHTML += 
                 `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
@@ -289,6 +292,7 @@ class SceneInit {
         } else if (!status && tooltip) {
             document.body.removeChild(tooltip);
         }
+
     }
 
     colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
