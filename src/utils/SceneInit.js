@@ -3,7 +3,7 @@
  * @author Michael Fuchs (https://github.com/deKilla)
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
-
+import Axis from "./Axis"
 import TWEEN from "tween.js";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
@@ -82,6 +82,9 @@ class SceneInit {
          else {
             this.camera.position.set(0, -10, 7);
         }
+        //ADD AXIS
+        let axis = new Axis().initAxis();
+        this.scene.add(axis);
 
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);

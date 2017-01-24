@@ -10,6 +10,7 @@
 import Chart from './Chart';
 import Legend from './utils/Legend';
 import {animateZ} from "./utils/animation";
+import Axis from "./utils/Axis";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
 
@@ -123,6 +124,9 @@ class BarChart {
 
         let barChartLegend = new Legend(legendMap, this.sceneConfig);
         barChartLegend.generateLegend();
+
+        let axis = new Axis();
+        axis.initAxis();
 
 
         return barChart;
