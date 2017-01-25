@@ -15,6 +15,7 @@ export default function createChart (domTarget) {
     let configJson;
     let chart;
     let chartType;
+    let chartName;
     let data;
     let swapActive;//boolean for preventing chain call of swapData()
 
@@ -51,19 +52,20 @@ export default function createChart (domTarget) {
             //check config to either filter incorrect config parameters, or pass default config
             configJson = checkConfig(options.configJson);
             chartType = options.chartType;
+            chartName = domTarget + "_" + chartType;
             data = options.data;
 
             if(document.getElementById(domTarget)) {
                 if (chartType && data) {
 
-                    chart = new Chart(chartType, data, configJson)
+                    chart = new Chart(chartName, chartType, data, configJson)
                         .createChart();
 
                     if (configJson) { //if config for the sceneInit is available
-                        scene = new SceneInit(domTarget,configJson, chart.legendMap);
+                        scene = new SceneInit(domTarget,configJson, chartName, chart.legendMap);
                     }
                     else { //else use default sceneInit settings
-                        scene = new SceneInit(domTarget, chart.legendMap);
+                        scene = new SceneInit(chartName, domTarget, chartName, chart.legendMap);
                     }
                     scene.initScene();
                     scene.animate();
@@ -85,7 +87,7 @@ export default function createChart (domTarget) {
                     data = options.chartData;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(configJson, data, configJson).createChart().object;
+                    let newChart = new Chart(configJson, data, configJson).createChart(chartType).object;
                     let oldChart = scene.scene.object[0];
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {

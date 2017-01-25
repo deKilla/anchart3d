@@ -14,15 +14,16 @@ import Legend from './Legend';
 class SceneInit {
 
     //TODO: ebenfalls object ...
-    constructor(domtarget, sceneConfig, legendMap, chartName, camera, scene, controls, renderer, mouse, INTERSECTED) {
+    constructor(domNode, sceneConfig, chartName, legendMap, camera, scene, controls, renderer, mouse, INTERSECTED) {
 
-        this.domNode = document.getElementById(domtarget);
+        
+        this.domNode = document.getElementById(domNode);
 
         this.parentWidth = window.getComputedStyle(this.domNode).getPropertyValue("width").slice(0,-2);
         this.parentHeight = window.getComputedStyle(this.domNode).getPropertyValue("height").slice(0,-2);
         this.sceneConfig = sceneConfig; //custom user options held here
-        this.legendMap = legendMap;
         this.chartName = chartName;
+        this.legendMap = legendMap;
         this.camera = camera;
         this.scene = scene;
         this.controls = controls;
@@ -61,8 +62,6 @@ class SceneInit {
 
         this.renderer.setSize(this.parentWidth, this.parentHeight);
         this.domNode.appendChild(this.renderer.domElement);
-
-        console.log(this.renderer.domElement);
 
         //transparent background won't work when a background-color is defined
         if(this.sceneConfig.transparency == true) {
@@ -106,10 +105,9 @@ class SceneInit {
 
         if (this.sceneConfig.showOnScreenControls) {
             this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
-            // was this.scene.getObjectByName("groupedChart", true) but is broken ?!!
         }
 
-        let legend = new Legend(this.legendMap, this.sceneConfig, this.chartName);
+        let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
         legend.removeLegend();
         legend.generateLegend();
 
@@ -142,8 +140,7 @@ class SceneInit {
 
         raycaster.setFromCamera(this.mouse, this.camera);
 
-        //search for our object by name which we declared before and return it
-        return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
+        return raycaster.intersectObjects(this.scene.getObjectByName(this.chartName, true).children);
     }
 
 
@@ -250,6 +247,9 @@ class SceneInit {
         } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
             this.showTooltip(false);
         }
+
+        //test
+        if(event.type == "mousemove") console.log(this.domNode);
     }
 
     showDetails(status) {

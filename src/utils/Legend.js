@@ -6,11 +6,11 @@
 
 class Legend {
 
-    constructor(map, sceneConfig, chartName) {
+    constructor(map, sceneConfig, domNode) {
         this.map = map;
         this.sceneConfig = sceneConfig;
-        this.chartName = chartName;
-        this.legendNode = document.getElementById(chartName).getElementsByClassName('legend')[0];
+        this.domNode = domNode;
+        this.legendNode = this.domNode.getElementsByClassName('legend')[0];
 
     }
 
@@ -19,7 +19,7 @@ class Legend {
         //checks if the the legend should be enabled
         if (this.sceneConfig.legend) {
 
-            let chartName = this.chartName;
+            let legendNode = this.legendNode;
             this.map.forEach(function createHTML(value, key, map) {
 
                 let containerElem = document.createElement("li");
@@ -31,8 +31,8 @@ class Legend {
                 let nameElem = document.createElement("i");
                 nameElem.textContent = key;
 
-                document.getElementById(chartName).getElementsByClassName('legend')[0].appendChild(containerElem).appendChild(colorElem);
-                document.getElementById(chartName).getElementsByClassName('legend')[0].appendChild(containerElem).appendChild(nameElem);
+                legendNode.appendChild(containerElem).appendChild(colorElem);
+                legendNode.appendChild(containerElem).appendChild(nameElem);
             })
         }
 

@@ -28,8 +28,8 @@
 
 -->
 
-<div id="pieChart"></div>
-<div id="barChart"></div>
+<div id="blatestpie"></div>
+<div id="blatestpie2"></div>
 
 <script>
 
@@ -141,7 +141,7 @@ var configuration_bc = {
     "tooltip": true,
     "showOnScreenControls": true,
     "legend": true,
-    //"bgcolor": "#f00",
+    //"bgcolor": "#f00",                 //bgcolor geht net ... todo
     "startAnimation": true,
     "chartAnimation": true,
     "transparency": true,
@@ -149,27 +149,24 @@ var configuration_bc = {
     "fov": 45
 };
 
- var pieChart = anchart3d.createChart("pieChart")
+ var pieChart = anchart3d.createChart("blatestpie")
     .setConfig(configuration_pc)
     .pieChart()
     .data(jsonData,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
-/*
- var barChart = anchart3d.createChart("barChart")
-    .setConfig(configuration_bc)
-    .data(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+var pieChart2 = anchart3d.createChart("blatestpie2")
+    .setConfig(configuration_pc)
+    .pieChart()
+    .data(jsonData2,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
-*/
 
-    /* UNCOMMENT FOR LIVE DATA SWAPPING
     setTimeout(function () {
-        chart3D.chartData(jsonData2,"Einwohner");
-        //chart3D.barChart();
-        chart3D.swapData();
-        chart3D.swapData(); //only here for demonstration of preventing chaining of this method!
-    },7000);
-     */
+        pieChart.data(jsonData2,"Einwohner");
+        pieChart2.data(jsonData,"Einwohner");
+        pieChart.swapData();
+        pieChart2.swapData(); //only here for demonstration of preventing chaining of this method!
+    },10000);
 
 </script>
 
