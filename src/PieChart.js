@@ -54,7 +54,7 @@ class PieChart {
 
         //Group together all pieces
         let chart = new THREE.Group();
-        
+        chart.name = "groupedChart";
         //define type of chart...necessary for live data swapping
         chart.chartType = this.type;
         chart.name = chart.chartType;

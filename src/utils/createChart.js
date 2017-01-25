@@ -14,12 +14,12 @@ export default function createChart (domTarget) {
     let scene;
     let configJson;
     let chart;
-    let type = domTarget;
+    let chartType;
     let data;
     let swapActive;//boolean for preventing chain call of swapData()
 
     let options = {
-        domTarget: domTarget,
+        domTarget: domTarget
     };
 
     return {
@@ -28,6 +28,14 @@ export default function createChart (domTarget) {
                 options.configJson = configJson;
             }
             else console.warn("Configuration already set!\nIgnoring additional configuration passed to the API");
+            return this;
+        },
+        pieChart: function () {
+            options.chartType = "pieChart";
+            return this;
+        },
+        barChart: function () {
+            options.chartType = "barChart";
             return this;
         },
         data: function (jsonData, sortBy) {
@@ -42,31 +50,29 @@ export default function createChart (domTarget) {
         draw: function () {
             //check config to either filter incorrect config parameters, or pass default config
             configJson = checkConfig(options.configJson);
+            chartType = options.chartType;
             data = options.data;
 
             if(document.getElementById(domTarget)) {
-                if (type && data) {
+                if (chartType && data) {
 
-                    chart = new Chart(type, data, configJson)
+                    chart = new Chart(chartType, data, configJson)
                         .createChart();
 
                     if (configJson) { //if config for the sceneInit is available
-                        scene = new SceneInit(domTarget, data, configJson, chart.legendMap, chart.type);
+                        scene = new SceneInit(domTarget,configJson, chart.legendMap);
                     }
                     else { //else use default sceneInit settings
-                        scene = new SceneInit(domTarget, data, chart.legendMap, chart.type);
+                        scene = new SceneInit(domTarget, chart.legendMap);
                     }
                     scene.initScene();
                     scene.animate();
-                    console.log(chart.object);
-                    console.log(scene);
                     scene.scene.add(chart.object);
-                    console.log(scene);
 
                     return this;
 
                 }
-                else throw "API Error: ChartType OR ChartData undefined!\nCheck if values were passed to 'setChart()' and 'chartData()'!";
+                else throw "API Error: ChartType OR ChartData undefined!\nCheck if chart type is set or 'chartData()' was called!";
 
             }
             else throw "API Error: Element with id \"" + domTarget + "\" not found!";
@@ -76,10 +82,10 @@ export default function createChart (domTarget) {
                 swapActive = true;
                 if(scene) {
                     chartType = options.chartType;
-                    chartData = options.chartData;
+                    data = options.chartData;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(type, data, configJson).createChart().object;
+                    let newChart = new Chart(configJson, data, configJson).createChart().object;
                     let oldChart = scene.scene.object[0];
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {

@@ -11,6 +11,7 @@ class Legend {
         this.sceneConfig = sceneConfig;
         this.chartName = chartName;
         this.legendNode = document.getElementById(chartName).getElementsByClassName('legend')[0];
+
     }
 
     generateLegend() {

@@ -14,13 +14,12 @@ import Legend from './Legend';
 class SceneInit {
 
     //TODO: ebenfalls object ...
-    constructor(domtarget, dataArray, sceneConfig, legendMap, chartName, camera, scene, controls, renderer, mouse, INTERSECTED) {
+    constructor(domtarget, sceneConfig, legendMap, chartName, camera, scene, controls, renderer, mouse, INTERSECTED) {
 
         this.domNode = document.getElementById(domtarget);
 
         this.parentWidth = window.getComputedStyle(this.domNode).getPropertyValue("width").slice(0,-2);
         this.parentHeight = window.getComputedStyle(this.domNode).getPropertyValue("height").slice(0,-2);
-        this.dataArray = dataArray;     //array with all datasets from user => needed for live data swapping
         this.sceneConfig = sceneConfig; //custom user options held here
         this.legendMap = legendMap;
         this.chartName = chartName;
@@ -144,7 +143,7 @@ class SceneInit {
         raycaster.setFromCamera(this.mouse, this.camera);
 
         //search for our object by name which we declared before and return it
-        return raycaster.intersectObjects(this.scene.getObjectByName(this.sceneConfig.name, true).children);
+        return raycaster.intersectObjects(this.scene.getObjectByName("groupedChart", true).children);
     }
 
 
@@ -155,16 +154,11 @@ class SceneInit {
                 break;
             case 67: //C key
                 break;
-                //let currentChart = this.scene.getObjectByName("groupedChart", true);
-                //let camera = this.camera;
-                ///this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
 
 
     showOnScreenControls(method = "click", currentChart, camera) {
-        //console.log(this.scene)
-        //console.log(currentChart);
         let repeater;
         let interval;
 
@@ -262,17 +256,17 @@ class SceneInit {
       
 
         if (status && this.sceneConfig.details) {
-            details.innerHTML = 
+            this.details.innerHTML =
             `<h2>${this.INTERSECTED.name}</h2>`;
             if(this.INTERSECTED.hasOwnProperty("data1")){
-            details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
+            this.details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
             }
             if(this.INTERSECTED.hasOwnProperty("data2")) {
-                details.innerHTML += 
+                this.details.innerHTML +=
                 `<b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
             }
             this.details.style.visibility = "visible";
-        } else if (!status && details) {
+        } else if (!status && this.details) {
             this.details.style.visibility = "hidden";
         }
     }

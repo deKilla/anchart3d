@@ -124,7 +124,6 @@
     ];
 
 var configuration_pc = {
-    "name": "pieChart",
     "details": true,
     "tooltip": true,
     "showOnScreenControls": true,
@@ -138,7 +137,6 @@ var configuration_pc = {
 };
 
 var configuration_bc = {
-    "name": "barChart",
     "details": true,
     "tooltip": true,
     "showOnScreenControls": true,
@@ -153,7 +151,8 @@ var configuration_bc = {
 
  var pieChart = anchart3d.createChart("pieChart")
     .setConfig(configuration_pc)
-    .data(jsonData,"Einwohner") // to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .pieChart()
+    .data(jsonData,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 /*
