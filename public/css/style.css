@@ -2,33 +2,41 @@ body{
     margin: 0;
     overflow: hidden;
     font-family: Arial;
-    background:#888;
+    background:#fff;
 }
+
+#wrapper { width:960px; margin:0 auto;  }
+
+h1, h2 { margin: 10px 0 0 10px; }
 
 /* -- the div neeeeeeeeeeds width and height or it does NOT work -- */
 /* maybe fallback or something? */
 #blatestpie {
-    width:700px;
-    height:400px;
-    border:2px solid #fff;
+    background:#aaa;
+    width:958px;
+    height:300px;
+    border:1px solid #000;
     position: relative;
 }
 
 #blatestpie2 {
-    width:700px;
-    height:400px;
-    border:2px solid #fff;
+    background:#aaa;
+    width:958px;
+    height:300px;
     position:relative;
+    border:1px solid #000;
 }
 
 
 .legend {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10px;
+    right: 10px;
     font-size: 14px;
     z-index: 8;
     list-style: none;
+    margin:0;
+    padding:0;
 }
 
 .legend li {
@@ -45,32 +53,26 @@ body{
     height: 14px;
     margin-right:10px;
     padding:5px;
-    border-radius:3px;
-}
-
-.legend-block{
-    display:inline;
 }
 
 .details { 
     z-index:8;
-    background: #000;
-    color:#fff;
+    background: #fff;
+    border:1px solid #000;
+    color:#000;
     position: absolute;
-    top:20px;
-    left:20px;
+    top:10px;
+    left:10px;
     padding:10px 15px 5px 10px;
-    border-radius:10px;
 }
 
-.details h2 { margin-top:0px; }
+.details h2 { margin:0 0 5px 0; }
 
 #tooltip {
     z-index: 9999;
     padding:10px;
     background: #ccc;
     border:1px solid #000;
-    border-radius:5px;
 }
 
 #tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
