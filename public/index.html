@@ -11,6 +11,7 @@
 
 <div id="wrapper">
 <h1>anchart3d</h1>
+<input type="button" onClick="swap()" value="swap data">
 <h2>PieChart</h2>
 <div id="blatestpie"></div>
 <h2>BarChart</h2>
@@ -149,12 +150,12 @@ var barChart = anchart3d.createChart("blatestpie2")
 
 
 
-    setTimeout(function () {
+    var swap = function () {
         pieChart.data(jsonData2,"Einwohner");
         barChart.data(jsonData,"Einwohner");
         pieChart.swapData();
         barChart.swapData(); //only here for demonstration of preventing chaining of this method!
-    },7000);
+    };
 
 </script>
 

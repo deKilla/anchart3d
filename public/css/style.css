@@ -14,7 +14,7 @@ h1, h2 { margin: 10px 0 0 10px; }
 #blatestpie {
     background:#aaa;
     width:958px;
-    height:300px;
+    height:280px;
     border:1px solid #000;
     position: relative;
 }
@@ -22,7 +22,7 @@ h1, h2 { margin: 10px 0 0 10px; }
 #blatestpie2 {
     background:#aaa;
     width:958px;
-    height:300px;
+    height:280px;
     position:relative;
     border:1px solid #000;
 }
