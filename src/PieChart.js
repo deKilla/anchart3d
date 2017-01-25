@@ -13,15 +13,12 @@ THREE.orbitControls = require('three-orbit-controls')(THREE);
 class PieChart {
 
     //TODO: maybe use object ...
-    constructor(name, type, jsonData, sceneConfig, radius, angleStart, angleEnd) {
+    constructor(name, type, jsonData, sceneConfig) {
 
         this.name = name;
         this.type = type;
         this.jsonData = jsonData;
         this.sceneConfig = sceneConfig;
-        this.radius = radius;
-        this.angleStart = angleStart;
-        this.angleEnd = angleEnd;
         this.legendMap = new Map();
         this.object = this.create3DPieChart();
     }
@@ -52,8 +49,6 @@ class PieChart {
     create3DPieChart(jsonData = this.jsonData) {
         //calculate percent of every data set in json first
         const calculatedData = jsonData.file;
-        console.log(calculatedData);
-
         //Group together all pieces
         let chart = new THREE.Group();
         //define type of chart...necessary for live data swapping
@@ -83,9 +78,6 @@ class PieChart {
                     //adding elements to the legendMap
                     this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
-                    /*this.legendMap.forEach(function createHTML(value, key, map) {
-                        console.log(key + " => " + value);
-                    })*/
 
                     segment.name = calculatedData[dataset].name;
                     segment.data1 = {};

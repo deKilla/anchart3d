@@ -108,7 +108,6 @@ class SceneInit {
         }
 
         let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
-        legend.removeLegend();
         legend.generateLegend();
 
     }
@@ -247,9 +246,6 @@ class SceneInit {
         } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
             this.showTooltip(false);
         }
-
-        //test
-        if(event.type == "mousemove") console.log(this.domNode);
     }
 
     showDetails(status) {

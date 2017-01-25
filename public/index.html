@@ -155,18 +155,18 @@ var configuration_bc = {
     .data(jsonData,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
-var pieChart2 = anchart3d.createChart("blatestpie2")
+var barChart = anchart3d.createChart("blatestpie2")
     .setConfig(configuration_pc)
-    .pieChart()
+    .barChart()
     .data(jsonData2,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
     setTimeout(function () {
         pieChart.data(jsonData2,"Einwohner");
-        pieChart2.data(jsonData,"Einwohner");
+        barChart.data(jsonData,"Einwohner");
         pieChart.swapData();
-        pieChart2.swapData(); //only here for demonstration of preventing chaining of this method!
-    },10000);
+        barChart.swapData(); //only here for demonstration of preventing chaining of this method!
+    },7000);
 
 </script>
 

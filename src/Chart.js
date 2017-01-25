@@ -18,18 +18,21 @@ class Chart {
     }
 
 
-    createChart(chartType = this.type) {
+    createChart() {
         let chart;
         let data = this.data;
+        let chartType = this.type;
+        let name = this.name;
+        let config = this.configuration;
 
         // https://sourcemaking.com/refactoring/smells/switch-statements => TODO
         switch (chartType) {
             case "pieChart":
-                chart = new PieChart(this.name, chartType, data, this.configuration);
+                chart = new PieChart(name, chartType, data, config);
                 this.legendMap = chart.legendMap;
                 break;
             case "barChart":
-                chart = new BarChart(this.name, chartType, data, this.configuration);
+                chart = new BarChart(name, chartType, data, config);
                 this.legendMap = chart.legendMap;
                 break;
             default:

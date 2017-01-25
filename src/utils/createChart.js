@@ -8,6 +8,7 @@ import SceneInit from './SceneInit';
 import Chart from './../Chart';
 import JsonData from "./JsonData";
 import {resetCameraPosition, dataSwapAnimation} from "./animation";
+import Legend from "./Legend";
 
 
 export default function createChart (domTarget) {
@@ -84,11 +85,11 @@ export default function createChart (domTarget) {
                 swapActive = true;
                 if(scene) {
                     chartType = options.chartType;
-                    data = options.chartData;
+                    data = options.data;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(configJson, data, configJson).createChart(chartType).object;
-                    let oldChart = scene.scene.object[0];
+                    let newChart = new Chart(chartName, chartType, data, configJson).createChart().object;
+                    let oldChart = scene.scene.getObjectByName(chartName,true);
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
                         scene.scene.add(newChart);
@@ -104,7 +105,6 @@ export default function createChart (domTarget) {
                 else throw "API Error: The method \"swapData()\" cannot be called before the \"draw()\" method!";
             }
             else console.warn("The method \"swapData()\" was already called and cannot be chained!\nIgnoring chain call of method!");
-
             }
 
         }

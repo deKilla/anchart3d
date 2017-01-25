@@ -1,14 +1,10 @@
 /**
- * Created by timo on 16.01.17.
- */
-/**
  * @author Amar Bajric (https://github.com/amarbajric)
  * @author Michael Fuchs (https://github.com/deKilla)
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
 import Chart from './Chart';
-import Legend from './utils/Legend';
 import {animateZ} from "./utils/animation";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
@@ -17,10 +13,12 @@ THREE.orbitControls = require('three-orbit-controls')(THREE);
 class BarChart {
 
     //TODO: maybe use object ...
-    constructor(jsonData, sceneConfig) {
-
+    constructor(name, type, jsonData, sceneConfig) {
+        this.name = name;
+        this.type = type;
         this.jsonData = jsonData;
         this.sceneConfig = sceneConfig;
+        this.legendMap = new Map();
         this.object = this.create3DBarChart();
 
     }
@@ -58,14 +56,12 @@ class BarChart {
 
     create3DBarChart(jsonData = this.jsonData) {
         const calculatedData = jsonData.file;
-        console.log(calculatedData);
         //Group together all pieces
         let barChart = new THREE.Group();
-        barChart.name = "groupedChart";
+        barChart.chartType = this.type;
+        barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
-        //Saves the Color and the name of the chart
-        let legendMap = new Map();
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
 
@@ -86,9 +82,8 @@ class BarChart {
                         lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
                     }
 
-
                     //adding elements to the legendMap
-                    legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+                    this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
                     segment.name = calculatedData[dataset].name;
                     segment.data1 = {};
@@ -107,6 +102,7 @@ class BarChart {
                     segment2.position.y = 1; //set second dataset behind first one
                     lastBarStartX = lastBarStartX + 0.7 + 0.2; //0.7 cause one bar is that long + 0.2 to set gaps between
 
+
                     segment2.name = calculatedData[dataset].name;
                     segment2.data2 = {};
                     segment2.data2.name = data2Name;
@@ -120,10 +116,6 @@ class BarChart {
         }
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);
-
-        let barChartLegend = new Legend(legendMap, this.sceneConfig);
-        barChartLegend.generateLegend();
-
 
         return barChart;
     }
