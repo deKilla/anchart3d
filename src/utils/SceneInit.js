@@ -44,7 +44,7 @@ class SceneInit {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
         this.details.style.visibility = "hidden";
 
-        this.controls = new THREE.OrbitControls(this.camera);
+        this.controls = new THREE.OrbitControls(this.camera, this.domNode);
         this.controls.addEventListener('change', this.render.bind(this));
 
         //OrbitControls custom settings
@@ -140,6 +140,7 @@ class SceneInit {
         raycaster.setFromCamera(this.mouse, this.camera);
 
         return raycaster.intersectObjects(this.scene.getObjectByName(this.chartName, true).children);
+    
     }
 
 
@@ -215,18 +216,20 @@ class SceneInit {
 
     onDocumentMouseAction(event) {
 
-        let intersectedObjects = this.findIntersections(event);
+        let intersectedObjects = this.findIntersections(event); // == aktuell immer null wenn die Maus im oberen Chart is
         //let scaled = false;
 
         if(intersectedObjects[0]) {
             // remove luminance if different segment is hovered
             if (this.INTERSECTED && this.INTERSECTED != intersectedObjects[0].object) {
                 this.INTERSECTED.material.emissive.setHex();
+                this.showTooltip(false);
             }
             this.INTERSECTED = intersectedObjects[0].object;
         } else if (this.INTERSECTED) {
             //remove luminance if no segment is hovered
             this.INTERSECTED.material.emissive.setHex();
+            this.showTooltip(false);
             this.INTERSECTED = null;
         }
         
@@ -242,9 +245,6 @@ class SceneInit {
             this.showTooltip(true);
             this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
             //console.log(intersectedObjects[0]);           
-
-        } else if (!this.INTERSECTED && event.type == "mousemove") { //mouse leave
-            this.showTooltip(false);
         }
     }
 
@@ -292,6 +292,8 @@ class SceneInit {
             tooltip.style.position = "absolute";
             tooltip.style.left = event.pageX + 'px';
             tooltip.style.top = event.pageY + 'px';
+
+            //console.log(tooltip);
 
             document.body.appendChild(tooltip);
         } else if (!status && tooltip) {

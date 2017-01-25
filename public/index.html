@@ -9,27 +9,13 @@
 </head>
 <body>
 
-<!--
-<div id="legend-background">
-    <h4>Piechart Legend</h4>
-    <ul id="legend">
-    </ul>
-</div>
-
-
-<div id="details"></div>
-<div id="controlcontainer">
-    <div id="controls"></div>
-</div>
-
-<div id="canvasparent">
-    <canvas id="anchart3d"></canvas>
-</div>
-
--->
-
+<div id="wrapper">
+<h1>anchart3d</h1>
+<h2>PieChart 1</h2>
 <div id="blatestpie"></div>
+<h2>PieChart 2</h2>
 <div id="blatestpie2"></div>
+</div>
 
 <script>
 
@@ -161,6 +147,8 @@ var barChart = anchart3d.createChart("blatestpie2")
     .data(jsonData2,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
+
+/*
     setTimeout(function () {
         pieChart.data(jsonData2,"Einwohner");
         barChart.data(jsonData,"Einwohner");
