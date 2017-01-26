@@ -125,8 +125,8 @@ class BarChart {
         let barChartLegend = new Legend(legendMap, this.sceneConfig);
         barChartLegend.generateLegend();
 
-        let axis = new Axis();
-        axis.initAxis();
+        //let axis = new Axis();
+        //axis.initAxis();
 
 
         return barChart;

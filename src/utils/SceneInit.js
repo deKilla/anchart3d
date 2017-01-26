@@ -85,6 +85,9 @@ class SceneInit {
         //ADD AXIS
         let axis = new Axis().initAxis();
         this.scene.add(axis);
+        axis.setLabelX("penis");
+        //var label1 = axis.makeTextSprite("Hello");
+        //this.scene.add(label1);
 
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
