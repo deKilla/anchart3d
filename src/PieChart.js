@@ -99,7 +99,7 @@ class PieChart {
                     //tween.js animation for the scale on z-axis
                     if(this.sceneConfig.chartAnimation) {
                         let finalPos = (data2Percent / 10);
-                        let startPos = {z: segment.scale.z};
+                        let startPos = segment.scale;
 
                         animateZ(segment, startPos, finalPos,3000,3000);
                     }

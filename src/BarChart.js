@@ -20,35 +20,28 @@ class BarChart {
         this.sceneConfig = sceneConfig;
         this.legendMap = new Map();
         this.object = this.create3DBarChart();
-
     }
 
-    createSegment(lastBarStartX, height) {
+    createSegment(lastBarStartX, lastRowColor) {
+        let color;
+        if(lastRowColor){
+            color = (lastRowColor & 0xfefefe) >> 1; //bitwise shift operator to make the color of 2nd row darker
+        }
+        else {
+            color = Math.random() * 0xffffff;
+        }
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1, 10, 10, 10);
+        //set the bottom of the bar as origin coordinates (bar will only scale up not in both dirs)
+        barGeometry.translate( 0, 0, barGeometry.parameters.depth/2);
 
-        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, height);
         let segmentMat = new THREE.MeshPhongMaterial({
-            color: Math.random() * 0xffffff,
+            color: color,
             shading: THREE.SmoothShading,
             shininess: 0.8,
         });
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
-
         bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
-        bar.position.z = height * 0.5; //needed in order to align them on the same height
-
-
-        /*//tween.js animation for the scale on z-axis
-        if (this.sceneConfig.chartAnimation) {
-            let finalPos = height;
-            let startPos = {z: 0};
-
-            animateZ(bar, startPos, finalPos, 3000, 3000);
-        }
-        else {
-            bar.scale.z = height;
-        }*/
-
 
         return bar;
     }
@@ -69,6 +62,7 @@ class BarChart {
             let values = calculatedData[dataset].values;
             let segment;
             let segment2;
+            let lastRowColor;
 
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
@@ -77,9 +71,20 @@ class BarChart {
                     let data1Value = values[value].value;
                     let data1Percent = values[value].percent;
                     //call function which creates one segment at a time
-                    segment = this.createSegment(lastBarStartX, data1Percent / 10);
+                    segment = this.createSegment(lastBarStartX);
                     if (values.length < 2) {
                         lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
+                    }
+                    lastRowColor = segment.material.color.getHex();
+
+                    if(this.sceneConfig.chartAnimation) {
+                        let finalPos = (data1Percent / 10);
+                        let startPos = segment.scale;
+
+                        animateZ(segment, startPos, finalPos, 3000, 3000);
+                    }
+                    else{
+                        segment.scale.z = (data1Percent / 10);
                     }
 
                     //adding elements to the legendMap
@@ -98,10 +103,19 @@ class BarChart {
                     let data2Value = values[value].value;
                     let data2Percent = values[value].percent;
 
-                    segment2 = this.createSegment(lastBarStartX, data2Percent / 10);
+                    segment2 = this.createSegment(lastBarStartX, lastRowColor);
                     segment2.position.y = 1; //set second dataset behind first one
                     lastBarStartX = lastBarStartX + 0.7 + 0.2; //0.7 cause one bar is that long + 0.2 to set gaps between
 
+                    if(this.sceneConfig.chartAnimation) {
+                        let finalPos = (data2Percent/10);
+                        let startPos = segment2.scale;
+
+                        animateZ(segment2, startPos, finalPos,3000,3000);
+                    }
+                    else{
+                        segment2.scale.z = (data2Percent / 10);
+                    }
 
                     segment2.name = calculatedData[dataset].name;
                     segment2.data2 = {};
