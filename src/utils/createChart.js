@@ -94,7 +94,7 @@ export default function createChart(domTarget) {
                     legend.generateLegend();
                     let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
-                    resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
+                    resetCameraPosition(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
                         scene.scene.add(newChart.object);
                         newChart.object.position.set(50, 0, 0);
                         dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 2500, 10)

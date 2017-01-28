@@ -66,46 +66,39 @@
         {
             "name":"Frankreich",
             "values": [
-                {"name":"Einwohner", "value":66030000},
-                {"name":"DSGehalt", "value":2500}
+                {"name":"Einwohner", "value":66030000}
             ]
         }
     ];
 
     var jsonData2 = [
         {
-            "name":"Uganda",
+            "name":"IMA2014",
             "values": [
-                {"name":"Einwohner", "value":37580000},
-                {"name":"DSGehalt", "value":1020}
+                {"name":"1.Semester", "value":55},
+                {"name":"2.Semester", "value":47},
+                {"name":"3.Semester", "value":39},
+                {"name":"4.Semester", "value":32},
+                {"name":"5.Semester", "value":27},
+                {"name":"6.Semester", "value":24}
             ]
         },
         {
-            "name":"Usbekistan",
+            "name":"IMA2015",
             "values": [
-                {"name":"Einwohner", "value":30240000},
-                {"name":"DSGehalt", "value":1320}
+                {"name":"1.Semester", "value":59},
+                {"name":"2.Semester", "value":44},
+                {"name":"3.Semester", "value":36},
+                {"name":"4.Semester", "value":33},
+                {"name":"5.Semester", "value":29},
+                {"name":"6.Semester", "value":28}
             ]
         },
         {
-            "name":"Spanien",
+            "name":"IMA2016",
             "values": [
-                {"name":"Einwohner", "value":46770000},
-                {"name":"DSGehalt", "value":2120}
-            ]
-        },
-        {
-            "name":"Polen",
-            "values": [
-                {"name":"Einwohner", "value":38350000},
-                {"name":"DSGehalt", "value":1970}
-            ]
-        },
-        {
-            "name":"Türkei",
-            "values": [
-                {"name":"Einwohner", "value":74930000},
-                {"name":"DSGehalt", "value":2075}
+                {"name":"1.Semester", "value":59},
+                {"name":"2.Semester", "value":44}
             ]
         }
     ];
@@ -139,20 +132,20 @@ var configuration_bc = {
  var pieChart = anchart3d.createChart("blatestpie")
     .setConfig(configuration_pc)
     .pieChart()
-    .data(jsonData,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .data(jsonData)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 var barChart = anchart3d.createChart("blatestpie2")
     .setConfig(configuration_bc)
     .barChart()
-    .data(jsonData2,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .data(jsonData2)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 
 
     var swap = function () {
-        pieChart.data(jsonData2,"Einwohner");
-        barChart.data(jsonData,"Einwohner");
+        pieChart.data(jsonData,"Einwohner");
+        barChart.data(jsonData2,"1.Semester");
         pieChart.swapData();
         barChart.swapData(); //only here for demonstration of preventing chaining of this method!
     };

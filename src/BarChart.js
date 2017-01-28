@@ -24,15 +24,15 @@ class BarChart {
 
     createSegment(lastBarStartX, lastRowColor) {
         let color;
-        if(lastRowColor){
-            color = (lastRowColor & 0xfefefe) >> 1; //bitwise shift operator to make the color of 2nd row darker
+        if (lastRowColor) {
+            color = (lastRowColor & 0xF26000) >> 1; //bitwise shift operator to make the color of 2nd row darker
         }
         else {
             color = Math.random() * 0xffffff;
         }
-        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1, 10, 10, 10);
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1.5, 10, 10, 10);
         //set the bottom of the bar as origin coordinates (bar will only scale up not in both dirs)
-        barGeometry.translate( 0, 0, barGeometry.parameters.depth/2);
+        barGeometry.translate(0, 0, barGeometry.parameters.depth / 2);
 
         let segmentMat = new THREE.MeshPhongMaterial({
             color: color,
@@ -55,78 +55,47 @@ class BarChart {
         barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
+
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
-
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
-            let segment2;
             let lastRowColor;
+            let yPos = 0;
 
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
-                if (value == 0) {
-                    let data1Name = values[value].name;
-                    let data1Value = values[value].value;
-                    let data1Percent = values[value].percent;
-                    //call function which creates one segment at a time
-                    segment = this.createSegment(lastBarStartX);
-                    if (values.length < 2) {
-                        lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
-                    }
-                    lastRowColor = segment.material.color.getHex();
+                let dataName = values[value].name;
+                let dataValue = values[value].value;
+                let dataPercent = values[value].percent;
+                //call function which creates one segment at a time
+                segment = this.createSegment(lastBarStartX, lastRowColor);
+                segment.position.y = yPos++; //set second dataset behind first one
+                lastRowColor = segment.material.color.getHex();
 
-                    if(this.sceneConfig.chartAnimation) {
-                        let finalPos = (data1Percent / 10);
-                        let startPos = segment.scale;
+                if (this.sceneConfig.chartAnimation) {
+                    let finalPos = (dataPercent / 10);
+                    let startPos = segment.scale;
 
-                        animateZ(segment, startPos, finalPos, 3000, 3000);
-                    }
-                    else{
-                        segment.scale.z = (data1Percent / 10);
-                    }
-
-                    //adding elements to the legendMap
-                    this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
-
-                    segment.name = calculatedData[dataset].name;
-                    segment.data1 = {};
-                    segment.data1.name = data1Name;
-                    segment.data1.value = data1Value;
-                    segment.data1.percent = data1Percent;
-
-
+                    animateZ(segment, startPos, finalPos, 3000, 3000);
                 }
-                if (value == 1) {
-                    let data2Name = values[value].name;
-                    let data2Value = values[value].value;
-                    let data2Percent = values[value].percent;
-
-                    segment2 = this.createSegment(lastBarStartX, lastRowColor);
-                    segment2.position.y = 1; //set second dataset behind first one
-                    lastBarStartX = lastBarStartX + 0.7 + 0.2; //0.7 cause one bar is that long + 0.2 to set gaps between
-
-                    if(this.sceneConfig.chartAnimation) {
-                        let finalPos = (data2Percent/10);
-                        let startPos = segment2.scale;
-
-                        animateZ(segment2, startPos, finalPos,3000,3000);
-                    }
-                    else{
-                        segment2.scale.z = (data2Percent / 10);
-                    }
-
-                    segment2.name = calculatedData[dataset].name;
-                    segment2.data2 = {};
-                    segment2.data2.name = data2Name;
-                    segment2.data2.value = data2Value;
-                    segment2.data2.percent = data2Percent;
-
-                    barChart.add(segment2);
+                else {
+                    segment.scale.z = (dataPercent / 10);
                 }
+
+                //adding elements to the legendMap
+                this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+
+                segment.name = calculatedData[dataset].name;
+                segment.data1 = {};
+                segment.data1.name = dataName;
+                segment.data1.value = dataValue;
+                segment.data1.percent = dataPercent;
+
                 barChart.add(segment);
             }
+            lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
         }
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);

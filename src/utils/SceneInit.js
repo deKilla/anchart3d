@@ -35,7 +35,8 @@ class SceneInit {
         this.details = this.createDomElement("details");
         this.control = this.createDomElement("control");
         this.legend = this.createDomElement("legend");
-        this.tooltip = null
+        this.tooltip = null;
+        this.cameraDefaultPos = {x: 0, y: -7, z: 2}; //camera default pos
 
     }
 
@@ -80,20 +81,19 @@ class SceneInit {
         this.scene.add(ambientLight);
 
         //spot light which is illuminating the chart directly
-        let spotLight = new THREE.SpotLight(0xffffff, 0.65);
+        let spotLight = new THREE.SpotLight(0xffffff, 0.70);
         spotLight.castShadow = true;
         spotLight.position.set(0, 40, 10);
         this.scene.add(spotLight);
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
-            let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
+            let endPos = this.cameraDefaultPos;
             entryAnimation(this.camera, endPos, 2500, 800);
         }
          else {
-            this.camera.position.set(0, -10, 7);
+            this.camera.position.set(this.cameraDefaultPos.x,this.cameraDefaultPos.y,this.cameraDefaultPos.z);
         }
-
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
@@ -104,7 +104,7 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
         if (this.sceneConfig.showOnScreenControls) {
-            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.cameraDefaultPos);
         }
 
         let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
@@ -135,7 +135,6 @@ class SceneInit {
         let raycaster = new THREE.Raycaster();
         this.mouse.x = (( event.pageX - this.domNode.offsetLeft ) / this.canvas.width ) * 2 - 1;
         this.mouse.y = - (( event.pageY - this.domNode.offsetTop ) / this.canvas.height ) * 2 + 1;
-        //console.log(this.mouse)
 
         raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -155,7 +154,7 @@ class SceneInit {
     }
 
 
-    showOnScreenControls(method = "click", currentChart, camera) {
+    showOnScreenControls(method = "click", currentChart, camera, defaultPos) {
         let repeater;
         let interval;
 
@@ -174,7 +173,7 @@ class SceneInit {
 
         this.domNode.querySelector(".btnreset").addEventListener("click", function () {
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
-            resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
+            resetCameraPosition(camera,defaultPos,4000);
         });
         this.domNode.querySelector(".btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
@@ -243,7 +242,7 @@ class SceneInit {
         //hover event
         if (this.INTERSECTED && event.type == "mousemove") {
             this.showTooltip(true);
-            this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+            this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.03));
             //console.log(intersectedObjects[0]);           
         }
     }
