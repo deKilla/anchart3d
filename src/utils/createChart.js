@@ -11,7 +11,7 @@ import {resetCameraPosition, dataSwapAnimation} from "./animation";
 import Legend from "./Legend";
 
 
-export default function createChart (domTarget) {
+export default function createChart(domTarget) {
     let scene;
     let configJson;
     let chart;
@@ -26,7 +26,7 @@ export default function createChart (domTarget) {
 
     return {
         setConfig: function (configJson) {
-            if(!options.configJson) {
+            if (!options.configJson) {
                 options.configJson = configJson;
             }
             else console.warn("Configuration already set!\nIgnoring additional configuration passed to the API");
@@ -41,7 +41,7 @@ export default function createChart (domTarget) {
             return this;
         },
         data: function (jsonData, sortBy) {
-            if(sortBy){
+            if (sortBy) {
                 options.data = new JsonData(jsonData).sortData(sortBy);
             }
             else {
@@ -56,14 +56,14 @@ export default function createChart (domTarget) {
             chartName = domTarget + "_" + chartType;
             data = options.data;
 
-            if(document.getElementById(domTarget)) {
+            if (document.getElementById(domTarget)) {
                 if (chartType && data) {
 
                     chart = new Chart(chartName, chartType, data, configJson)
                         .createChart();
 
                     if (configJson) { //if config for the sceneInit is available
-                        scene = new SceneInit(domTarget,configJson, chartName, chart.legendMap);
+                        scene = new SceneInit(domTarget, configJson, chartName, chart.legendMap);
                     }
                     else { //else use default sceneInit settings
                         scene = new SceneInit(chartName, domTarget, chartName, chart.legendMap);
@@ -80,21 +80,24 @@ export default function createChart (domTarget) {
             }
             else throw "API Error: Element with id \"" + domTarget + "\" not found!";
         },
-        swapData : function(){
-            if(!swapActive) {
+        swapData: function () {
+            if (!swapActive) {
                 swapActive = true;
-                if(scene) {
+                if (scene) {
                     chartType = options.chartType;
                     data = options.data;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(chartName, chartType, data, configJson).createChart().object;
-                    let oldChart = scene.scene.getObjectByName(chartName,true);
+                    let newChart = new Chart(chartName, chartType, data, configJson).createChart();
+                    let legend = new Legend(newChart.legendMap,configJson, document.getElementById(domTarget));
+                    legend.removeLegend();
+                    legend.generateLegend();
+                    let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
                     resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 1000).onComplete(function () {
-                        scene.scene.add(newChart);
-                        newChart.position.set(50, 0, 0);
-                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart, 2500, 10)
+                        scene.scene.add(newChart.object);
+                        newChart.object.position.set(50, 0, 0);
+                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 2500, 10)
                             .onComplete(function () {
                                 scene.scene.remove(scene.scene.getObjectById(oldChart.id));
                                 controls.enableZoom = true;
@@ -105,38 +108,36 @@ export default function createChart (domTarget) {
                 else throw "API Error: The method \"swapData()\" cannot be called before the \"draw()\" method!";
             }
             else console.warn("The method \"swapData()\" was already called and cannot be chained!\nIgnoring chain call of method!");
-            }
-
         }
-
-    };
+    }
+};
 
 
 function checkConfig(configJson) {
     let validConfig = {};
-    if(configJson){
+    if (configJson) {
         Object.keys(configJson).forEach(function (propKey) {
-            if(propKey === "fov"){
-                if(isNaN(configJson[propKey]))
+            if (propKey === "fov") {
+                if (isNaN(configJson[propKey]))
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'integer'!\nProperty was set to default value!");
                 else validConfig[propKey] = configJson[propKey];
             }
-            else if(propKey === "name"){
-                if(typeof configJson[propKey] != "string")
+            else if (propKey === "name") {
+                if (typeof configJson[propKey] != "string")
                     console.warn("Invalid type for property \"" + propKey + "\" : Type has to be 'string'!\nProperty was set to default value!");
                 else validConfig[propKey] = configJson[propKey];
             }
-            else if(["fov","bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean"){//if other config params are not boolean, they are set to false automatically
+            else if (["fov", "bgcolor"].indexOf(propKey) < 0 && typeof configJson[propKey] !== "boolean") {//if other config params are not boolean, they are set to false automatically
                 console.warn("Invalid type for property \"" + propKey + "\": Type has to be \"boolean\"!\nProperty was set to \"false\"!");
                 validConfig[propKey] = false;
             }
-            else{
+            else {
                 validConfig[propKey] = configJson[propKey];
             }
         });
         return validConfig;
     }
-    else{//check if valid types are used for config properties
+    else {//check if valid types are used for config properties
         console.warn("No configuration passed for Scene.\nUsing default configuration!");
         return validConfig; //return empty object to use default config in SceneInit
     }

@@ -40,12 +40,11 @@ class Legend {
 
 
     removeLegend() {
-
         try {  //resets the elem
-            this.legendNode.innerHtml = "";
+            this.legendNode.innerHTML = "";
         }
         catch (err) {
-            console.warn("Childs do not exist in Legend. Error:" + err);
+            console.warn("Childs do not exist in Legend\n" + err);
         }
     }
 }
