@@ -36,7 +36,7 @@ class SceneInit {
         this.control = this.createDomElement("control");
         this.legend = this.createDomElement("legend");
         this.tooltip = null;
-        this.cameraDefaultPos = {x: 0, y: -7, z: 2}; //camera default pos
+        this.cameraDefaultPos = {x: 0, y: -9, z: 2}; //camera default pos
 
     }
 

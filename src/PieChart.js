@@ -108,6 +108,7 @@ class PieChart {
                     }
 
                 }
+                chart.position.z = -1.5;
                 //add new piece to the grouped pieChart
                 chart.add(segment);
             }

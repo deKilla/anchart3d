@@ -97,7 +97,7 @@ export default function createChart(domTarget) {
                         legend.removeLegend();
                         legend.generateLegend();
                         scene.scene.add(newChart.object);
-                        newChart.object.position.set(50, 0, 0);
+                        newChart.object.position.set(50, 0, -1.5);
                         dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 2500, 10)
                             .onComplete(function () {
                                 scene.scene.remove(scene.scene.getObjectById(oldChart.id));

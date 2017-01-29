@@ -1,18 +1,17 @@
 
-anchart3d
-===================
-###A library for 3-dimensional charts utilizing three.js and tween.js###
-------------------------------------------------------------------
-#### Contributors ####
+# anchart3d
+
+## A library for 3-dimensional charts utilizing three.js and tween.js
+
+#### Contributors
 - Amar Bajric ([amarbajric](https://github.com/amarbajric))
 - Michael Fuchs ([deKilla](https://github.com/deKilla))
 - Timo Hasenbichler ([timoooo](https://github.com/timoooo))
 
-## Table of contents ##
+## Table of contents
 [TOC]
 
-A few words
--------------
+#Preface
 
 This project has been developed by three ambitious students, who are studying at the university "FH Joanneum" in Graz, Austria. 
 The project is an open source library for visualizing JSON data as three dimensional Charts (e.g. Pie Charts or Bar Charts), which are not 
@@ -59,6 +58,6 @@ For an explanation of the the configuration parameters and and overview, refer t
  - **minify:** uglify.js
  - **test:** test using jest
 
-#### Configuartion ####
+#### Configuartion
 
-jahu
+The anchart3d library 

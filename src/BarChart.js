@@ -132,6 +132,7 @@ class BarChart {
 
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);
+        barChart.position.z = -1.5;
 
         return barChart;
     }
