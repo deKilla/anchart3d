@@ -6,7 +6,7 @@
  * @author Michael Fuchs (https://github.com/deKilla)
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
-
+import SceneInit from './utils/SceneInit';
 import Chart from './Chart';
 import Legend from './utils/Legend';
 import {animateZ} from "./utils/animation";
@@ -22,9 +22,12 @@ class BarChart {
 
         this.jsonData = jsonData;
         this.sceneConfig = sceneConfig;
+
         this.object = this.create3DBarChart();
 
     }
+
+
 
     createSegment(lastBarStartX, height) {
 
@@ -69,11 +72,21 @@ class BarChart {
         let legendMap = new Map();
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
+        let currPositions = this.createSegment(0,0);
+        currPositions.position.set(0,0,0);
+
+
+
 
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let segment;
             let segment2;
+            //console.log(segment.position.get());
+
+
+
+
 
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
@@ -86,8 +99,6 @@ class BarChart {
                     if (values.length < 2) {
                         lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
                     }
-
-
                     //adding elements to the legendMap
                     legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
 
@@ -96,7 +107,6 @@ class BarChart {
                     segment.data1.name = data1Name;
                     segment.data1.value = data1Value;
                     segment.data1.percent = data1Percent;
-
 
                 }
                 if (value == 1) {
@@ -113,9 +123,10 @@ class BarChart {
                     segment2.data2.name = data2Name;
                     segment2.data2.value = data2Value;
                     segment2.data2.percent = data2Percent;
-
+                    currPositions.position.y = segment2.position.y;
                     barChart.add(segment2);
                 }
+
                 barChart.add(segment);
             }
         }
@@ -125,13 +136,31 @@ class BarChart {
         let barChartLegend = new Legend(legendMap, this.sceneConfig);
         barChartLegend.generateLegend();
 
-        //let axis = new Axis();
-        //axis.initAxis();
+        //generate Labels and Axis only when enabled
+        if (this.sceneConfig.axis) {
 
+            let axis = new Axis().initAxis(currPositions.position.y);
+            //this.scene.add(axis);
+            barChart.add(axis);
+            //generate Labels function
+            let sprite = new Axis().makeTextSprite("hello");
+            sprite.position.set(-2, 0, 0);
+            //let sprite = axis.makeTextSprite("HELLO");
+            barChart.add(sprite);
+
+        }
+
+
+
+
+
+
+
+
+        //save u shitter
 
         return barChart;
     }
-
 
 }
 

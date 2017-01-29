@@ -8,16 +8,17 @@ import TWEEN from "tween.js";
 var THREE = require("three");
 THREE.OrbitControls = require("three-orbit-controls")(THREE);
 import {entryAnimation, resetCameraPosition, resetChartPosition} from "./animation";
+import BarChart from "../BarChart"
 
 
 class SceneInit {
 
     //TODO: ebenfalls object ...
     constructor(domtarget, dataArray, sceneConfig, camera, scene, controls, renderer, mouse, INTERSECTED) {
-        
+
         this.domNode = document.getElementById(domtarget);
-        this.parentWidth = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("width").slice(0,-2);
-        this.parentHeight = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("height").slice(0,-2);
+        this.parentWidth = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("width").slice(0, -2);
+        this.parentHeight = window.getComputedStyle(this.domNode.parentElement).getPropertyValue("height").slice(0, -2);
         this.dataArray = dataArray;     //array with all datasets from user => needed for live data swapping
         this.sceneConfig = sceneConfig; //custom user options held here
         this.camera = camera;
@@ -31,7 +32,7 @@ class SceneInit {
 
     initScene() {
         this.camera = new THREE.PerspectiveCamera(this.sceneConfig.fov || 45, this.parentWidth / this.parentHeight, 1, 1000);
-        if(document.getElementById("details")) document.getElementById("details").style.visibility = "hidden";
+        if (document.getElementById("details")) document.getElementById("details").style.visibility = "hidden";
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.addEventListener('change', this.render.bind(this));
@@ -53,8 +54,8 @@ class SceneInit {
         this.domNode.parentElement.appendChild(this.renderer.domElement);
 
         //transparent background won't work when a background-color is defined
-        if(this.sceneConfig.transparency == true) {
-            this.renderer.setClearColor( 0xffffff, 0 );
+        if (this.sceneConfig.transparency == true) {
+            this.renderer.setClearColor(0xffffff, 0);
         } else {
             this.scene.background = new THREE.Color(
                 this.sceneConfig.bgcolor ||
@@ -79,15 +80,9 @@ class SceneInit {
             let endPos = {x: 0, y: -10, z: 7}; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
             entryAnimation(this.camera, endPos, 2500, 800);
         }
-         else {
+        else {
             this.camera.position.set(0, -10, 7);
         }
-        //ADD AXIS
-        let axis = new Axis().initAxis();
-        this.scene.add(axis);
-        axis.setLabelX("penis");
-        //var label1 = axis.makeTextSprite("Hello");
-        //this.scene.add(label1);
 
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
@@ -125,7 +120,7 @@ class SceneInit {
     findIntersections(event) {
         let raycaster = new THREE.Raycaster();
         this.mouse.x = (( event.pageX - this.domNode.parentElement.offsetLeft ) / this.domNode.width ) * 2 - 1;
-        this.mouse.y = - (( event.pageY - this.domNode.parentElement.offsetTop ) / this.domNode.height ) * 2 + 1;
+        this.mouse.y = -(( event.pageY - this.domNode.parentElement.offsetTop ) / this.domNode.height ) * 2 + 1;
         //console.log(this.mouse)
 
         raycaster.setFromCamera(this.mouse, this.camera);
@@ -136,15 +131,15 @@ class SceneInit {
 
 
     onDocumentKeyAction(event) {
-       // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+        // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
         switch (event.keyCode) {
             case 82: //R key
                 break;
             case 67: //C key
                 break;
-                //let currentChart = this.scene.getObjectByName("groupedChart", true);
-                //let camera = this.camera;
-                ///this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
+            //let currentChart = this.scene.getObjectByName("groupedChart", true);
+            //let camera = this.camera;
+            ///this.showOnScreenControls("mouseover", currentChart, camera); //click, mouseover
         }
     }
 
@@ -169,8 +164,8 @@ class SceneInit {
         document.getElementById("controls").innerHTML += `<a id="btndown">&darr;</a>`;
 
         document.querySelector("#btnreset").addEventListener("click", function () {
-            resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
-            resetCameraPosition(camera,{x:0,y:-10,z:7},4000);
+            resetChartPosition(currentChart, {x: 0, y: 0, z: 0}, 4000);
+            resetCameraPosition(camera, {x: 0, y: -10, z: 7}, 4000);
         });
         document.querySelector("#btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
@@ -215,7 +210,7 @@ class SceneInit {
         let intersectedObjects = this.findIntersections(event);
         //let scaled = false;
 
-        if(intersectedObjects[0]) {
+        if (intersectedObjects[0]) {
             // remove luminance if different segment is hovered
             if (this.INTERSECTED && this.INTERSECTED != intersectedObjects[0].object) {
                 this.INTERSECTED.material.emissive.setHex();
@@ -226,7 +221,7 @@ class SceneInit {
             this.INTERSECTED.material.emissive.setHex();
             this.INTERSECTED = null;
         }
-        
+
         //click event
         if (this.INTERSECTED && event.type == "mousedown") {
             this.showDetails(true);
@@ -246,21 +241,21 @@ class SceneInit {
     }
 
     showDetails(status) {
-        
+
         let details = document.getElementById("details");
         if (!details) {
             throw "The tooltip requires a <div id=\"detailpane\"></div> in order to work!";
         }
 
         if (status && this.sceneConfig.details) {
-            details.innerHTML = 
-            `<h2>${this.INTERSECTED.name}</h2>`;
-            if(this.INTERSECTED.hasOwnProperty("data1")){
-            details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
+            details.innerHTML =
+                `<h2>${this.INTERSECTED.name}</h2>`;
+            if (this.INTERSECTED.hasOwnProperty("data1")) {
+                details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
             }
-            if(this.INTERSECTED.hasOwnProperty("data2")) {
-                details.innerHTML += 
-                `<b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
+            if (this.INTERSECTED.hasOwnProperty("data2")) {
+                details.innerHTML +=
+                    `<b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
             }
             details.style.visibility = "visible";
         } else if (!status && details) {
@@ -271,7 +266,7 @@ class SceneInit {
     showTooltip(status) {
 
         let tooltip = document.getElementById("tooltip") || null;
-        
+
         if (status && this.sceneConfig.tooltip) {
 
             if (!document.getElementById("tooltip")) {
@@ -283,12 +278,12 @@ class SceneInit {
             tooltip.setAttribute("id", "tooltip");
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>`;
-            if(this.INTERSECTED.hasOwnProperty("data1")){
+            if (this.INTERSECTED.hasOwnProperty("data1")) {
                 tooltip.innerHTML += `<b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br/>`;
-                }
-            if(this.INTERSECTED.hasOwnProperty("data2")) {
-                tooltip.innerHTML += 
-                `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
+            }
+            if (this.INTERSECTED.hasOwnProperty("data2")) {
+                tooltip.innerHTML +=
+                    `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
             }
             tooltip.style.position = "absolute";
             tooltip.style.left = event.pageX + 'px';
@@ -303,23 +298,22 @@ class SceneInit {
 
     colorLuminance(hex, lum) {//function for mouse hover "glow effect" to illuminate the color of selected segment
 
-    // validate hex string
+        // validate hex string
         hex = String(hex).replace(/[^0-9a-f]/gi, '');
         if (hex.length < 6) {
-            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
         }
         lum = lum || 0;
 
         // convert to decimal and change luminosity
         let threeHex = "0x", c, i;
         for (i = 0; i < 3; i++) {
-            c = parseInt(hex.substr(i*2,2), 16);
+            c = parseInt(hex.substr(i * 2, 2), 16);
             c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-            threeHex += ("00"+c).substr(c.length);
+            threeHex += ("00" + c).substr(c.length);
         }
-    return threeHex;
+        return threeHex;
     }
-
 
 
     onDocumentDblClick() {
