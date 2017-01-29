@@ -280,6 +280,8 @@ class SceneInit {
             }
 
             tooltip.setAttribute("id", "tooltip");
+
+            //iterate over intersected to get all data ...
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>`;
             if(this.INTERSECTED.hasOwnProperty("data1")){

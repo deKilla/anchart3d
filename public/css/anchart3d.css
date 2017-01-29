@@ -82,8 +82,12 @@
 #tooltip {
     z-index: 9999;
     padding:10px;
-    background: #ccc;
+    background: #fff;
     border:1px solid #000;
+
+    -webkit-box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.75);
 }
 
 #tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
