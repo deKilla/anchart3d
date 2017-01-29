@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <title>Pie Chart</title>
 
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="./css/anchart3d.css">
+    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
     <script type="text/javascript" src="./../build/anchart3d.js"></script>
 </head>
 <body>
 
 <div id="wrapper">
-<h1>anchart3d</h1>
-<input type="button" onClick="swap()" value="swap data">
+<img src="img/fh.png" alt="FH Joanneum" style="height:130px; position:absolute; top:-15px; right:10px;" />
+<h1>anchart3d - BÜPA Präsentation</h1>
 <h2>PieChart</h2>
+<input type="button" onClick="swapPie()" value="swap data">
 <div id="blatestpie"></div>
 <h2>BarChart</h2>
+<input type="button" onClick="swapBar()" value="swap data">
 <div id="blatestpie2"></div>
 </div>
 
@@ -150,11 +153,14 @@ var barChart = anchart3d.createChart("blatestpie2")
 
 
 
-    var swap = function () {
+    var swapPie = function () {
         pieChart.data(jsonData2,"Einwohner");
-        barChart.data(jsonData,"Einwohner");
         pieChart.swapData();
-        barChart.swapData(); //only here for demonstration of preventing chaining of this method!
+    };
+
+    var swapBar = function () {
+        barChart.data(jsonData,"Einwohner");
+        barChart.swapData();
     };
 
 </script>
