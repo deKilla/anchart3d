@@ -23,7 +23,7 @@ export function resetCameraPosition(cameraObj,defaultPos,animTime){
     //Camera Rotation and Position
     let actualCamPos = {x: cameraObj.position.x, y: Math.round(cameraObj.position.y), z: Math.round(cameraObj.position.z)}; //ceiling upwards cause of minimal variety
     let initCam = (actualCamPos.x == defaultPos.x && actualCamPos.y == defaultPos.y && actualCamPos.z == defaultPos.z);
-    console.log(actualCamPos,initCam);
+
     if (!initCam) {
         return new TWEEN.Tween(actualCamPos)
             .to({x: defaultPos.x, y: defaultPos.y, z: defaultPos.z}, animTime)

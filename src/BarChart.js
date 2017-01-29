@@ -25,13 +25,13 @@ class BarChart {
     createSegment(lastBarStartX, lastRowColor) {
         let color;
         if (lastRowColor) {
-            color = (lastRowColor & 0xF26000) >> 1; //bitwise shift operator to make the color of 2nd row darker
-        }
+                color =  this.lightenCol(lastRowColor, 15).getHex();
+            }
         else {
             color = Math.random() * 0xffffff;
         }
-        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1.5, 10, 10, 10);
-        //set the bottom of the bar as origin coordinates (bar will only scale up not in both dirs)
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1, 10, 10, 10);
+        //set the bottom of the bar as origin coordinates (bar will only scale up, not in both dirs)
         barGeometry.translate(0, 0, barGeometry.parameters.depth / 2);
 
         let segmentMat = new THREE.MeshPhongMaterial({
@@ -41,9 +41,18 @@ class BarChart {
         });
 
         let bar = new THREE.Mesh(barGeometry, segmentMat);
-        bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
+        bar.position.x = lastBarStartX;
 
         return bar;
+    }
+
+
+    lightenCol(color, percent){//lightens the color for every row of datasets
+        color.b = (color.b + (color.b * (percent/100))) <= 1 ? color.b + (color.b * (percent/100)) : 1;
+        color.g = (color.g + (color.g * (percent/100))) <= 1 ? color.g + (color.g * (percent/100)) : 1;
+        color.r = (color.r + (color.r * (percent/100))) <= 1 ? color.r + (color.r * (percent/100)) : 1;
+
+        return color;
     }
 
 
@@ -72,7 +81,7 @@ class BarChart {
                 //call function which creates one segment at a time
                 segment = this.createSegment(lastBarStartX, lastRowColor);
                 segment.position.y = yPos++; //set second dataset behind first one
-                lastRowColor = segment.material.color.getHex();
+                lastRowColor = segment.material.color;
 
                 if (this.sceneConfig.chartAnimation) {
                     let finalPos = (dataPercent / 10);
@@ -84,8 +93,10 @@ class BarChart {
                     segment.scale.z = (dataPercent / 10);
                 }
 
-                //adding elements to the legendMap
-                this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+                if(value == 0) {
+                    //adding elements to the legendMap
+                    this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
+                }
 
                 segment.name = calculatedData[dataset].name;
                 segment.data1 = {};
