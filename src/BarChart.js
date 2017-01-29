@@ -117,8 +117,13 @@ class BarChart {
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);
 
-        let axis = new Axis().initAxis(yPostition);
-        barChart.add(axis);
+        let line = new Axis().initAxis(yPostition);
+        barChart.add(line);
+
+        let gridLines = new Axis().generateGridlines(yPostition);
+        barChart.add(gridLines);
+
+
 
         return barChart;
     }
