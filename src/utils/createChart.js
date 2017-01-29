@@ -7,7 +7,7 @@
 import SceneInit from './SceneInit';
 import Chart from './../Chart';
 import JsonData from "./JsonData";
-import {resetCameraPosition, dataSwapAnimation} from "./animation";
+import {resetCameraPosition, dataSwapAnimation, resetChartPosition} from "./animation";
 import Legend from "./Legend";
 
 
@@ -88,13 +88,14 @@ export default function createChart(domTarget) {
                     data = options.data;
                     let camera = scene.camera;
                     let controls = scene.controls;
-                    let newChart = new Chart(chartName, chartType, data, configJson).createChart();
-                    let legend = new Legend(newChart.legendMap,configJson, document.getElementById(domTarget));
-                    legend.removeLegend();
-                    legend.generateLegend();
                     let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
+                    resetChartPosition(scene.scene,{x:0,y:0,z:0},1000);
                     resetCameraPosition(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
+                        let newChart = new Chart(chartName, chartType, data, configJson).createChart();
+                        let legend = new Legend(newChart.legendMap,configJson, document.getElementById(domTarget));
+                        legend.removeLegend();
+                        legend.generateLegend();
                         scene.scene.add(newChart.object);
                         newChart.object.position.set(50, 0, 0);
                         dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 2500, 10)

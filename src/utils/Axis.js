@@ -88,11 +88,9 @@ class Axis {
     }
 
 
-    initAxis(y) {
+    initAxis(y,x) {
         let material = new THREE.LineBasicMaterial({
-            color: 0x000000, //black
-            //Due to limitations in the ANGLE layer, with the WebGL renderer on Windows platforms, linewidth will always be 1.
-            lineWidth: 1
+            color: 0x000000 //black
         });
 
 
@@ -101,25 +99,25 @@ class Axis {
             //ebene 1
             new THREE.Vector3(-0.7, -2, 0),
             new THREE.Vector3(-0.7, y + 0.7, 0),
-            new THREE.Vector3(3, y + 0.7, 0),
+            new THREE.Vector3(x, y + 0.7, 0),
             new THREE.Vector3(-0.7, y + 0.7, 0),
             new THREE.Vector3(-0.7, y + 0.7, 1),
             //ebene 2
             new THREE.Vector3(-0.7, -2, 1),
             new THREE.Vector3(-0.7, y+0.7, 1),
-            new THREE.Vector3(3, y+0.7, 1),
+            new THREE.Vector3(x, y+0.7, 1),
             new THREE.Vector3(-0.7, y+0.7, 1),
             new THREE.Vector3(-0.7, y+0.7, 2),
             //ebene 3
             new THREE.Vector3(-0.7, -2, 2),
             new THREE.Vector3(-0.7, y+0.7, 2),
-            new THREE.Vector3(3, y+0.7, 2),
+            new THREE.Vector3(x, y+0.7, 2),
             new THREE.Vector3(-0.7, y+0.7, 2),
             new THREE.Vector3(-0.7, y+0.7, 3),
             //ebene 4
             new THREE.Vector3(-0.7, -2, 3),
             new THREE.Vector3(-0.7, y+0.7, 3),
-            new THREE.Vector3(3, y+0.7, 3),
+            new THREE.Vector3(x, y+0.7, 3),
             new THREE.Vector3(-0.7, y+0.7, 3),
             new THREE.Vector3(-0.7, y+0.7, 4),
         );

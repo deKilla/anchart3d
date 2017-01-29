@@ -125,7 +125,7 @@ class BarChart {
             }
             lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
         }
-        let axis = new Axis().initAxis(yPostition);
+        let axis = new Axis().initAxis(yPostition,lastBarStartX);
         axisLines.add(axis);
         barChart.add(labels);
         barChart.add(axisLines);
