@@ -6,7 +6,7 @@
 /* OUTER PARENTS                                            */
 /* ======================================================== */
 
-#blatestpie {
+#pieChart {
       
       /* required */
       width:858px;
@@ -17,7 +17,7 @@
     position: relative;
 }
 
-#blatestpie2 {
+#barChart {
     
       /* required */
       width:858px;

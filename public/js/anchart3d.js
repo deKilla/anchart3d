@@ -264,8 +264,8 @@ var anchart3d =
 	
 	        this.domNode = document.getElementById(domNode);
 	
-	        this.parentWidth = window.getComputedStyle(this.domNode).getPropertyValue("width").slice(0, -2);
-	        this.parentHeight = window.getComputedStyle(this.domNode).getPropertyValue("height").slice(0, -2);
+	        this.parentWidth = window.getComputedStyle(this.domNode).getPropertyValue("width").slice(0, -2) || 400;
+	        this.parentHeight = window.getComputedStyle(this.domNode).getPropertyValue("height").slice(0, -2) || 300;
 	        this.sceneConfig = sceneConfig; //custom user options held here
 	        this.chartName = chartName;
 	        this.legendMap = legendMap;
