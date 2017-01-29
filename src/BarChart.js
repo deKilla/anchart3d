@@ -5,6 +5,7 @@
  */
 
 import Chart from './Chart';
+import Axis from './utils/Axis';
 import {animateZ} from "./utils/animation";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
@@ -64,6 +65,7 @@ class BarChart {
         barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
+        let yPostition = 0;
 
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
@@ -103,6 +105,10 @@ class BarChart {
                 segment.data1.name = dataName;
                 segment.data1.value = dataValue;
                 segment.data1.percent = dataPercent;
+                console.log(segment.position.y);
+
+                if(yPostition <= segment.position.y) yPostition=segment.position.y;
+
 
                 barChart.add(segment);
             }
@@ -110,6 +116,9 @@ class BarChart {
         }
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);
+
+        let axis = new Axis().initAxis(yPostition);
+        barChart.add(axis);
 
         return barChart;
     }
