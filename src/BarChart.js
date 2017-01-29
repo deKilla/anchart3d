@@ -68,7 +68,7 @@ class BarChart {
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
         let yPostition = 0;
-        let doOnce = 0;
+
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
@@ -119,26 +119,19 @@ class BarChart {
                 segment.data1.value = dataValue;
                 segment.data1.percent = dataPercent;
 
-                if(yPostition <= segment.position.y) yPostition=segment.position.y;
-
+                if(yPostition <= segment.position.y) yPostition = segment.position.y;
 
                 barChart.add(segment);
             }
             lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
         }
-        //half the position and align the segments to the center
-        barChart.position.x = -(lastBarStartX / 2);
-
         let axis = new Axis().initAxis(yPostition);
         axisLines.add(axis);
-
-        //let grid = new Axis().generateGridlines(yPostition);
-        //gridLines.add(grid);
         barChart.add(labels);
         barChart.add(axisLines);
-        //barChart.add(gridLines);
 
-
+        //half the position and align the segments to the center
+        barChart.position.x = -(lastBarStartX / 2);
 
         return barChart;
     }

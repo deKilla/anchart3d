@@ -1,9 +1,7 @@
 /**
  * Created by Timo on 29.01.2017.
  */
-/**
- * Created by Timo on 24.01.2017.
- */
+
 import * as THREE from "three";
 
 
@@ -33,28 +31,28 @@ class Axis {
     makeTextSprite(message, parameters) {
         if (parameters === undefined) parameters = {};
 
-        var fontface = parameters.hasOwnProperty("fontface") ?
+        let fontface = parameters.hasOwnProperty("fontface") ?
             parameters["fontface"] : "Arial";
 
-        var fontsize = parameters.hasOwnProperty("fontsize") ?
+        let fontsize = parameters.hasOwnProperty("fontsize") ?
             parameters["fontsize"] : 11;
 
-        var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+        let borderThickness = parameters.hasOwnProperty("borderThickness") ?
             parameters["borderThickness"] : 1;
 
-        var borderColor = parameters.hasOwnProperty("borderColor") ?
+        let borderColor = parameters.hasOwnProperty("borderColor") ?
             parameters["borderColor"] : {r: 0, g: 0, b: 0, a: 1.0};
 
-        var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+        let backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
             parameters["backgroundColor"] : {r: 255, g: 255, b: 255, a: 1.0};
 
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
+        let canvas = document.createElement('canvas');
+        let context = canvas.getContext('2d');
         context.font = "Bold " + fontsize + "px " + fontface;
 
         // get size data (height depends only on font size)
-        var metrics = context.measureText(message);
-        var textWidth = metrics.width;
+        let metrics = context.measureText(message);
+        let textWidth = metrics.width;
 
         // background color
         context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
@@ -79,13 +77,10 @@ class Axis {
         texture.needsUpdate = true;
 
 
-
-
-
-        var spriteMaterial = new THREE.SpriteMaterial(
+        let spriteMaterial = new THREE.SpriteMaterial(
             {map: texture, fog: true}); //,alignment: spriteAlignment
 
-        var sprite = new THREE.Sprite(spriteMaterial);
+        let sprite = new THREE.Sprite(spriteMaterial);
         sprite.scale.set(5, 2.5, 1);
 
         sprite.position.normalize();
@@ -94,12 +89,14 @@ class Axis {
 
 
     initAxis(y) {
-        var material = new THREE.LineBasicMaterial({
-            color: 0x000000 //black
+        let material = new THREE.LineBasicMaterial({
+            color: 0x000000, //black
+            //Due to limitations in the ANGLE layer, with the WebGL renderer on Windows platforms, linewidth will always be 1.
+            lineWidth: 1
         });
 
 
-        var geometry = new THREE.Geometry();
+        let geometry = new THREE.Geometry();
         geometry.vertices.push(
             //ebene 1
             new THREE.Vector3(-0.7, -2, 0),
@@ -127,13 +124,8 @@ class Axis {
             new THREE.Vector3(-0.7, y+0.7, 4),
         );
 
-        var line = new THREE.Line(geometry, material);
-
-        return line;
+        return new THREE.Line(geometry, material);
     }
-
-
-
 
 
 }
