@@ -11,18 +11,20 @@
 </head>
 <body>
 
+<a href="https://github.com/deKilla/anchart3d"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
 <div id="wrapper">
 <img src="img/fh.png" alt="FH Joanneum" style="height:95px; position:fixed; background:#fff; border:1px solid #000; top:20px; right:20px;" />
 <h1>anchart3d - BÜPA Präsentation</h1>
 <h2>PieChart <a href="javascript:void()" onClick="swapPie()">&#9889;</a></h2>
-<div id="blatestpie"></div>
+<div id="pieChart"></div>
 <h2>BarChart <a href="javascript:void()" onClick="swapBar()">&#9889;</a></h2>
-<div id="blatestpie2"></div>
+<div id="barChart"></div>
 </div>
 
 <script>
 
-    var jsonData = [
+    var jsonData1 = [
         {
             "name":"Österreich",
             "values": [
@@ -138,13 +140,13 @@ var configuration_bc = {
     "fov": 45
 };
 
- var pieChart = anchart3d.createChart("blatestpie")
+ var pieChart = anchart3d.createChart("pieChart")
     .setConfig(configuration_pc)
     .pieChart()
-    .data(jsonData,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .data(jsonData1,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
-var barChart = anchart3d.createChart("blatestpie2")
+var barChart = anchart3d.createChart("barChart")
     .setConfig(configuration_bc)
     .barChart()
     .data(jsonData2,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
@@ -158,7 +160,7 @@ var barChart = anchart3d.createChart("blatestpie2")
     };
 
     var swapBar = function () {
-        barChart.data(jsonData,"Einwohner");
+        barChart.data(jsonData1,"Einwohner");
         barChart.swapData();
     };
 
