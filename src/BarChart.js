@@ -30,7 +30,7 @@ class BarChart {
         else {
             color = Math.random() * 0xffffff;
         }
-        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1, 10, 10, 10);
+        let barGeometry = new THREE.BoxGeometry(0.7, 0.7, 0.8, 10, 10, 10);
         //set the bottom of the bar as origin coordinates (bar will only scale up, not in both dirs)
         barGeometry.translate(0, 0, barGeometry.parameters.depth / 2);
 
