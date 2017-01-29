@@ -7,6 +7,7 @@ anchart3d
 - Amar Bajric ([amarbajric](https://github.com/amarbajric))
 - Michael Fuchs ([deKilla](https://github.com/deKilla))
 - Timo Hasenbichler ([timoooo](https://github.com/timoooo))
+
 ## Table of contents ##
 [TOC]
 
