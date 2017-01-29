@@ -61,6 +61,7 @@ class BarChart {
         const calculatedData = jsonData.file;
         //Group together all pieces
         let barChart = new THREE.Group();
+        let axisLines = new THREE.Group();
         barChart.chartType = this.type;
         barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
@@ -118,7 +119,8 @@ class BarChart {
         barChart.position.x = -(lastBarStartX / 2);
 
         let axis = new Axis().initAxis(yPostition);
-        barChart.add(axis);
+        axisLines.add(axis);
+        barChart.add(axisLines);
 
         return barChart;
     }
