@@ -48,8 +48,6 @@ class Axis {
         var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
             parameters["backgroundColor"] : {r: 255, g: 255, b: 255, a: 1.0};
 
-        //var spriteAlignment = THREE.SpriteAlignment.topLeft;
-
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
         context.font = "Bold " + fontsize + "px " + fontface;
@@ -76,7 +74,13 @@ class Axis {
 
         // canvas contents will be used for a texture
         let texture = new THREE.Texture(canvas);
+
+        texture.minFilter = THREE.LinearFilter;
         texture.needsUpdate = true;
+
+
+
+
 
         var spriteMaterial = new THREE.SpriteMaterial(
             {map: texture, fog: true}); //,alignment: spriteAlignment
@@ -97,55 +101,39 @@ class Axis {
 
         var geometry = new THREE.Geometry();
         geometry.vertices.push(
+            //ebene 1
             new THREE.Vector3(-0.7, -2, 0),
             new THREE.Vector3(-0.7, y + 0.7, 0),
             new THREE.Vector3(3, y + 0.7, 0),
             new THREE.Vector3(-0.7, y + 0.7, 0),
-            new THREE.Vector3(-0.7, y + 0.7, 3)
+            new THREE.Vector3(-0.7, y + 0.7, 1),
+            //ebene 2
+            new THREE.Vector3(-0.7, -2, 1),
+            new THREE.Vector3(-0.7, y+0.7, 1),
+            new THREE.Vector3(3, y+0.7, 1),
+            new THREE.Vector3(-0.7, y+0.7, 1),
+            new THREE.Vector3(-0.7, y+0.7, 2),
+            //ebene 3
+            new THREE.Vector3(-0.7, -2, 2),
+            new THREE.Vector3(-0.7, y+0.7, 2),
+            new THREE.Vector3(3, y+0.7, 2),
+            new THREE.Vector3(-0.7, y+0.7, 2),
+            new THREE.Vector3(-0.7, y+0.7, 3),
+            //ebene 4
+            new THREE.Vector3(-0.7, -2, 3),
+            new THREE.Vector3(-0.7, y+0.7, 3),
+            new THREE.Vector3(3, y+0.7, 3),
+            new THREE.Vector3(-0.7, y+0.7, 3),
+            new THREE.Vector3(-0.7, y+0.7, 4),
         );
 
         var line = new THREE.Line(geometry, material);
-
-
 
         return line;
     }
 
 
-    generateGridlines(y) {
-        let arrayOfLines = [];
-        let materialDashed = new THREE.Line({
-            color: 0x000000 //black
-        });
 
-        /*
-        for (let i = 0; i < 5; i++) {
-            let geometry = new THREE.Geometry();
-
-            geometry.vertices.push(
-                new THREE.Vector3(-0.7, -2, i),
-                new THREE.Vector3(-0.7, y + 0.7, i),
-                new THREE.Vector3(3, y + 0.7, i)
-            );
-
-            let helpLine = new THREE.Line(geometry, materialDashed);
-            arrayOfLines.push(helpLine);
-        }
-        */
-
-        let geometry = new THREE.Geometry();
-
-        geometry.vertices.push(
-            new THREE.Vector3(-0.7, -2, 1),
-            new THREE.Vector3(-0.7, y + 0.7, 1),
-            new THREE.Vector3(3, y + 0.7, 1)
-        );
-
-        let helpLine = new THREE.Line(geometry, materialDashed);
-
-
-        return helpLine;
-    }
 
 
 }

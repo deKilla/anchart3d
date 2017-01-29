@@ -26,7 +26,7 @@ class BarChart {
     createSegment(lastBarStartX, lastRowColor) {
         let color;
         if (lastRowColor) {
-                color =  this.lightenCol(lastRowColor, 15).getHex();
+                color =  this.darkenCol(lastRowColor, 10).getHex();
             }
         else {
             color = Math.random() * 0xffffff;
@@ -48,10 +48,10 @@ class BarChart {
     }
 
 
-    lightenCol(color, percent){//lightens the color for every row of datasets
-        color.b = (color.b + (color.b * (percent/100))) <= 1 ? color.b + (color.b * (percent/100)) : 1;
-        color.g = (color.g + (color.g * (percent/100))) <= 1 ? color.g + (color.g * (percent/100)) : 1;
-        color.r = (color.r + (color.r * (percent/100))) <= 1 ? color.r + (color.r * (percent/100)) : 1;
+    darkenCol(color, percent){//darkens the color for every row of datasets
+        color.b = (color.b - (color.b * (percent/100))) <= 1 ? color.b - (color.b * (percent/100)) : 1;
+        color.g = (color.g - (color.g * (percent/100))) <= 1 ? color.g - (color.g * (percent/100)) : 1;
+        color.r = (color.r - (color.r * (percent/100))) <= 1 ? color.r - (color.r * (percent/100)) : 1;
 
         return color;
     }
@@ -61,12 +61,14 @@ class BarChart {
         const calculatedData = jsonData.file;
         //Group together all pieces
         let barChart = new THREE.Group();
+        let axisLines = new THREE.Group();
+        let labels = new THREE.Group();
         barChart.chartType = this.type;
         barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
         let lastBarStartX = 0.0;
         let yPostition = 0;
-
+        let doOnce = 0;
         //iterate over the jsonData and create for every data a new Bar
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
@@ -74,6 +76,12 @@ class BarChart {
             let segment;
             let lastRowColor;
             let yPos = 0;
+            //sets the Label for the Row
+            let labelRow = new Axis().makeTextSprite(calculatedData[dataset].name);
+            labelRow.position.set(lastBarStartX+2,-2,-1);
+            labels.add(labelRow);
+
+
 
             for (let value = 0; value < values.length; value++) {
                 //get first data set of the first object
@@ -84,6 +92,11 @@ class BarChart {
                 segment = this.createSegment(lastBarStartX, lastRowColor);
                 segment.position.y = yPos++; //set second dataset behind first one
                 lastRowColor = segment.material.color;
+
+                let labelLine = new Axis().makeTextSprite(values[value].name);
+                labelLine.position.set(0,segment.position.y,-1);
+                labels.add(labelLine);
+
 
                 if (this.sceneConfig.chartAnimation) {
                     let finalPos = (dataPercent / 10);
@@ -105,7 +118,6 @@ class BarChart {
                 segment.data1.name = dataName;
                 segment.data1.value = dataValue;
                 segment.data1.percent = dataPercent;
-                console.log(segment.position.y);
 
                 if(yPostition <= segment.position.y) yPostition=segment.position.y;
 
@@ -117,11 +129,14 @@ class BarChart {
         //half the position and align the segments to the center
         barChart.position.x = -(lastBarStartX / 2);
 
-        let line = new Axis().initAxis(yPostition);
-        barChart.add(line);
+        let axis = new Axis().initAxis(yPostition);
+        axisLines.add(axis);
 
-        let gridLines = new Axis().generateGridlines(yPostition);
-        barChart.add(gridLines);
+        //let grid = new Axis().generateGridlines(yPostition);
+        //gridLines.add(grid);
+        barChart.add(labels);
+        barChart.add(axisLines);
+        //barChart.add(gridLines);
 
 
 
