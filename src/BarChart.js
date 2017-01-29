@@ -77,7 +77,7 @@ class BarChart {
             let lastRowColor;
             let yPos = 0;
             //sets the Label for the Row
-            let labelRow = new Axis().makeTextSprite(calculatedData[dataset].name);
+            let labelRow = new Axis().makeTextSprite(" " + calculatedData[dataset].name + " ");
             labelRow.position.set(lastBarStartX+2,-2,-1);
             labels.add(labelRow);
 
@@ -93,7 +93,7 @@ class BarChart {
                 segment.position.y = yPos++; //set second dataset behind first one
                 lastRowColor = segment.material.color;
 
-                let labelLine = new Axis().makeTextSprite(values[value].name);
+                let labelLine = new Axis().makeTextSprite(" " + values[value].name + " ");
                 labelLine.position.set(0,segment.position.y,-1);
                 labels.add(labelLine);
 

@@ -84,7 +84,7 @@ var anchart3d =
 	
 	var _Chart2 = _interopRequireDefault(_Chart);
 	
-	var _JsonData = __webpack_require__(/*! ./JsonData */ 12);
+	var _JsonData = __webpack_require__(/*! ./JsonData */ 13);
 	
 	var _JsonData2 = _interopRequireDefault(_JsonData);
 	
@@ -45419,6 +45419,10 @@ var anchart3d =
 	
 	var _Chart2 = _interopRequireDefault(_Chart);
 	
+	var _Axis = __webpack_require__(/*! ./utils/Axis */ 12);
+	
+	var _Axis2 = _interopRequireDefault(_Axis);
+	
 	var _animation = __webpack_require__(/*! ./utils/animation */ 5);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -45447,12 +45451,12 @@ var anchart3d =
 	        value: function createSegment(lastBarStartX, lastRowColor) {
 	            var color = void 0;
 	            if (lastRowColor) {
-	                color = (lastRowColor & 0xfefefe) >> 1; //bitwise shift operator to make the color of 2nd row darker
+	                color = this.darkenCol(lastRowColor, 10).getHex();
 	            } else {
 	                color = Math.random() * 0xffffff;
 	            }
-	            var barGeometry = new THREE.BoxGeometry(0.7, 0.7, 1, 10, 10, 10);
-	            //set the bottom of the bar as origin coordinates (bar will only scale up not in both dirs)
+	            var barGeometry = new THREE.BoxGeometry(0.7, 0.7, 0.8, 10, 10, 10);
+	            //set the bottom of the bar as origin coordinates (bar will only scale up, not in both dirs)
 	            barGeometry.translate(0, 0, barGeometry.parameters.depth / 2);
 	
 	            var segmentMat = new THREE.MeshPhongMaterial({
@@ -45462,9 +45466,19 @@ var anchart3d =
 	            });
 	
 	            var bar = new THREE.Mesh(barGeometry, segmentMat);
-	            bar.position.x = lastBarStartX; //0.5 cube side length + distance between the bars
+	            bar.position.x = lastBarStartX;
 	
 	            return bar;
+	        }
+	    }, {
+	        key: 'darkenCol',
+	        value: function darkenCol(color, percent) {
+	            //darkens the color for every row of datasets
+	            color.b = color.b - color.b * (percent / 100) <= 1 ? color.b - color.b * (percent / 100) : 1;
+	            color.g = color.g - color.g * (percent / 100) <= 1 ? color.g - color.g * (percent / 100) : 1;
+	            color.r = color.r - color.r * (percent / 100) <= 1 ? color.r - color.r * (percent / 100) : 1;
+	
+	            return color;
 	        }
 	    }, {
 	        key: 'create3DBarChart',
@@ -45474,81 +45488,78 @@ var anchart3d =
 	            var calculatedData = jsonData.file;
 	            //Group together all pieces
 	            var barChart = new THREE.Group();
+	            var axisLines = new THREE.Group();
+	            var labels = new THREE.Group();
 	            barChart.chartType = this.type;
 	            barChart.name = this.name;
 	            //variable holds last position of the inserted segment of the barchart
 	            var lastBarStartX = 0.0;
+	            var yPostition = 0;
+	            var doOnce = 0;
 	            //iterate over the jsonData and create for every data a new Bar
 	            //data = one object in the json which holds the props "amount","percent" in this case.
-	
 	            for (var dataset = 0; dataset < calculatedData.length; dataset++) {
 	                var values = calculatedData[dataset].values;
 	                var segment = void 0;
-	                var segment2 = void 0;
 	                var lastRowColor = void 0;
+	                var yPos = 0;
+	                //sets the Label for the Row
+	                var labelRow = new _Axis2.default().makeTextSprite(" " + calculatedData[dataset].name + " ");
+	                labelRow.position.set(lastBarStartX + 2, -2, -1);
+	                labels.add(labelRow);
 	
 	                for (var value = 0; value < values.length; value++) {
 	                    //get first data set of the first object
+	                    var dataName = values[value].name;
+	                    var dataValue = values[value].value;
+	                    var dataPercent = values[value].percent;
+	                    //call function which creates one segment at a time
+	                    segment = this.createSegment(lastBarStartX, lastRowColor);
+	                    segment.position.y = yPos++; //set second dataset behind first one
+	                    lastRowColor = segment.material.color;
+	
+	                    var labelLine = new _Axis2.default().makeTextSprite(" " + values[value].name + " ");
+	                    labelLine.position.set(0, segment.position.y, -1);
+	                    labels.add(labelLine);
+	
+	                    if (this.sceneConfig.chartAnimation) {
+	                        var finalPos = dataPercent / 10;
+	                        var startPos = segment.scale;
+	
+	                        (0, _animation.animateZ)(segment, startPos, finalPos, 3000, 3000);
+	                    } else {
+	                        segment.scale.z = dataPercent / 10;
+	                    }
+	
 	                    if (value == 0) {
-	                        var data1Name = values[value].name;
-	                        var data1Value = values[value].value;
-	                        var data1Percent = values[value].percent;
-	                        //call function which creates one segment at a time
-	                        segment = this.createSegment(lastBarStartX);
-	                        if (values.length < 2) {
-	                            lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
-	                        }
-	                        lastRowColor = segment.material.color.getHex();
-	
-	                        if (this.sceneConfig.chartAnimation) {
-	                            var finalPos = data1Percent / 10;
-	                            var startPos = segment.scale;
-	
-	                            (0, _animation.animateZ)(segment, startPos, finalPos, 3000, 3000);
-	                        } else {
-	                            segment.scale.z = data1Percent / 10;
-	                        }
-	
 	                        //adding elements to the legendMap
 	                        this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
-	
-	                        segment.name = calculatedData[dataset].name;
-	                        segment.data1 = {};
-	                        segment.data1.name = data1Name;
-	                        segment.data1.value = data1Value;
-	                        segment.data1.percent = data1Percent;
 	                    }
-	                    if (value == 1) {
-	                        var data2Name = values[value].name;
-	                        var data2Value = values[value].value;
-	                        var data2Percent = values[value].percent;
 	
-	                        segment2 = this.createSegment(lastBarStartX, lastRowColor);
-	                        segment2.position.y = 1; //set second dataset behind first one
-	                        lastBarStartX = lastBarStartX + 0.7 + 0.2; //0.7 cause one bar is that long + 0.2 to set gaps between
+	                    segment.name = calculatedData[dataset].name;
+	                    segment.data1 = {};
+	                    segment.data1.name = dataName;
+	                    segment.data1.value = dataValue;
+	                    segment.data1.percent = dataPercent;
 	
-	                        if (this.sceneConfig.chartAnimation) {
-	                            var _finalPos = data2Percent / 10;
-	                            var _startPos = segment2.scale;
+	                    if (yPostition <= segment.position.y) yPostition = segment.position.y;
 	
-	                            (0, _animation.animateZ)(segment2, _startPos, _finalPos, 3000, 3000);
-	                        } else {
-	                            segment2.scale.z = data2Percent / 10;
-	                        }
-	
-	                        segment2.name = calculatedData[dataset].name;
-	                        segment2.data2 = {};
-	                        segment2.data2.name = data2Name;
-	                        segment2.data2.value = data2Value;
-	                        segment2.data2.percent = data2Percent;
-	
-	                        barChart.add(segment2);
-	                    }
 	                    barChart.add(segment);
 	                }
+	                lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
 	            }
 	            //half the position and align the segments to the center
 	            barChart.position.x = -(lastBarStartX / 2);
+	
+	            var axis = new _Axis2.default().initAxis(yPostition);
+	            axisLines.add(axis);
+	
+	            //let grid = new Axis().generateGridlines(yPostition);
+	            //gridLines.add(grid);
+	            barChart.add(labels);
+	            barChart.add(axisLines);
+	            //barChart.add(gridLines);
+	
 	
 	            return barChart;
 	        }
@@ -45561,6 +45572,139 @@ var anchart3d =
 
 /***/ },
 /* 12 */
+/*!***************************!*\
+  !*** ./src/utils/Axis.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	        value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Timo on 29.01.2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	/**
+	 * Created by Timo on 24.01.2017.
+	 */
+	
+	
+	var _three = __webpack_require__(/*! three */ 7);
+	
+	var THREE = _interopRequireWildcard(_three);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Axis = function () {
+	        function Axis(sceneConfig) {
+	                _classCallCheck(this, Axis);
+	
+	                this.sceneConfig = sceneConfig;
+	        }
+	
+	        _createClass(Axis, [{
+	                key: "roundRect",
+	                value: function roundRect(ctx, x, y, w, h, r) {
+	                        ctx.beginPath();
+	                        ctx.moveTo(x + r, y);
+	                        ctx.lineTo(x + w - r, y);
+	                        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+	                        ctx.lineTo(x + w, y + h - r);
+	                        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+	                        ctx.lineTo(x + r, y + h);
+	                        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+	                        ctx.lineTo(x, y + r);
+	                        ctx.quadraticCurveTo(x, y, x + r, y);
+	                        ctx.closePath();
+	                        ctx.fill();
+	                        ctx.stroke();
+	                }
+	        }, {
+	                key: "makeTextSprite",
+	                value: function makeTextSprite(message, parameters) {
+	                        if (parameters === undefined) parameters = {};
+	
+	                        var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
+	
+	                        var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 11;
+	
+	                        var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 1;
+	
+	                        var borderColor = parameters.hasOwnProperty("borderColor") ? parameters["borderColor"] : { r: 0, g: 0, b: 0, a: 1.0 };
+	
+	                        var backgroundColor = parameters.hasOwnProperty("backgroundColor") ? parameters["backgroundColor"] : { r: 255, g: 255, b: 255, a: 1.0 };
+	
+	                        var canvas = document.createElement('canvas');
+	                        var context = canvas.getContext('2d');
+	                        context.font = "Bold " + fontsize + "px " + fontface;
+	
+	                        // get size data (height depends only on font size)
+	                        var metrics = context.measureText(message);
+	                        var textWidth = metrics.width;
+	
+	                        // background color
+	                        context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+	                        // border color
+	                        context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+	
+	                        context.lineWidth = borderThickness;
+	                        this.roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+	                        // 1.4 is extra height factor for text below baseline: g,j,p,q.
+	
+	                        // text color
+	                        context.fillStyle = "rgba(0, 0, 0, 1.0)";
+	
+	                        context.fillText(message, borderThickness, fontsize + borderThickness);
+	
+	                        // canvas contents will be used for a texture
+	                        var texture = new THREE.Texture(canvas);
+	
+	                        texture.minFilter = THREE.LinearFilter;
+	                        texture.needsUpdate = true;
+	
+	                        var spriteMaterial = new THREE.SpriteMaterial({ map: texture, fog: true }); //,alignment: spriteAlignment
+	
+	                        var sprite = new THREE.Sprite(spriteMaterial);
+	                        sprite.scale.set(5, 2.5, 1);
+	
+	                        sprite.position.normalize();
+	                        return sprite;
+	                }
+	        }, {
+	                key: "initAxis",
+	                value: function initAxis(y) {
+	                        var material = new THREE.LineBasicMaterial({
+	                                color: 0x000000 //black
+	                        });
+	
+	                        var geometry = new THREE.Geometry();
+	                        geometry.vertices.push(
+	                        //ebene 1
+	                        new THREE.Vector3(-0.7, -2, 0), new THREE.Vector3(-0.7, y + 0.7, 0), new THREE.Vector3(3, y + 0.7, 0), new THREE.Vector3(-0.7, y + 0.7, 0), new THREE.Vector3(-0.7, y + 0.7, 1),
+	                        //ebene 2
+	                        new THREE.Vector3(-0.7, -2, 1), new THREE.Vector3(-0.7, y + 0.7, 1), new THREE.Vector3(3, y + 0.7, 1), new THREE.Vector3(-0.7, y + 0.7, 1), new THREE.Vector3(-0.7, y + 0.7, 2),
+	                        //ebene 3
+	                        new THREE.Vector3(-0.7, -2, 2), new THREE.Vector3(-0.7, y + 0.7, 2), new THREE.Vector3(3, y + 0.7, 2), new THREE.Vector3(-0.7, y + 0.7, 2), new THREE.Vector3(-0.7, y + 0.7, 3),
+	                        //ebene 4
+	                        new THREE.Vector3(-0.7, -2, 3), new THREE.Vector3(-0.7, y + 0.7, 3), new THREE.Vector3(3, y + 0.7, 3), new THREE.Vector3(-0.7, y + 0.7, 3), new THREE.Vector3(-0.7, y + 0.7, 4));
+	
+	                        var line = new THREE.Line(geometry, material);
+	
+	                        return line;
+	                }
+	        }]);
+	
+	        return Axis;
+	}();
+	
+	exports.default = Axis;
+
+/***/ },
+/* 13 */
 /*!*******************************!*\
   !*** ./src/utils/JsonData.js ***!
   \*******************************/
