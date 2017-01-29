@@ -1,0 +1,16 @@
+
+body{
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial;
+    
+    background-color: #878987;
+	background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233c9836' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#wrapper { z-index:-1; overflow:hidden; bottom:0px; top:0px; min-height:100vh;width:858px; margin:0 auto; position:relative; padding:20px 50px; border-left:1px solid #000; border-right:1px solid #000; background:#fff; }
+
+h1 { margin:0;  }
+h2 { margin: 10px 0 0 0; }
+
+h2 + input { margin-right:0px; }

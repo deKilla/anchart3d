@@ -1,0 +1,141 @@
+/* ======================================================== */
+/*                                                          */
+/*       anchart3d.css                                      */
+/*                                                          */
+/* ======================================================== */
+/* OUTER PARENTS                                            */
+/* ======================================================== */
+
+#blatestpie {
+      
+      /* required */
+      width:858px;
+      height:280px;
+
+    background:#aaa;
+    border:1px solid #000;
+    position: relative;
+}
+
+#blatestpie2 {
+    
+      /* required */
+      width:858px;
+      height:280px;
+
+    background:#aaa;
+    position:relative;
+    border:1px solid #000;
+}
+
+/* ======================================================== */
+/* LEGEND                                                   */
+/* ======================================================== */
+
+.legend {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+    z-index: 8;
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+
+.legend li {
+    color:#000;
+    margin-bottom:5px;
+    padding:3px 0;
+}
+
+.color-box {
+    display: inline-flex;
+    border: 1px solid #fff;
+    width: 14px;
+    height: 14px;
+    margin-right:10px;
+    padding:5px;
+}
+
+/* ======================================================== */
+/* DETAILS                                                  */
+/* ======================================================== */
+
+.details { 
+    z-index:8;
+    background: #fff;
+    border:1px solid #000;
+    color:#000;
+    position: absolute;
+    top:10px;
+    left:10px;
+    padding:10px 15px 5px 10px;
+}
+
+.details h2 { margin:0 0 5px 0; }
+
+/* ======================================================== */
+/* TOOLTIP                                                  */
+/* ======================================================== */
+
+#tooltip {
+    z-index: 9999;
+    padding:10px;
+    background: #ccc;
+    border:1px solid #000;
+}
+
+#tooltip h4 { padding-bottom:5px; font-size:20px; padding:0px; margin:0px 0px 5px 0px; }
+
+/* ======================================================== */
+/* CONTROLS                                                 */
+/* ======================================================== */
+
+.control { z-index:9999; position: absolute; bottom:100px; left:10px; } /* bottom: 100px; macht 0 sinn ... todo! */
+.control a { padding:0px; margin:0px; position:absolute; background:#000; border:1px solid #fff; text-align: center; font-weight:bold; color:#fff; cursor:pointer; width:28px; height:28px; line-height: 28px;}
+.control a:hover { background: #333; }
+
+.btnup { top:1px; left:30px; }
+.btnleft { top:30px; left:1px; }
+.btnreset { top:31px; left:31px; }
+.btnright { top:30px; left:59px; }
+.btndown { top:59px; left:30px; }
+
+.btnup {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.btnleft {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.btnright {
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.btndown {
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.control > a.btnreset { border:0px none; width:29px; height:29px; }
