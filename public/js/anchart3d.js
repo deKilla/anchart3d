@@ -174,7 +174,7 @@ var anchart3d =
 	                        legend.generateLegend();
 	                        var oldChart = scene.scene.getObjectByName(chartName, true);
 	                        controls.enableZoom = false;
-	                        (0, _animation.resetCameraPosition)(camera, { x: 0, y: -10, z: 7 }, 1000).onComplete(function () {
+	                        (0, _animation.resetCameraPosition)(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
 	                            scene.scene.add(newChart.object);
 	                            newChart.object.position.set(50, 0, 0);
 	                            (0, _animation.dataSwapAnimation)(oldChart, { x: -50, y: 0, z: 0 }, newChart.object, 2500, 10).onComplete(function () {
@@ -281,6 +281,7 @@ var anchart3d =
 	        this.control = this.createDomElement("control");
 	        this.legend = this.createDomElement("legend");
 	        this.tooltip = null;
+	        this.cameraDefaultPos = { x: 0, y: -7, z: 1.5 }; //camera default pos
 	    }
 	
 	    _createClass(SceneInit, [{
@@ -323,17 +324,17 @@ var anchart3d =
 	            this.scene.add(ambientLight);
 	
 	            //spot light which is illuminating the chart directly
-	            var spotLight = new THREE.SpotLight(0xffffff, 0.65);
+	            var spotLight = new THREE.SpotLight(0xffffff, 0.70);
 	            spotLight.castShadow = true;
 	            spotLight.position.set(0, 40, 10);
 	            this.scene.add(spotLight);
 	
 	            if (this.sceneConfig.startAnimation) {
 	                this.camera.position.set(0, -10, 1100);
-	                var endPos = { x: 0, y: -10, z: 7 }; //let defaultCamPos = {x: 0, y: -10, z: 7}; => should be for all charts later
+	                var endPos = this.cameraDefaultPos;
 	                (0, _animation.entryAnimation)(this.camera, endPos, 2500, 800);
 	            } else {
-	                this.camera.position.set(0, -10, 7);
+	                this.camera.position.set(this.cameraDefaultPos.x, this.cameraDefaultPos.y, this.cameraDefaultPos.z);
 	            }
 	
 	            document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
@@ -345,7 +346,7 @@ var anchart3d =
 	            window.addEventListener('resize', this.onWindowResize.bind(this), false);
 	
 	            if (this.sceneConfig.showOnScreenControls) {
-	                this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera);
+	                this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.cameraDefaultPos);
 	            }
 	
 	            var legend = new _Legend2.default(this.legendMap, this.sceneConfig, this.domNode);
@@ -377,7 +378,6 @@ var anchart3d =
 	            var raycaster = new THREE.Raycaster();
 	            this.mouse.x = (event.pageX - this.domNode.offsetLeft) / this.canvas.width * 2 - 1;
 	            this.mouse.y = -((event.pageY - this.domNode.offsetTop) / this.canvas.height) * 2 + 1;
-	            //console.log(this.mouse)
 	
 	            raycaster.setFromCamera(this.mouse, this.camera);
 	
@@ -402,6 +402,7 @@ var anchart3d =
 	            var method = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "click";
 	            var currentChart = arguments[1];
 	            var camera = arguments[2];
+	            var defaultPos = arguments[3];
 	
 	            var repeater = void 0;
 	            var interval = void 0;
@@ -421,7 +422,7 @@ var anchart3d =
 	
 	            this.domNode.querySelector(".btnreset").addEventListener("click", function () {
 	                (0, _animation.resetChartPosition)(currentChart, { x: 0, y: 0, z: 0 }, 4000);
-	                (0, _animation.resetCameraPosition)(camera, { x: 0, y: -10, z: 7 }, 4000);
+	                (0, _animation.resetCameraPosition)(camera, defaultPos, 4000);
 	            });
 	            this.domNode.querySelector(".btnleft").addEventListener(method, function () {
 	                repeater = setInterval(function () {
@@ -491,7 +492,7 @@ var anchart3d =
 	            //hover event
 	            if (this.INTERSECTED && event.type == "mousemove") {
 	                this.showTooltip(true);
-	                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.01));
+	                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.03));
 	                //console.log(intersectedObjects[0]);           
 	            }
 	        }
@@ -1723,14 +1724,14 @@ var anchart3d =
 	        return new _tween2.default.Tween(actualObjPos).to({ x: defaultPos.x, y: defaultPos.y, z: defaultPos.z }, animTime).easing(_tween2.default.Easing.Cubic.Out).onUpdate(function () {
 	            object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
 	        }).start();
-	    }
+	    } else return new _tween2.default.Tween().to(0, 0).start();
 	} /**
 	   * @author Amar Bajric (https://github.com/amarbajric)
 	   */
 	
 	function resetCameraPosition(cameraObj, defaultPos, animTime) {
 	    //Camera Rotation and Position
-	    var actualCamPos = { x: cameraObj.position.x, y: cameraObj.position.y, z: Math.ceil(cameraObj.position.z) }; //ceiling upwards cause of minimal variety
+	    var actualCamPos = { x: cameraObj.position.x, y: Math.round(cameraObj.position.y), z: Math.round(cameraObj.position.z) }; //ceiling upwards cause of minimal variety
 	    var initCam = actualCamPos.x == defaultPos.x && actualCamPos.y == defaultPos.y && actualCamPos.z == defaultPos.z;
 	
 	    if (!initCam) {

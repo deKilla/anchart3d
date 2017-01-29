@@ -16,12 +16,13 @@ export function resetChartPosition(object,defaultPos,animTime){
                 object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
             }).start();
     }
+    else return new TWEEN.Tween().to(0,0).start();
 }
 
 
 export function resetCameraPosition(cameraObj,defaultPos,animTime){
     //Camera Rotation and Position
-    let actualCamPos = {x: cameraObj.position.x, y: cameraObj.position.y, z: Math.ceil(cameraObj.position.z)}; //ceiling upwards cause of minimal variety
+    let actualCamPos = {x: cameraObj.position.x, y: Math.round(cameraObj.position.y), z: Math.round(cameraObj.position.z)}; //ceiling upwards cause of minimal variety
     let initCam = (actualCamPos.x == defaultPos.x && actualCamPos.y == defaultPos.y && actualCamPos.z == defaultPos.z);
 
     if (!initCam) {
