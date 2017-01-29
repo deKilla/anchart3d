@@ -16,6 +16,7 @@ export function resetChartPosition(object,defaultPos,animTime){
                 object.rotation.set(actualObjPos.x, actualObjPos.y, actualObjPos.z);
             }).start();
     }
+    else return new TWEEN.Tween().to(0,0).start();
 }
 
 

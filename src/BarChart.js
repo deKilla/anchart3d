@@ -26,7 +26,7 @@ class BarChart {
     createSegment(lastBarStartX, lastRowColor) {
         let color;
         if (lastRowColor) {
-                color =  this.lightenCol(lastRowColor, 15).getHex();
+                color =  this.darkenCol(lastRowColor, 10).getHex();
             }
         else {
             color = Math.random() * 0xffffff;
@@ -48,10 +48,10 @@ class BarChart {
     }
 
 
-    lightenCol(color, percent){//lightens the color for every row of datasets
-        color.b = (color.b + (color.b * (percent/100))) <= 1 ? color.b + (color.b * (percent/100)) : 1;
-        color.g = (color.g + (color.g * (percent/100))) <= 1 ? color.g + (color.g * (percent/100)) : 1;
-        color.r = (color.r + (color.r * (percent/100))) <= 1 ? color.r + (color.r * (percent/100)) : 1;
+    darkenCol(color, percent){//darkens the color for every row of datasets
+        color.b = (color.b - (color.b * (percent/100))) <= 1 ? color.b - (color.b * (percent/100)) : 1;
+        color.g = (color.g - (color.g * (percent/100))) <= 1 ? color.g - (color.g * (percent/100)) : 1;
+        color.r = (color.r - (color.r * (percent/100))) <= 1 ? color.r - (color.r * (percent/100)) : 1;
 
         return color;
     }
