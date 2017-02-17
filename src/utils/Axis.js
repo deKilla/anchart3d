@@ -126,6 +126,43 @@ class Axis {
     }
 
 
+
+    scatterAxisDrawer(scatterObject){
+        let scatterPlotAxis = scatterObject;
+
+        function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+
+        let lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push(
+
+            v(-50, 50, -50), v(50, 50, -50),
+            v(-50, -50, -50), v(50, -50, -50),
+            v(-50, -50, 50), v(50, -50, 50),
+
+            v(-50, 0, -50), v(50, 0, -50),
+            v(-50, -50, 0), v(50, -50, 0),
+
+            v(50, -50, -50), v(50, 50, -50),
+            v(-50, -50, -50), v(-50, 50, -50),
+            v(-50, -50, 50), v(-50, 50, 50),
+
+            v(0, -50, -50), v(0, 50, -50),
+            v(-50, -50, 0), v(-50, 50, 0),
+
+            v(-50, 50, -50), v(-50, 50, 50),
+            v(-50, -50, -50), v(-50, -50, 50),
+
+            v(50,-50,50), v(50,-50,-50),
+            v(-50, 0, -50), v(-50, 0, 50),
+            v(0, -50, -50), v(0, -50, 50)
+        );
+        let lineMat = new THREE.LineBasicMaterial({color: 0x808080, lineWidth: 1});
+        let line = new THREE.Line(lineGeo, lineMat);
+        line.type = THREE.Lines;
+        scatterPlotAxis.add(line);
+    }
+
+
 }
 
 export default Axis

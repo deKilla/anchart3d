@@ -23,7 +23,7 @@ class BarChart {
         this.object = this.create3DBarChart();
     }
 
-    createSegment(lastBarStartX, lastRowColor) {
+    createBar(lastBarStartX, lastRowColor) {
         let color;
         if (lastRowColor) {
                 color =  this.darkenCol(lastRowColor, 10).getHex();
@@ -89,7 +89,7 @@ class BarChart {
                 let dataValue = values[value].value;
                 let dataPercent = values[value].percent;
                 //call function which creates one segment at a time
-                segment = this.createSegment(lastBarStartX, lastRowColor);
+                segment = this.createBar(lastBarStartX, lastRowColor);
                 segment.position.y = yPos++; //set second dataset behind first one
                 lastRowColor = segment.material.color;
 

@@ -112,6 +112,27 @@
         }
     ];
 
+    var jsonData3 = [
+        {
+            "name":"Dataset1",
+            "values": [
+                {"name":"Position", "value":[55,47,39]},
+                {"name":"size", "value":32},
+                {"name":"shape", "value":"sphere"}
+            ]
+        },
+        {
+            "name":"Dataset2",
+            "values": [
+                {"name":"Position", "value":[42,47,39]},
+                {"name":"size", "value":57},
+                {"name":"shape", "value":"sphere"}
+            ]
+        }
+    ];
+
+
+
 var configuration_pc = {
     "details": true,
     "tooltip": true,
@@ -129,12 +150,25 @@ var configuration_bc = {
     "tooltip": true,
     "showOnScreenControls": true,
     "legend": true,
-    "startAnimation": true,
+    "startAnimation": false,
     "chartAnimation": true,
     "transparency": true,
     "antialias": true,
     "fov": 45
 };
+
+var configuration_sc = {
+    "details": true,
+    "tooltip": true,
+    "showOnScreenControls": true,
+    "legend": true,
+    "startAnimation": false,
+    "chartAnimation": true,
+    "transparency": true,
+    "antialias": true,
+    "fov": 45
+};
+
 
  var pieChart = anchart3d.createChart("pieChart")
     .setConfig(configuration_pc)
@@ -142,11 +176,18 @@ var configuration_bc = {
     .data(jsonData1,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
-var barChart = anchart3d.createChart("barChart")
+/*var barChart = anchart3d.createChart("barChart")
     .setConfig(configuration_bc)
     .barChart()
     .data(jsonData2)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
-    .draw(); //.draw() must be last
+    .draw(); //.draw() must be last*/
+
+var scatterChart = anchart3d.createChart("barChart")
+    .setConfig(configuration_sc)
+    .scatterChart()
+    .data(jsonData3)
+    .draw();
+
 
     var swapPie = function () {
         pieChart.data(jsonData1,"Einwohner");

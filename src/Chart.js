@@ -6,6 +6,7 @@
 
 import PieChart from './PieChart';
 import BarChart from './BarChart'
+import ScatterChart from "./ScatterChart";
 
 class Chart {
 
@@ -33,6 +34,10 @@ class Chart {
                 break;
             case "barChart":
                 chart = new BarChart(name, chartType, data, config);
+                this.legendMap = chart.legendMap;
+                break;
+            case "scatterChart":
+                chart = new ScatterChart(name, chartType, data, config);
                 this.legendMap = chart.legendMap;
                 break;
             default:

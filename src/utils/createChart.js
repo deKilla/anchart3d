@@ -40,6 +40,10 @@ export default function createChart(domTarget) {
             options.chartType = "barChart";
             return this;
         },
+        scatterChart: function () {
+            options.chartType = "scatterChart";
+            return this;
+        },
         data: function (jsonData, sortBy) {
             if (sortBy) {
                 options.data = new JsonData(jsonData).sortData(sortBy);
