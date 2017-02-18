@@ -70,14 +70,13 @@ class SceneInit {
         } else {
             this.scene.background = new THREE.Color(
                 this.sceneConfig.bgcolor ||
-                window.getComputedStyle(this.domNode).getPropertyValue("background-color")// ||
-                //window.getComputedStyle(document.body).getPropertyValue("background-color") // pseudo transparency
+                window.getComputedStyle(this.domNode).getPropertyValue("background-color")
             );
         }
 
         //ambient light which is for the whole scene
         let ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        ambientLight.castShadow = false;
+        ambientLight.castShadow = true;
         this.scene.add(ambientLight);
 
         //spot light which is illuminating the chart directly
@@ -97,8 +96,6 @@ class SceneInit {
 
         document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
         document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
-        document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
-        document.ondblclick = this.onDocumentDblClick.bind(this);
 
         //if window resizes
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
@@ -140,17 +137,6 @@ class SceneInit {
 
         return raycaster.intersectObjects(this.scene.getObjectByName(this.chartName, true).children);
     
-    }
-
-
-    onDocumentKeyAction(event) {
-       // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
-        switch (event.keyCode) {
-            case 82: //R key
-                break;
-            case 67: //C key
-                break;
-        }
     }
 
 
@@ -256,7 +242,7 @@ class SceneInit {
             for(let dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++){
                 if(this.INTERSECTED.hasOwnProperty("data"+dataset)){
                     this.details.innerHTML +=
-                        `<b>${this.INTERSECTED["data"+dataset].name}:</b> ${this.INTERSECTED["data"+dataset].percent.toFixed(2)}% (${this.INTERSECTED["data"+dataset].value})<br>`;
+                        `<b>${this.INTERSECTED["data"+dataset].name}:</b> ${this.INTERSECTED["data"+dataset].value} (${this.INTERSECTED["data"+dataset].percent.toFixed(2)}%)<br>`;
                 }
             }
             this.details.style.visibility = "visible";
@@ -318,10 +304,6 @@ class SceneInit {
     return threeHex;
     }
 
-
-
-    onDocumentDblClick() {
-    }
 
 
     createDomElement(name) {

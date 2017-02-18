@@ -1,5 +1,6 @@
 /**
- * Created by Timo on 29.01.2017.
+ * @author Amar Bajric (https://github.com/amarbajric)
+ * @author Timo Hasenbichler (https://github.com/timoooo)
  */
 
 import * as THREE from "three";
@@ -10,6 +11,11 @@ class Axis {
     constructor(sceneConfig) {
         this.sceneConfig = sceneConfig;
 
+    }
+
+
+    createVector(x,y,z){
+        return new THREE.Vector3(x,y,z);
     }
 
     roundRect(ctx, x, y, w, h, r) {
@@ -93,78 +99,110 @@ class Axis {
             color: 0x000000 //black
         });
 
-
         let geometry = new THREE.Geometry();
         geometry.vertices.push(
             //ebene 1
-            new THREE.Vector3(-0.7, -2, 0),
-            new THREE.Vector3(-0.7, y + 0.7, 0),
-            new THREE.Vector3(x, y + 0.7, 0),
-            new THREE.Vector3(-0.7, y + 0.7, 0),
-            new THREE.Vector3(-0.7, y + 0.7, 1),
+            this.createVector(-0.7, -2, 0),
+            this.createVector(-0.7, y + 0.7, 0),
+            this.createVector(x, y + 0.7, 0),
+            this.createVector(-0.7, y + 0.7, 0),
+            this.createVector(-0.7, y + 0.7, 1),
             //ebene 2
-            new THREE.Vector3(-0.7, -2, 1),
-            new THREE.Vector3(-0.7, y+0.7, 1),
-            new THREE.Vector3(x, y+0.7, 1),
-            new THREE.Vector3(-0.7, y+0.7, 1),
-            new THREE.Vector3(-0.7, y+0.7, 2),
+            this.createVector(-0.7, -2, 1),
+            this.createVector(-0.7, y+0.7, 1),
+            this.createVector(x, y+0.7, 1),
+            this.createVector(-0.7, y+0.7, 1),
+            this.createVector(-0.7, y+0.7, 2),
             //ebene 3
-            new THREE.Vector3(-0.7, -2, 2),
-            new THREE.Vector3(-0.7, y+0.7, 2),
-            new THREE.Vector3(x, y+0.7, 2),
-            new THREE.Vector3(-0.7, y+0.7, 2),
-            new THREE.Vector3(-0.7, y+0.7, 3),
+            this.createVector(-0.7, -2, 2),
+            this.createVector(-0.7, y+0.7, 2),
+            this.createVector(x, y+0.7, 2),
+            this.createVector(-0.7, y+0.7, 2),
+            this.createVector(-0.7, y+0.7, 3),
             //ebene 4
-            new THREE.Vector3(-0.7, -2, 3),
-            new THREE.Vector3(-0.7, y+0.7, 3),
-            new THREE.Vector3(x, y+0.7, 3),
-            new THREE.Vector3(-0.7, y+0.7, 3),
-            new THREE.Vector3(-0.7, y+0.7, 4),
+            this.createVector(-0.7, -2, 3),
+            this.createVector(-0.7, y+0.7, 3),
+            this.createVector(x, y+0.7, 3),
+            this.createVector(-0.7, y+0.7, 3),
+            this.createVector(-0.7, y+0.7, 4),
         );
 
         return new THREE.Line(geometry, material);
     }
 
 
+    createTextCanvas(text, color, font, size){
+        size = size || 12;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        let fontStr = (size + 'px ') + (font || 'Arial');
+        ctx.font = fontStr;
+        let w = ctx.measureText(text).width;
+        let h = Math.ceil(size);
+        canvas.width = w;
+        canvas.height = h;
+        ctx.font = fontStr;
+        ctx.fillStyle = color || 'black';
+        ctx.fillText(text, 0, Math.ceil(size*0.8));
+        return canvas;
+    }
 
-    scatterAxisDrawer(scatterObject){
-        if(typeof scatterObject === "undefined"){
-            console.error("The argument of the function has to be an instance of THREE.Object3D.")
-        }
 
-        function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+    createText2D(text, size, color, font, segW, segH) {
+        let canvas = this.createTextCanvas(text, color, font, size);
+        let plane = new THREE.PlaneGeometry(canvas.width, canvas.height, segW, segH);
+        let tex = new THREE.Texture(canvas);
+        tex.needsUpdate = true;
+        let planeMat = new THREE.MeshBasicMaterial({
+            map: tex, color: 0xffffff, transparent: true
+        });
+        let mesh = new THREE.Mesh(plane, planeMat);
+        mesh.scale.set(0.25, 0.25, 0.25);
+        mesh.doubleSided = true;
+        return mesh;
+    }
+
+
+
+    scatterAxisDrawer(scatterObject,xMax,yMax,zMax){
 
         let lineGeo = new THREE.Geometry();
         lineGeo.vertices.push(
 
-            v(-50, 50, -50), v(50, 50, -50),
-            v(-50, -50, -50), v(50, -50, -50),
-            v(-50, -50, 50), v(50, -50, 50),
+            //bottom grid
+            this.createVector(-50, -50, 50), this.createVector(50, -50, 50),
+            this.createVector(50, -50, -50), this.createVector(-50, -50, -50),
+            this.createVector(50, -50, -50), this.createVector(-50, -50, -50),
+            this.createVector(-50, -50, 50),
+            //now starting middle cross bottom
+            this.createVector(0, -50, 50), this.createVector(0, -50, -50),
+            this.createVector(-50, -50, -50), this.createVector(-50, -50, 0),
+            this.createVector(50, -50, 0),
 
-            v(-50, 0, -50), v(50, 0, -50),
-            v(-50, -50, 0), v(50, -50, 0),
+            //back grid
+            this.createVector(50, -50, -50), this.createVector(50, 50, -50),
+            this.createVector(-50, 50, -50), this.createVector(-50, -50, -50),
+            //now starting middle cross back
+            this.createVector(0, -50, -50), this.createVector(0, 50, -50),
+            this.createVector(-50, 50, -50),this.createVector(-50, 0, -50),
+            this.createVector(50, 0, -50), this.createVector(-50, 0, -50),
 
-            v(50, -50, -50), v(50, 50, -50),
-            v(-50, -50, -50), v(-50, 50, -50),
-            v(-50, -50, 50), v(-50, 50, 50),
+            //left grid
+            this.createVector(-50, 50, -50), this.createVector(-50, 50, 50),
+            this.createVector(-50, -50, 50),
+            //now starting middle cross left
+            this.createVector(-50, -50, 0), this.createVector(-50, 50, 0),
+            this.createVector(-50, 50, 50), this.createVector(-50, 0, 50),
+            this.createVector(-50, 0, -50)
 
-            v(0, -50, -50), v(0, 50, -50),
-            v(-50, -50, 0), v(-50, 50, 0),
-
-            v(-50, 50, -50), v(-50, 50, 50),
-            v(-50, -50, -50), v(-50, -50, 50),
-
-            v(50,-50,50), v(50,-50,-50),
-            v(-50, 0, -50), v(-50, 0, 50),
-            v(0, -50, -50), v(0, -50, 50)
         );
-        let lineMat = new THREE.LineBasicMaterial({color: 0x808080, lineWidth: 1});
+        let lineMat = new THREE.LineBasicMaterial({color: 0x808080});
         let line = new THREE.Line(lineGeo, lineMat);
-        line.type = THREE.Lines;
+        line.type = THREE.LineStrip;
         scatterObject.add(line);
+
         return scatterObject;
     }
-
 
 }
 

@@ -116,9 +116,9 @@
         {
             "name":"Dataset1",
             "values": [
-                {"name":"X", "value":20},
-                {"name":"Y", "value":39},
-                {"name":"Z", "value":47},
+                {"name":"X", "value":170},
+                {"name":"Y", "value":89},
+                {"name":"Z", "value":66},
                 {"name":"size", "value":32},
                 {"name":"shape", "value":"sphere"}
             ]
@@ -126,10 +126,10 @@
         {
             "name":"Dataset2",
             "values": [
-                {"name":"X", "value":150},
-                {"name":"Y", "value":62},
-                {"name":"Z", "value":11},
-                {"name":"size", "value":70},
+                {"name":"X", "value":260},
+                {"name":"Y", "value":220},
+                {"name":"Z", "value":200},
+                {"name":"size", "value":90},
                 {"name":"shape", "value":"sphere"}
             ]
         }
@@ -166,7 +166,7 @@ var configuration_sc = {
     "tooltip": true,
     "showOnScreenControls": true,
     "legend": true,
-    "startAnimation": false,
+    "startAnimation": true,
     "chartAnimation": true,
     "transparency": true,
     "antialias": true,
@@ -175,9 +175,9 @@ var configuration_sc = {
 
 
  var pieChart = anchart3d.createChart("pieChart")
-    .setConfig(configuration_pc)
-    .pieChart()
-    .data(jsonData1,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .setConfig(configuration_bc)
+    .barChart()
+    .data(jsonData2)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 /*var barChart = anchart3d.createChart("barChart")

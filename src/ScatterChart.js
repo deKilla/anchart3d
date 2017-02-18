@@ -24,23 +24,18 @@ class ScatterChart {
 
 
     createEntity(x,y,z,size,shape){
-        let geometry = new THREE.SphereGeometry( size/100, 32, 32, 3.3);
+        let geometry = new THREE.SphereGeometry( size/10, 32, 32, 3.3);
         let material = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
             shininess: 0.8,
         });
         let sphere = new THREE.Mesh(geometry, material);
-        sphere.position.x = x/100;
-        sphere.position.y = y/100;
-        sphere.position.z = z/100;
+        sphere.position.x = x/10;
+        sphere.position.y = y/10;
+        sphere.position.z = z/10;
         return sphere;
     }
-
-
-
-
-
 
 
 
@@ -70,6 +65,8 @@ class ScatterChart {
             entity = this.createEntity(posX,posY,posZ, size);
             entity.name = calculatedData[dataset].name;
 
+            this.legendMap.set(calculatedData[dataset].name, entity.material.color.getHexString());
+
             for(let value = 0; value < values.length; value++){
                 if(values[value].name.toUpperCase().endsWith("X")){
                     entity["data"+value] = {};
@@ -97,11 +94,10 @@ class ScatterChart {
                 }
             }
 
-
-
             scatterChart.add(entity);
         }
 
+        //create new grid for scatter chart
         new Axis().scatterAxisDrawer(axisLines);
         scatterChart.add(axisLines);
         scatterChart.add(labels);
