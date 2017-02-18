@@ -30,12 +30,13 @@ class ScatterChart {
             shading: THREE.SmoothShading,
             shininess: 0.8,
         });
-        let sphere = new THREE.Mesh( geometry, material);
-        sphere.position.x = x/10;
-        sphere.position.y = y/10;
-        sphere.position.z = z/10;
+        let sphere = new THREE.Mesh(geometry, material);
+        sphere.position.x = x/100;
+        sphere.position.y = y/100;
+        sphere.position.z = z/100;
         return sphere;
     }
+
 
 
 
@@ -52,51 +53,60 @@ class ScatterChart {
         scatterChart.chartType = this.type;
         scatterChart.name = this.name;
 
-        //iterate over the jsonData and create for every data a new Bar
+        //iterate over the jsonData and create for every data a new entity
         //data = one object in the json which holds the props "amount","percent" in this case.
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let entity;
-            let posX = values[0].value[0];
-            let posY = values[0].value[1];
-            let posZ = values[0].value[2];
-            let size = values[1].value;
-            console.log(values[1].value);
-            console.log(posX);
+            let posX, posY, posZ, size;
 
-            entity = this.createEntity(posX,posY,posZ, size,"circle");
+            for(let value = 0; value < values.length; value++){
+                if(values[value].name.toUpperCase().endsWith("X")) posX = values[value].value;
+                else if(values[value].name.toUpperCase().endsWith("Y")) posY = values[value].value;
+                else if(values[value].name.toUpperCase().endsWith("Z")) posZ = values[value].value;
+                else if(values[value].name.toUpperCase().endsWith("SIZE")) size = values[value].value;
+            }
+
+            entity = this.createEntity(posX,posY,posZ, size);
             entity.name = calculatedData[dataset].name;
-            entity.data1 = {};
-            entity.data1.name = values[0].name;
-            entity.data1.value = "x: " + values[0].value[0] + "; y: " + values[0].value[1] + "; z: " + values[0].value[2];
-            entity.data1.percent = 0;
 
-            /*for (let value = 0; value < values.length; value++) {
-                //get first data set of the first object
-                let dataName = values[value].name;
-                let dataValue = values[value].value;
-                let dataPercent = values[value].percent;
-                //call function which creates one segment at a time
+            for(let value = 0; value < values.length; value++){
+                if(values[value].name.toUpperCase().endsWith("X")){
+                    entity["data"+value] = {};
+                    entity["data"+value].name = values[value].name;
+                    entity["data"+value].value = values[value].value;
+                    entity["data"+value].percent = values[value].percent;
+                }
+                else if(values[value].name.toUpperCase().endsWith("Y")){
+                    entity["data"+value] = {};
+                    entity["data"+value].name = values[value].name;
+                    entity["data"+value].value = values[value].value;
+                    entity["data"+value].percent = values[value].percent;
+                }
+                else if(values[value].name.toUpperCase().endsWith("Z")){
+                    entity["data"+value] = {};
+                    entity["data"+value].name = values[value].name;
+                    entity["data"+value].value = values[value].value;
+                    entity["data"+value].percent = values[value].percent;
+                }
+                else if(values[value].name.toUpperCase().endsWith("SIZE")){
+                    entity["data"+value] = {};
+                    entity["data"+value].name = values[value].name;
+                    entity["data"+value].value = values[value].value;
+                    entity["data"+value].percent = values[value].percent;
+                }
+            }
 
 
-                entity.name = calculatedData[dataset].name;
-                entity.data1 = {};
-                entity.data1.name = dataName;
-                entity.data1.value = dataValue;
-                entity.data1.percent = dataPercent;
 
-
-
-            }*/
             scatterChart.add(entity);
         }
 
-        axisLines = new Axis().scatterAxisDrawer(axisLines);
+        new Axis().scatterAxisDrawer(axisLines);
         scatterChart.add(axisLines);
         scatterChart.add(labels);
         return scatterChart;
     }
-
 }
 
 

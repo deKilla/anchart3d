@@ -128,7 +128,9 @@ class Axis {
 
 
     scatterAxisDrawer(scatterObject){
-        let scatterPlotAxis = scatterObject;
+        if(typeof scatterObject === "undefined"){
+            console.error("The argument of the function has to be an instance of THREE.Object3D.")
+        }
 
         function v(x,y,z){ return new THREE.Vector3(x,y,z); }
 
@@ -159,7 +161,8 @@ class Axis {
         let lineMat = new THREE.LineBasicMaterial({color: 0x808080, lineWidth: 1});
         let line = new THREE.Line(lineGeo, lineMat);
         line.type = THREE.Lines;
-        scatterPlotAxis.add(line);
+        scatterObject.add(line);
+        return scatterObject;
     }
 
 

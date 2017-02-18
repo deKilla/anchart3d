@@ -253,15 +253,15 @@ class SceneInit {
         if (status && this.sceneConfig.details) {
             this.details.innerHTML =
             `<h2>${this.INTERSECTED.name}</h2>`;
-            if(this.INTERSECTED.hasOwnProperty("data1")){
-            this.details.innerHTML += `<b>${this.INTERSECTED.data1.name}:</b> ${this.INTERSECTED.data1.percent.toFixed(2)}% (${this.INTERSECTED.data1.value})<br>`;
-            }
-            if(this.INTERSECTED.hasOwnProperty("data2")) {
-                this.details.innerHTML +=
-                `<b>${this.INTERSECTED.data2.name}:</b> ${this.INTERSECTED.data2.percent.toFixed(2)}% (${this.INTERSECTED.data2.value})`;
+            for(let dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++){
+                if(this.INTERSECTED.hasOwnProperty("data"+dataset)){
+                    this.details.innerHTML +=
+                        `<b>${this.INTERSECTED["data"+dataset].name}:</b> ${this.INTERSECTED["data"+dataset].percent.toFixed(2)}% (${this.INTERSECTED["data"+dataset].value})<br>`;
+                }
             }
             this.details.style.visibility = "visible";
-        } else if (!status && this.details) {
+        }
+        else if (!status && this.details) {
             this.details.style.visibility = "hidden";
         }
     }
@@ -280,21 +280,17 @@ class SceneInit {
 
             tooltip.setAttribute("id", "tooltip");
 
-            //iterate over intersected to get all data ...
             tooltip.innerHTML =
                 `<h4>${this.INTERSECTED.name}</h4>`;
-            if(this.INTERSECTED.hasOwnProperty("data1")){
-                tooltip.innerHTML += `<b>${this.INTERSECTED.data1.name}</b>: ${this.INTERSECTED.data1.value} (${this.INTERSECTED.data1.percent.toFixed(2)}%)<br/>`;
+            for(let dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++){
+                if(this.INTERSECTED.hasOwnProperty("data"+dataset)){
+                    tooltip.innerHTML += `<b>${this.INTERSECTED["data"+dataset].name}</b>: ${this.INTERSECTED["data"+dataset].value} (${this.INTERSECTED["data"+dataset].percent.toFixed(2)}%)<br/>`;
                 }
-            if(this.INTERSECTED.hasOwnProperty("data2")) {
-                tooltip.innerHTML += 
-                `<b>${this.INTERSECTED.data2.name}</b>: ${this.INTERSECTED.data2.value} (${this.INTERSECTED.data2.percent.toFixed(2)}%)`;
             }
             tooltip.style.position = "absolute";
             tooltip.style.left = event.pageX + 'px';
             tooltip.style.top = event.pageY + 'px';
 
-            //console.log(tooltip);
 
             document.body.appendChild(tooltip);
         } else if (!status && tooltip) {
