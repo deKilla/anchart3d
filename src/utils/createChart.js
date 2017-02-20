@@ -75,7 +75,7 @@ export default function createChart(domTarget) {
 
                     if(chartType === "scatterChart"){
                         scene.cameraDefaultPos.y = 0;
-                        scene.cameraDefaultPos.z = 170;
+                        scene.cameraDefaultPos.z = 40;
                     }
 
                     scene.initScene();
@@ -100,6 +100,7 @@ export default function createChart(domTarget) {
                     let controls = scene.controls;
                     let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
+                    controls.enable = false;
                     resetChartPosition(scene.scene,{x:0,y:0,z:0},1000);
                     resetCameraPosition(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
                         let newChart = new Chart(chartName, chartType, data, configJson).createChart();
@@ -108,10 +109,11 @@ export default function createChart(domTarget) {
                         legend.generateLegend();
                         scene.scene.add(newChart.object);
                         newChart.object.position.set(50, 0, -1.5);
-                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 2500, 10)
+                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 3000, 10)
                             .onComplete(function () {
                                 scene.scene.remove(scene.scene.getObjectById(oldChart.id));
                                 controls.enableZoom = true;
+                                controls.enable = true;
                                 swapActive = false;
                             });
                     });

@@ -96,7 +96,7 @@ class Axis {
 
     initAxis(y,x) {
         let material = new THREE.LineBasicMaterial({
-            color: 0x000000 //black
+            color: 0x696969 //black
         });
 
         let geometry = new THREE.Geometry();
@@ -170,38 +170,39 @@ class Axis {
         lineGeo.vertices.push(
 
             //bottom grid
-            this.createVector(-50, -50, 50), this.createVector(50, -50, 50),
-            this.createVector(50, -50, -50), this.createVector(-50, -50, -50),
-            this.createVector(50, -50, -50), this.createVector(-50, -50, -50),
-            this.createVector(-50, -50, 50),
+            this.createVector(-10, -10, 10), this.createVector(10, -10, 10),
+            this.createVector(10, -10, -10), this.createVector(-10, -10, -10),
+            this.createVector(10, -10, -10), this.createVector(-10, -10, -10),
+            this.createVector(-10, -10, 10),
             //now starting middle cross bottom
-            this.createVector(0, -50, 50), this.createVector(0, -50, -50),
-            this.createVector(-50, -50, -50), this.createVector(-50, -50, 0),
-            this.createVector(50, -50, 0),
+            this.createVector(0, -10, 10), this.createVector(0, -10, -10),
+            this.createVector(-10, -10, -10), this.createVector(-10, -10, 0),
+            this.createVector(10, -10, 0),
 
             //back grid
-            this.createVector(50, -50, -50), this.createVector(50, 50, -50),
-            this.createVector(-50, 50, -50), this.createVector(-50, -50, -50),
+            this.createVector(10, -10, -10), this.createVector(10, 10, -10),
+            this.createVector(-10, 10, -10), this.createVector(-10, -10, -10),
             //now starting middle cross back
-            this.createVector(0, -50, -50), this.createVector(0, 50, -50),
-            this.createVector(-50, 50, -50),this.createVector(-50, 0, -50),
-            this.createVector(50, 0, -50), this.createVector(-50, 0, -50),
+            this.createVector(0, -10, -10), this.createVector(0, 10, -10),
+            this.createVector(-10, 10, -10),this.createVector(-10, 0, -10),
+            this.createVector(10, 0, -10), this.createVector(-10, 0, -10),
 
             //left grid
-            this.createVector(-50, 50, -50), this.createVector(-50, 50, 50),
-            this.createVector(-50, -50, 50),
+            this.createVector(-10, 10, -10), this.createVector(-10, 10, 10),
+            this.createVector(-10, -10, 10),
             //now starting middle cross left
-            this.createVector(-50, -50, 0), this.createVector(-50, 50, 0),
-            this.createVector(-50, 50, 50), this.createVector(-50, 0, 50),
-            this.createVector(-50, 0, -50)
+            this.createVector(-10, -10, 0), this.createVector(-10, 10, 0),
+            this.createVector(-10, 10, 10), this.createVector(-10, 0, 10),
+            this.createVector(-10, 0, -10)
 
         );
-        let lineMat = new THREE.LineBasicMaterial({color: 0x808080});
+        let lineMat = new THREE.LineBasicMaterial({color: 0x696969});
         let line = new THREE.Line(lineGeo, lineMat);
         line.type = THREE.LineStrip;
         scatterObject.add(line);
 
         return scatterObject;
+
     }
 
 }

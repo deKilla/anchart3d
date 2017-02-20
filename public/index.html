@@ -102,12 +102,12 @@
         {
             "name":"IMA2016",
             "values": [
-                {"name":"1.Semester", "value":59},
-                {"name":"2.Semester", "value":44},
-                {"name":"3.Semester", "value":38},
-                {"name":"4.Semester", "value":35},
-                {"name":"5.Semester", "value":33},
-                {"name":"6.Semester", "value":27}
+                {"name":"1.Semester", "value":520000},
+                {"name":"2.Semester", "value":630000},
+                {"name":"3.Semester", "value":38567},
+                {"name":"4.Semester", "value":353214},
+                {"name":"5.Semester", "value":330032},
+                {"name":"6.Semester", "value":275981}
             ]
         }
     ];
@@ -116,9 +116,9 @@
         {
             "name":"Dataset1",
             "values": [
-                {"name":"X", "value":170},
-                {"name":"Y", "value":89},
-                {"name":"Z", "value":66},
+                {"name":"X", "value":170000},
+                {"name":"Y", "value":890000},
+                {"name":"Z", "value":660000},
                 {"name":"size", "value":32},
                 {"name":"shape", "value":"sphere"}
             ]
@@ -126,9 +126,9 @@
         {
             "name":"Dataset2",
             "values": [
-                {"name":"X", "value":260},
-                {"name":"Y", "value":220},
-                {"name":"Z", "value":200},
+                {"name":"X", "value":260000},
+                {"name":"Y", "value":220000},
+                {"name":"Z", "value":200000},
                 {"name":"size", "value":90},
                 {"name":"shape", "value":"sphere"}
             ]
@@ -199,8 +199,8 @@ var scatterChart = anchart3d.createChart("barChart")
     };
 
     var swapBar = function () {
-        barChart.data(jsonData1,"DSGehalt");
-        barChart.swapData();
+        scatterChart.data(jsonData3);
+        scatterChart.swapData();
     };
 
 </script>
