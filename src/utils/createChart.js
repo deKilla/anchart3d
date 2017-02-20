@@ -100,7 +100,7 @@ export default function createChart(domTarget) {
                     let controls = scene.controls;
                     let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
-                    controls.enable = false;
+                    controls.enabled = false;
                     resetChartPosition(scene.scene,{x:0,y:0,z:0},1000);
                     resetCameraPosition(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
                         let newChart = new Chart(chartName, chartType, data, configJson).createChart();
@@ -113,7 +113,7 @@ export default function createChart(domTarget) {
                             .onComplete(function () {
                                 scene.scene.remove(scene.scene.getObjectById(oldChart.id));
                                 controls.enableZoom = true;
-                                controls.enable = true;
+                                controls.enabled = true;
                                 swapActive = false;
                             });
                     });

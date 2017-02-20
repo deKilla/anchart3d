@@ -20,6 +20,7 @@ export function resetChartPosition(object,defaultPos,animTime){
 }
 
 
+
 export function resetCameraPosition(cameraObj,defaultPos,animTime){
     //Camera Rotation and Position
     let actualCamPos = {x: cameraObj.position.x, y: Math.round(cameraObj.position.y), z: Math.round(cameraObj.position.z)}; //ceiling upwards cause of minimal variety
@@ -65,7 +66,6 @@ export function animateZ(obj,startpos,endPosition,animTime,delayTime) {
         .delay(delayTime)
         .start();
 }
-
 
 
 

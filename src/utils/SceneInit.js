@@ -103,7 +103,7 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
         if (this.sceneConfig.showOnScreenControls) {
-            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.cameraDefaultPos);
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.controls, this.cameraDefaultPos);
         }
 
         let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
@@ -142,7 +142,7 @@ class SceneInit {
     }
 
 
-    showOnScreenControls(method = "click", currentChart, camera, defaultPos) {
+    showOnScreenControls(method = "click", currentChart, camera, controls, defaultPos) {
         let repeater;
         let interval;
 
@@ -160,8 +160,10 @@ class SceneInit {
         this.control.innerHTML += `<a class="btndown">&darr;</a>`;
 
         this.domNode.querySelector(".btnreset").addEventListener("click", function () {
+            controls.enabled = false;
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
             resetCameraPosition(camera,defaultPos,4000);
+            controls.enabled = true;
         });
         this.domNode.querySelector(".btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {
@@ -231,7 +233,6 @@ class SceneInit {
         if (this.INTERSECTED && event.type == "mousemove") {
             this.showTooltip(true);
             this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.03));
-            //console.log(intersectedObjects[0]);           
         }
     }
 
