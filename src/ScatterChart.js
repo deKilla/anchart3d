@@ -31,9 +31,9 @@ class ScatterChart {
             shininess: 0.8,
         });
         let sphere = new THREE.Mesh(geometry, material);
-        sphere.position.x = x/10;
-        sphere.position.y = y/10;
-        sphere.position.z = z/10;
+        sphere.position.x = -10 + (20*((x/10)/10));
+        sphere.position.y = -10 + (20*((y/10)/10));
+        sphere.position.z = -10 + (20*((z/10)/10));
         return sphere;
     }
 
@@ -48,6 +48,7 @@ class ScatterChart {
         let axisHelper = new Axis();
         scatterChart.chartType = this.type;
         scatterChart.name = this.name;
+
 
         //iterate over the jsonData and create for every data a new entity
         //data = one object in the json which holds the props "amount","percent" in this case.
