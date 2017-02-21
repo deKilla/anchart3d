@@ -250,7 +250,8 @@ class SceneInit {
             for(let dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++){
                 if(this.INTERSECTED.hasOwnProperty("data"+dataset)){
                     this.details.innerHTML +=
-                        `<b>${this.INTERSECTED["data"+dataset].name}:</b> ${this.INTERSECTED["data"+dataset].value} (${this.INTERSECTED["data"+dataset].percent.toFixed(2)}%)<br>`;
+                        `<b>${this.INTERSECTED["data"+dataset].name}:</b> ${this.INTERSECTED["data"+dataset].value} 
+                            ${(!isNaN(this.INTERSECTED["data"+dataset].value)) ? "("+ this.INTERSECTED["data"+dataset].percent.toFixed(2) + "%)" : ""}<br/>`;
                 }
             }
             this.details.style.visibility = "visible";
@@ -278,7 +279,8 @@ class SceneInit {
                 `<h4>${this.INTERSECTED.name}</h4>`;
             for(let dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++){
                 if(this.INTERSECTED.hasOwnProperty("data"+dataset)){
-                    tooltip.innerHTML += `<b>${this.INTERSECTED["data"+dataset].name}</b>: ${this.INTERSECTED["data"+dataset].value} (${this.INTERSECTED["data"+dataset].percent.toFixed(2)}%)<br/>`;
+                    tooltip.innerHTML += `<b>${this.INTERSECTED["data"+dataset].name}</b>: ${this.INTERSECTED["data"+dataset].value} 
+                                            ${(!isNaN(this.INTERSECTED["data"+dataset].value)) ? "("+ this.INTERSECTED["data"+dataset].percent.toFixed(2) + "%)" : ""}<br/>`;
                 }
             }
             tooltip.style.position = "absolute";
