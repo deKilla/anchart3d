@@ -63,6 +63,7 @@ class BarChart {
         let barChart = new THREE.Group();
         let axisLines = new THREE.Group();
         let labels = new THREE.Group();
+        let axisHelper = new Axis();
         barChart.chartType = this.type;
         barChart.name = this.name;
         //variable holds last position of the inserted segment of the barchart
@@ -77,7 +78,7 @@ class BarChart {
             let lastRowColor;
             let yPos = 0;
             //sets the Label for the Row
-            let labelRow = new Axis().makeTextSprite(" " + calculatedData[dataset].name + " ");
+            let labelRow = axisHelper.makeTextSprite2D(" " + calculatedData[dataset].name + " ");
             labelRow.position.set(lastBarStartX+2,-2,-1);
             labels.add(labelRow);
 
@@ -93,7 +94,7 @@ class BarChart {
                 segment.position.y = yPos++; //set second dataset behind first one
                 lastRowColor = segment.material.color;
 
-                let labelLine = new Axis().makeTextSprite(" " + values[value].name + " ");
+                let labelLine = axisHelper.makeTextSprite2D(" " + values[value].name + " ");
                 labelLine.position.set(0,segment.position.y,-1);
                 labels.add(labelLine);
 
@@ -125,7 +126,7 @@ class BarChart {
             }
             lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
         }
-        let axis = new Axis().initAxis(yPostition,lastBarStartX);
+        let axis = axisHelper.initAxis(yPostition,lastBarStartX);
         axisLines.add(axis);
         barChart.add(labels);
         barChart.add(axisLines);

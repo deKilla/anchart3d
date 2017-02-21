@@ -102,12 +102,12 @@
         {
             "name":"IMA2016",
             "values": [
-                {"name":"1.Semester", "value":520000},
-                {"name":"2.Semester", "value":630000},
-                {"name":"3.Semester", "value":38567},
-                {"name":"4.Semester", "value":353214},
-                {"name":"5.Semester", "value":330032},
-                {"name":"6.Semester", "value":275981}
+                {"name":"1.Semester", "value":59},
+                {"name":"2.Semester", "value":44},
+                {"name":"3.Semester", "value":38},
+                {"name":"4.Semester", "value":35},
+                {"name":"5.Semester", "value":33},
+                {"name":"6.Semester", "value":27}
             ]
         }
     ];
@@ -116,20 +116,60 @@
         {
             "name":"Dataset1",
             "values": [
-                {"name":"X", "value":170000},
-                {"name":"Y", "value":890000},
-                {"name":"Z", "value":660000},
-                {"name":"size", "value":32},
+                {"name":"X", "value":9},
+                {"name":"Y", "value":11},
+                {"name":"Z", "value":15},
+                {"name":"size", "value":63},
                 {"name":"shape", "value":"sphere"}
             ]
         },
         {
             "name":"Dataset2",
             "values": [
-                {"name":"X", "value":260000},
-                {"name":"Y", "value":220000},
-                {"name":"Z", "value":200000},
-                {"name":"size", "value":90},
+                {"name":"X", "value":63},
+                {"name":"Y", "value":8},
+                {"name":"Z", "value":42},
+                {"name":"size", "value":22},
+                {"name":"shape", "value":"sphere"}
+            ]
+        },
+        {
+            "name":"Dataset3",
+            "values": [
+                {"name":"X", "value":21},
+                {"name":"Y", "value":12},
+                {"name":"Z", "value":44},
+                {"name":"size", "value":85},
+                {"name":"shape", "value":"sphere"}
+            ]
+        },
+        {
+            "name":"Dataset4",
+            "values": [
+                {"name":"X", "value":16},
+                {"name":"Y", "value":32},
+                {"name":"Z", "value":42},
+                {"name":"size", "value":75},
+                {"name":"shape", "value":"sphere"}
+            ]
+        },
+        {
+            "name":"Dataset5",
+            "values": [
+                {"name":"X", "value":71},
+                {"name":"Y", "value":5},
+                {"name":"Z", "value":42},
+                {"name":"size", "value":35},
+                {"name":"shape", "value":"sphere"}
+            ]
+        },
+        {
+            "name":"Dataset6",
+            "values": [
+                {"name":"X", "value":80},
+                {"name":"Y", "value":41},
+                {"name":"Z", "value":1},
+                {"name":"size", "value":10},
                 {"name":"shape", "value":"sphere"}
             ]
         }
@@ -176,8 +216,8 @@ var configuration_sc = {
 
  var pieChart = anchart3d.createChart("pieChart")
     .setConfig(configuration_bc)
-    .barChart()
-    .data(jsonData2)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .scatterChart()
+    .data(jsonData3)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 /*var barChart = anchart3d.createChart("barChart")

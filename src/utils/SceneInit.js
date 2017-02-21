@@ -80,17 +80,21 @@ class SceneInit {
         this.scene.add(ambientLight);
 
         //spot light which is illuminating the chart directly
-        //will be attached later to camera
         let pointLight = new THREE.PointLight(0xffffff, 0.40);
+        //attach point light to the camera in order to always look in the same direction as the camera
+        this.camera.add(pointLight);
 
+
+        //special position for scatter chart
+        if(this.chartName.includes("scatterChart")){
+            this.cameraDefaultPos.y = 0;
+            this.cameraDefaultPos.z = 40;
+        }
 
         if (this.sceneConfig.startAnimation) {
             this.camera.position.set(0, -10, 1100);
             let endPos = this.cameraDefaultPos;
             entryAnimation(this.camera, endPos, 2500, 800);
-            //attach point light to the camera in order to always look in the same direction as the camera
-            this.scene.add(this.camera);
-            this.camera.add(pointLight);
         }
          else {
             this.camera.position.set(this.cameraDefaultPos.x,this.cameraDefaultPos.y,this.cameraDefaultPos.z);
@@ -103,12 +107,12 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
         if (this.sceneConfig.showOnScreenControls) {
-            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.controls, this.cameraDefaultPos);
+            console.log(this.scene.getObjectByName(this.chartName));
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene.getObjectByName(this.chartName), this.camera, this.cameraDefaultPos);
         }
 
         let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
         legend.generateLegend();
-
     }
 
     animate() {
@@ -141,8 +145,7 @@ class SceneInit {
     
     }
 
-
-    showOnScreenControls(method = "click", currentChart, camera, controls, defaultPos) {
+    showOnScreenControls(method = "click", currentChart, camera, defaultPos) {
         let repeater;
         let interval;
 
@@ -160,10 +163,8 @@ class SceneInit {
         this.control.innerHTML += `<a class="btndown">&darr;</a>`;
 
         this.domNode.querySelector(".btnreset").addEventListener("click", function () {
-            controls.enabled = false;
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
             resetCameraPosition(camera,defaultPos,4000);
-            controls.enabled = true;
         });
         this.domNode.querySelector(".btnleft").addEventListener(method, function () {
             repeater = setInterval(function () {

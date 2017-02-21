@@ -5,7 +5,6 @@
 
 import * as THREE from "three";
 
-
 class Axis {
 
     constructor(sceneConfig) {
@@ -34,7 +33,7 @@ class Axis {
         ctx.stroke();
     }
 
-    makeTextSprite(message, parameters) {
+    makeTextSprite2D(message, parameters) {
         if (parameters === undefined) parameters = {};
 
         let fontface = parameters.hasOwnProperty("fontface") ?
@@ -86,12 +85,13 @@ class Axis {
         let spriteMaterial = new THREE.SpriteMaterial(
             {map: texture, fog: true}); //,alignment: spriteAlignment
 
+
         let sprite = new THREE.Sprite(spriteMaterial);
         sprite.scale.set(5, 2.5, 1);
 
-        sprite.position.normalize();
         return sprite;
     }
+
 
 
     initAxis(y,x) {
@@ -131,40 +131,31 @@ class Axis {
     }
 
 
-    createTextCanvas(text, color, font, size){
-        size = size || 12;
+    //mesh text is static and does not move at all or follow the camera
+    createMeshText2D(text, fontsize, fontBold, height, width) {
         let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        let fontStr = (size + 'px ') + (font || 'Arial');
-        ctx.font = fontStr;
-        let w = ctx.measureText(text).width;
-        let h = Math.ceil(size);
-        canvas.width = w;
-        canvas.height = h;
-        ctx.font = fontStr;
-        ctx.fillStyle = color || 'black';
-        ctx.fillText(text, 0, Math.ceil(size*0.8));
-        return canvas;
-    }
+        let context1 = canvas.getContext('2d');
+        context1.font = (fontBold ? "Bold " : "") + (String(fontsize).trim() || "12") + "px Arial";
+        context1.fillStyle = "rgba(0, 0, 0, 1.0)";
+        context1.fillText(text, 0, fontsize+10);
 
 
-    createText2D(text, size, color, font, segW, segH) {
-        let canvas = this.createTextCanvas(text, color, font, size);
-        let plane = new THREE.PlaneGeometry(canvas.width, canvas.height, segW, segH);
-        let tex = new THREE.Texture(canvas);
-        tex.needsUpdate = true;
-        let planeMat = new THREE.MeshBasicMaterial({
-            map: tex, color: 0xffffff, transparent: true
-        });
-        let mesh = new THREE.Mesh(plane, planeMat);
-        mesh.scale.set(0.25, 0.25, 0.25);
-        mesh.doubleSided = true;
-        return mesh;
+        // canvas contents will be used for a texture
+        let texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+
+        let material = new THREE.MeshBasicMaterial( {map: texture, side:THREE.DoubleSide});
+        material.transparent = true;
+
+        return new THREE.Mesh(
+            new THREE.PlaneGeometry(canvas.width, canvas.height),
+            material
+        );
     }
 
 
 
-    scatterAxisDrawer(scatterObject,xMax,yMax,zMax){
+    scatterAxisDrawer(scatterObject){
 
         let lineGeo = new THREE.Geometry();
         lineGeo.vertices.push(
@@ -202,7 +193,6 @@ class Axis {
         scatterObject.add(line);
 
         return scatterObject;
-
     }
 
 }

@@ -73,11 +73,6 @@ export default function createChart(domTarget) {
                         scene = new SceneInit(chartName, domTarget, chartName, chart.legendMap);
                     }
 
-                    if(chartType === "scatterChart"){
-                        scene.cameraDefaultPos.y = 0;
-                        scene.cameraDefaultPos.z = 40;
-                    }
-
                     scene.initScene();
                     scene.animate();
                     scene.scene.add(chart.object);

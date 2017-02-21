@@ -45,6 +45,7 @@ class ScatterChart {
         let scatterChart = new THREE.Group();
         let axisLines = new THREE.Object3D();
         let labels = new THREE.Group();
+        let axisHelper = new Axis();
         scatterChart.chartType = this.type;
         scatterChart.name = this.name;
 
@@ -98,7 +99,7 @@ class ScatterChart {
         }
 
         //create new grid for scatter chart
-        new Axis().scatterAxisDrawer(axisLines);
+        axisHelper.scatterAxisDrawer(axisLines);
         scatterChart.add(axisLines);
         scatterChart.add(labels);
         return scatterChart;
