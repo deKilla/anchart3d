@@ -83,7 +83,7 @@ class SceneInit {
         let pointLight = new THREE.PointLight(0xffffff, 0.40);
         //attach point light to the camera in order to always look in the same direction as the camera
         this.camera.add(pointLight);
-
+        this.scene.add(this.camera);
 
         //special position for scatter chart
         if(this.chartName.includes("scatterChart")){
@@ -107,8 +107,7 @@ class SceneInit {
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
         if (this.sceneConfig.showOnScreenControls) {
-            console.log(this.scene.getObjectByName(this.chartName));
-            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene.getObjectByName(this.chartName), this.camera, this.cameraDefaultPos);
+            this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.chartName, this.camera, this.cameraDefaultPos);
         }
 
         let legend = new Legend(this.legendMap, this.sceneConfig, this.domNode);
@@ -145,7 +144,8 @@ class SceneInit {
     
     }
 
-    showOnScreenControls(method = "click", currentChart, camera, defaultPos) {
+    showOnScreenControls(method = "click", scene, chartName, camera, defaultPos) {
+        let currentChart;
         let repeater;
         let interval;
 
@@ -161,6 +161,10 @@ class SceneInit {
         this.control.innerHTML += `<a class="btnreset">R</a>`;
         this.control.innerHTML += `<a class="btnright">&rarr;</a>`;
         this.control.innerHTML += `<a class="btndown">&darr;</a>`;
+
+        this.control.addEventListener("mouseover", function () {
+            currentChart = scene.getObjectByName(chartName);
+        });
 
         this.domNode.querySelector(".btnreset").addEventListener("click", function () {
             resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);

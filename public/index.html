@@ -216,8 +216,8 @@ var configuration_sc = {
 
  var pieChart = anchart3d.createChart("pieChart")
     .setConfig(configuration_bc)
-    .scatterChart()
-    .data(jsonData3)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .barChart()
+    .data(jsonData2)// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
     .draw(); //.draw() must be last
 
 /*var barChart = anchart3d.createChart("barChart")

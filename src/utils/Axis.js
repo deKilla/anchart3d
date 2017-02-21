@@ -139,7 +139,6 @@ class Axis {
         context1.fillStyle = "rgba(0, 0, 0, 1.0)";
         context1.fillText(text, 0, fontsize+10);
 
-
         // canvas contents will be used for a texture
         let texture = new THREE.Texture(canvas);
         texture.needsUpdate = true;
@@ -152,7 +151,6 @@ class Axis {
             material
         );
     }
-
 
 
     scatterAxisDrawer(scatterObject){
@@ -194,7 +192,6 @@ class Axis {
 
         return scatterObject;
     }
-
 }
 
 export default Axis
