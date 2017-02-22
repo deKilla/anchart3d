@@ -64,9 +64,9 @@ class ScatterChart {
         let sphere = new THREE.Mesh(geometry, material);
         //calculating where to position the entities, given on scaling of axis and maximum values
         //dynamically resizing and scaling of whole grid and values
-        sphere.position.x = -10 + (20 * (x / (Math.ceil(xMax / 10) * 10)));
-        sphere.position.y = -10 + (20 * (y / (Math.ceil(yMax / 10) * 10)));
-        sphere.position.z = -10 + (20 * (z / (Math.ceil(zMax / 10) * 10)));
+        sphere.position.x = -10 + (20 * (x / (Math.ceil(xMax / (xMax <= 10? 1 : 10)) * (xMax <= 10? 1 : 10))));
+        sphere.position.y = -10 + (20 * (x / (Math.ceil(yMax / (yMax <= 10? 1 : 10)) * (yMax <= 10? 1 : 10))));
+        sphere.position.z = -10 + (20 * (x / (Math.ceil(zMax / (zMax <= 10? 1 : 10)) * (zMax <= 10? 1 : 10))));
 
         return sphere;
     }
@@ -118,11 +118,11 @@ class ScatterChart {
         }
         //create new grid for scatter chart
         axisHelper.scatterAxisDrawer(axisLines);
-        let xAxis = axisHelper.makeTextSprite2D(" X (" + (Math.ceil(xMax/10)*10) + ") ",{fontsize:42});
+        let xAxis = axisHelper.makeTextSprite2D(" X (" + (Math.ceil(xMax/(xMax <= 10 ? 1 : 10))* (xMax <= 10 ? 1 : 10)) + ") ",{fontsize:42});
         xAxis.position.set(12,-10,12);
-        let yAxis = axisHelper.makeTextSprite2D(" Y (" + (Math.ceil(yMax/10)*10) + ") ",{fontsize:42});
+        let yAxis = axisHelper.makeTextSprite2D(" Y (" + (Math.ceil(yMax/(yMax <= 10 ? 1 : 10))* (yMax <= 10 ? 1 : 10)) + ") ",{fontsize:42});
         yAxis.position.set(-10,9,10);
-        let zAxis = axisHelper.makeTextSprite2D(" Z (" + (Math.ceil(zMax/10)*10) + ") ",{fontsize:42});
+        let zAxis = axisHelper.makeTextSprite2D(" Z (" + (Math.ceil(zMax/(zMax <= 10 ? 1 : 10))* (zMax <= 10 ? 1 : 10)) + ") ",{fontsize:42});
         zAxis.position.set(13,9,-10);
         labels.add(xAxis,yAxis,zAxis);
 
