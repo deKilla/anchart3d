@@ -23,6 +23,17 @@ class ScatterChart {
 
     }
 
+    //get max value for scaling later on...
+    getMax(propertyEnding){
+        return Math.max.apply(Math,this.jsonData.file.map(function(dataSet){
+            for(let i = 0; i < dataSet.values.length; i++){
+                if(dataSet.values[i].name.toLowerCase().endsWith(propertyEnding)){
+                    return dataSet.values[i].value;
+                }
+            }
+        }));
+    }
+
 
     scaleNum(value){
         let decimalScale = value.toString().substr(1).length;
@@ -31,6 +42,7 @@ class ScatterChart {
         }
         else return Number("1" + "0".repeat(decimalScale));
     }
+
 
     createEntity(x,y,z,size,xMax,yMax,zMax,sizeMax,shape){
         let geometry = new THREE.SphereGeometry(size/this.scaleNum(sizeMax), 32, 32, 3.3);
@@ -53,10 +65,10 @@ class ScatterChart {
     create3DScatterChart(jsonData = this.jsonData){
         const calculatedData = jsonData.file;
         //calculate max values
-        const xMax = Math.max.apply(Math,this.jsonData.file.map(function (o) {return o.values[0].value}));
-        const yMax = Math.max.apply(Math,this.jsonData.file.map(function (o) {return o.values[1].value}));
-        const zMax = Math.max.apply(Math,this.jsonData.file.map(function (o) {return o.values[2].value}));
-        const sizeMax = Math.max.apply(Math,this.jsonData.file.map(function (o) {return o.values[3].value}));
+        const xMax = this.getMax("x");
+        const yMax = this.getMax("y");
+        const zMax = this.getMax("z");
+        const sizeMax = this.getMax("size");
 
         //Group together all pieces
         let scatterChart = new THREE.Group();
@@ -71,16 +83,17 @@ class ScatterChart {
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let entity;
-            let posX, posY, posZ, size;
+            let posX, posY, posZ, size, shape;
 
             for(let value = 0; value < values.length; value++){
-                if(values[value].name.toUpperCase().endsWith("X")) posX = values[value].value;
-                if(values[value].name.toUpperCase().endsWith("Y")) posY = values[value].value;
-                if(values[value].name.toUpperCase().endsWith("Z")) posZ = values[value].value;
-                if(values[value].name.toUpperCase().endsWith("SIZE")) size = values[value].value;
+                if(values[value].name.toLowerCase().endsWith("x")) posX = values[value].value;
+                if(values[value].name.toLowerCase().endsWith("y")) posY = values[value].value;
+                if(values[value].name.toLowerCase().endsWith("z")) posZ = values[value].value;
+                if(values[value].name.toLowerCase().endsWith("size")) size = values[value].value;
+                if(values[value].name.toLowerCase().endsWith("shape")) shape = values[value].value;
             }
 
-            entity = this.createEntity(posX,posY,posZ,size,xMax,yMax,zMax,sizeMax);
+            entity = this.createEntity(posX,posY,posZ,size,xMax,yMax,zMax,sizeMax,shape);
             entity.name = calculatedData[dataset].name;
             this.legendMap.set(calculatedData[dataset].name, entity.material.color.getHexString());
 
@@ -93,7 +106,6 @@ class ScatterChart {
 
             scatterChart.add(entity);
         }
-
         //create new grid for scatter chart
         axisHelper.scatterAxisDrawer(axisLines);
         scatterChart.add(axisLines);
