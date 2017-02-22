@@ -137,7 +137,7 @@ class Axis {
         let context1 = canvas.getContext('2d');
         context1.font = (fontBold ? "Bold " : "") + (String(fontsize).trim() || "12") + "px Arial";
         context1.fillStyle = "rgba(0, 0, 0, 1.0)";
-        context1.fillText(text, 0, fontsize+10);
+        context1.fillText(text, 1, fontsize+10);
 
         // canvas contents will be used for a texture
         let texture = new THREE.Texture(canvas);
@@ -187,8 +187,29 @@ class Axis {
         );
         let lineMat = new THREE.LineBasicMaterial({color: 0x696969});
         let line = new THREE.Line(lineGeo, lineMat);
+
+        //lines for indicating where the 0,0,0 point is and all starts
+        let startLines = new THREE.Geometry();
+        startLines.vertices.push(
+            //directed line for x-axis
+          this.createVector(-10,-10,-10), this.createVector(-5,-10,-10),
+            this.createVector(-5.5,-9.5,-10), this.createVector(-5,-10,-10),
+            this.createVector(-5.5,-10.5,-10), this.createVector(-5,-10,-10),
+            this.createVector(-10,-10,-10),
+            //directed line for y-axis
+            this.createVector(-10,-5,-10), this.createVector(-10.5,-5.5,-10),
+            this.createVector(-10,-5,-10), this.createVector(-9.5,-5.5,-10),
+            this.createVector(-10,-5,-10), this.createVector(-10,-10,-10),
+            //directed line for z-axis
+            this.createVector(-10,-10,-5), this.createVector(-9.5,-10,-5.5),
+            this.createVector(-10,-10,-5), this.createVector(-10.5,-10,-5.5),
+            this.createVector(-10,-10,-5), this.createVector(-10,-10,-10),
+        );
+        let lineMat2 = new THREE.LineBasicMaterial({color: 0x000000});
+        let line2 = new THREE.Line(startLines, lineMat2);
+
         line.type = THREE.LineStrip;
-        scatterObject.add(line);
+        scatterObject.add(line,line2);
 
         return scatterObject;
     }
