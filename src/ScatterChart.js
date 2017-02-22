@@ -53,10 +53,11 @@ class ScatterChart {
         });
 
         let sphere = new THREE.Mesh(geometry, material);
-        //positioning from -10 (0%) to +10 (100%)
-        sphere.position.x = -10 + (20*((x/this.scaleNum(xMax))/10));
-        sphere.position.y = -10 + (20*((y/this.scaleNum(yMax))/10));
-        sphere.position.z = -10 + (20*((z/this.scaleNum(zMax))/10));
+        //calculating where to position the entities, given on scaling of axis and maximum values
+        //dynamically resizing and scaling of whole grid and values
+        sphere.position.x = -10 + (20*(x/(Math.ceil(xMax / 10) * 10)));
+        sphere.position.y = -10 + (20*(y/(Math.ceil(yMax / 10) * 10)));
+        sphere.position.z = -10 + (20*(z/(Math.ceil(zMax / 10) * 10)));
 
         return sphere;
     }
