@@ -136,10 +136,10 @@ var configuration_bc = {
     "fov": 45
 };
 
- var pieChart = anchart3d.createChart("pieChart")
+ var lineChart = anchart3d.createChart("lineChart")
     .setConfig(configuration_pc)
-    .pieChart()
-    .data(jsonData1,"Einwohner")// to sort: .chartData(jsonData, "Einwohner") - sortiert nach Einwohnern
+    .lineChart()
+    .data(jsonData2)
     .draw(); //.draw() must be last
 
 var barChart = anchart3d.createChart("barChart")

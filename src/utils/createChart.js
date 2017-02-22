@@ -40,6 +40,10 @@ export default function createChart(domTarget) {
             options.chartType = "barChart";
             return this;
         },
+        lineChart: function () {
+            options.chartType = "lineChart";
+            return this;
+        },
         data: function (jsonData, sortBy) {
             if (sortBy) {
                 options.data = new JsonData(jsonData).sortData(sortBy);
