@@ -45,7 +45,16 @@ class ScatterChart {
 
 
     createEntity(x, y, z, size, xMax, yMax, zMax, sizeMax, shape) {
-        let geometry = new THREE.SphereGeometry(size / this.scaleNum(sizeMax), 32, 32, 3.3);
+        let geometry;
+        if(shape === "sphere" || typeof shape === "undefined"){
+            geometry= new THREE.SphereGeometry(size / this.scaleNum(sizeMax), 32, 32, 3.3);
+        }
+        else if(shape == "cone"){
+            geometry = new THREE.ConeGeometry( size / this.scaleNum(sizeMax), (size / this.scaleNum(sizeMax))*2, 32, 32, false, 0, 6.3);
+        }
+        else if(shape == "diamond"){
+            geometry= new THREE.SphereGeometry(size / this.scaleNum(sizeMax), 7, 2, 0, 6.3, 0, 3.1);
+        }
         let material = new THREE.MeshPhongMaterial({
             color: Math.random() * 0xffffff,
             shading: THREE.SmoothShading,
