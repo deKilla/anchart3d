@@ -37,7 +37,7 @@ class ScatterChart {
 
     scaleNum(value) {
         let decimalScale = value.toString().substr(1).length;
-        if (decimalScale < 1) {
+        if (decimalScale < 1 || value < 1) {
             return 1;
         }
         else return Number("1" + "0".repeat(decimalScale));
@@ -64,9 +64,9 @@ class ScatterChart {
         let sphere = new THREE.Mesh(geometry, material);
         //calculating where to position the entities, given on scaling of axis and maximum values
         //dynamically resizing and scaling of whole grid and values
-        sphere.position.x = -10 + (20 * (x / (Math.ceil(xMax / (xMax <= 10? 1 : 10)) * (xMax <= 10? 1 : 10))));
-        sphere.position.y = -10 + (20 * (x / (Math.ceil(yMax / (yMax <= 10? 1 : 10)) * (yMax <= 10? 1 : 10))));
-        sphere.position.z = -10 + (20 * (x / (Math.ceil(zMax / (zMax <= 10? 1 : 10)) * (zMax <= 10? 1 : 10))));
+        sphere.position.x = -10 + (20 * (x / (Math.ceil(xMax / (xMax <= 10 ? 1 : 10)) * (xMax <= 10 ? 1 : 10))));
+        sphere.position.y = -10 + (20 * (y / (Math.ceil(yMax / (yMax <= 10 ? 1 : 10)) * (yMax <= 10 ? 1 : 10))));
+        sphere.position.z = -10 + (20 * (z / (Math.ceil(zMax / (zMax <= 10 ? 1 : 10)) * (zMax <= 10 ? 1 : 10))));
 
         return sphere;
     }
