@@ -80,7 +80,7 @@ class SceneInit {
         this.scene.add(ambientLight);
 
         //spot light which is illuminating the chart directly
-        let pointLight = new THREE.PointLight(0xffffff, 0.40);
+        let pointLight = new THREE.PointLight(0xffffff, 0.25);
         //attach point light to the camera in order to always look in the same direction as the camera
         this.camera.add(pointLight);
         this.scene.add(this.camera);
