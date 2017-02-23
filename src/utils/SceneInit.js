@@ -36,7 +36,7 @@ class SceneInit {
         this.control = this.createDomElement("control");
         this.legend = this.createDomElement("legend");
         this.tooltip = null;
-        this.cameraDefaultPos = {x: 0, y: -9, z: 2}; //camera default pos
+        this.cameraDefaultPos = {x: 0, y: 0, z: 7}; //camera default pos
 
     }
 
@@ -87,7 +87,6 @@ class SceneInit {
 
         //special position for scatter chart
         if(this.chartName.includes("scatterChart")){
-            this.cameraDefaultPos.y = 0;
             this.cameraDefaultPos.z = 40;
         }
 
@@ -141,10 +140,11 @@ class SceneInit {
         raycaster.setFromCamera(this.mouse, this.camera);
 
         return raycaster.intersectObjects(this.scene.getObjectByName(this.chartName, true).children);
-    
     }
 
+
     showOnScreenControls(method = "click", scene, chartName, camera, defaultPos) {
+        let defaultChartRot = {x: null, y: null, z: null};
         let currentChart;
         let repeater;
         let interval;
@@ -164,10 +164,15 @@ class SceneInit {
 
         this.control.addEventListener("mouseover", function () {
             currentChart = scene.getObjectByName(chartName);
+            if(defaultChartRot.x == null){
+                defaultChartRot.x = currentChart.rotation.x;
+                defaultChartRot.y = currentChart.rotation.y;
+                defaultChartRot.z = currentChart.rotation.z;
+            }
         });
 
         this.domNode.querySelector(".btnreset").addEventListener("click", function () {
-            resetChartPosition(currentChart,{x: 0, y: 0, z: 0},4000);
+            resetChartPosition(currentChart,{x: defaultChartRot.x, y: defaultChartRot.y, z: defaultChartRot.z},4000);
             resetCameraPosition(camera,defaultPos,4000);
         });
         this.domNode.querySelector(".btnleft").addEventListener(method, function () {

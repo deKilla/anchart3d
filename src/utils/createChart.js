@@ -78,7 +78,6 @@ export default function createChart(domTarget) {
                     scene.scene.add(chart.object);
 
                     return this;
-
                 }
                 else throw "API Error: ChartType OR ChartData undefined!\nCheck if chart type is set or 'chartData()' was called!";
 
@@ -96,15 +95,15 @@ export default function createChart(domTarget) {
                     let oldChart = scene.scene.getObjectByName(chartName, true);
                     controls.enableZoom = false;
                     controls.enabled = false;
-                    resetChartPosition(scene.scene,{x:0,y:0,z:0},1000);
+                    resetChartPosition(scene.scene,{x:oldChart.rotation.x,y:oldChart.rotation.y,z:oldChart.rotation.z},1000);
                     resetCameraPosition(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
                         let newChart = new Chart(chartName, chartType, data, configJson).createChart();
                         let legend = new Legend(newChart.legendMap,configJson, document.getElementById(domTarget));
                         legend.removeLegend();
                         legend.generateLegend();
                         scene.scene.add(newChart.object);
-                        newChart.object.position.set(50, 0, -1.5);
-                        dataSwapAnimation(oldChart, {x: -50, y: 0, z: 0}, newChart.object, 3000, 10)
+                        newChart.object.position.set(50, newChart.object.position.y, newChart.object.position.z);
+                        dataSwapAnimation(oldChart, {x: -50, y: newChart.object.position.y, z: newChart.object.position.z}, newChart.object, 3000, 10)
                             .onComplete(function () {
                                 scene.scene.remove(scene.scene.getObjectById(oldChart.id));
                                 controls.enableZoom = true;
