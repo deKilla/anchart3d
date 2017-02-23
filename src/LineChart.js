@@ -3,8 +3,8 @@
  */
 import Axis from "./utils/Axis";
 import {animateZ} from "./utils/animation";
-var THREE = require('three');
-var MeshLine = require('three.meshline');
+let THREE = require('three');
+let MeshLine = require('three.meshline');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
 
 
@@ -68,7 +68,7 @@ class LineChart {
             lineGeometry.vertices.push(vector);
 
         }
-
+        lineMat.setGeometry(lineGeometry);
         let line = new THREE.Mesh(lineGeometry,lineMat);
         //checks if lastPoint is set  if not  its the first point of the line
         return line;
