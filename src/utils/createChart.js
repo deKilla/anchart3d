@@ -40,6 +40,10 @@ export default function createChart(domTarget) {
             options.chartType = "barChart";
             return this;
         },
+        lineChart: function () {
+            options.chartType = "lineChart";
+            return this;
+        },
         scatterChart: function () {
             options.chartType = "scatterChart";
             return this;
