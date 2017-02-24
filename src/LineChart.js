@@ -1,11 +1,9 @@
 /**
- * Created by Timo on 23.02.2017.
- */
-/**
  * @author Amar Bajric (https://github.com/amarbajric)
  * @author Michael Fuchs (https://github.com/deKilla)
  * @author Timo Hasenbichler (https://github.com/timoooo)
  */
+
 import Axis from "./utils/Axis";
 var THREE = require('three');
 THREE.orbitControls = require('three-orbit-controls')(THREE);
