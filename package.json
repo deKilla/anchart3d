@@ -40,6 +40,7 @@
     "webpack": "^1.14.0",
     "three": "^0.82.1",
     "three-orbit-controls": "^82.1.0",
-    "tween.js": "^16.3.5"
+    "tween.js": "^16.3.5",
+    "three.meshline":"^1.0.3"
   }
 }

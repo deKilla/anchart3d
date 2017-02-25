@@ -44,7 +44,7 @@ class LineChart {
     }
 
     createLine(pointArray, max) {
-
+        /*
         let material = new THREE.MeshPhongMaterial({
             color: 0x696969, //black
             shading: THREE.SmoothShading,
@@ -52,9 +52,35 @@ class LineChart {
         });
 
         let lineGeometry = new THREE.Geometry();
-
-        //so it doesnt divide by zero if the maximum number is zero or numbers are negative
+         */
+        //before the cylinder can be created the height has to be calculated
+        //this works with pythagoras
+        let line = new THREE.Group();
+        let steps = 4;
+        let distance = 0;
+        var material = new THREE.MeshBasicMaterial( {color: 0xffff00});
         if (max == 0) max = 1;
+        for (let i = 0; i < pointArray.length-1; i++) {
+            let ya =((10.0 * pointArray[i]) / max) ;
+            let yb = ((10.0 * pointArray[i+1]) / max) ;
+            let a = ya-yb;
+            let height = Math.sqrt((a*a)+(steps*steps));
+            //Create the line mesh
+            console.log(height);
+            let geometry = new THREE.CylinderGeometry(5,5,height);
+            let cyl = new THREE.Mesh(geometry,material);
+            //cyl.position.set(new THREE.Vector3( distance,((10.0 * pointArray[i]) / max), -9));
+
+
+            distance+=steps;
+            line.add(cyl);
+        }
+
+        return line;
+
+        /*
+        //so it doesnt divide by zero if the maximum number is zero or numbers are negative
+
 
 
 
@@ -64,8 +90,8 @@ class LineChart {
         //to get the correct distance between the points it has to be calculated
         let span = 10;
 
-        let steps = 4;
-        let distance = 0;
+
+
         for (let i = 0; i < pointArray.length; i++) {
             console.log(-((10.0 * pointArray[i]) / max) +"  "+ distance);
             lineGeometry.vertices.push(
@@ -73,7 +99,11 @@ class LineChart {
             );
             distance+=steps;
         }
-        return new THREE.Line(lineGeometry, material);
+
+
+
+
+        return new THREE.Line(lineGeometry, material);*/
     }
 
 
@@ -134,6 +164,15 @@ class LineChart {
         }
 
         axisHelper.lineAxisDrawer(axisLines);
+
+        //TEST
+        let geometry = new THREE.CylinderGeometry(0.2,0.2,5);
+        var material = new THREE.MeshBasicMaterial( {color: 0xffff00});
+        let cyl = new THREE.Mesh(geometry,material);
+        cyl.position.set(new THREE.Vector3(1,1,1));
+
+        lineChart.add(cyl);
+        // TEST END
 
         lineChart.add(axisLines);
 
