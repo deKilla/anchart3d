@@ -213,6 +213,67 @@ class Axis {
 
         return scatterObject;
     }
+    lineAxisDrawer(lineObject){
+
+        let lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push(
+
+            //bottom grid
+            this.createVector(-10, -10, 10), this.createVector(10, -10, 10),
+            this.createVector(10, -10, -10), this.createVector(-10, -10, -10),
+            this.createVector(10, -10, -10), this.createVector(-10, -10, -10),
+            this.createVector(-10, -10, 10),
+            //now starting middle cross bottom
+            this.createVector(0, -10, 10), this.createVector(0, -10, -10),
+            this.createVector(-10, -10, -10), this.createVector(-10, -10, 0),
+            this.createVector(10, -10, 0),
+
+            //back grid
+            this.createVector(10, -10, -10), this.createVector(10, 10, -10),
+            this.createVector(-10, 10, -10), this.createVector(-10, -10, -10),
+            //now starting middle cross back
+            this.createVector(0, -10, -10), this.createVector(0, 10, -10),
+            this.createVector(-10, 10, -10),this.createVector(-10, 0, -10),
+            this.createVector(10, 0, -10), this.createVector(-10, 0, -10),
+
+            //left grid
+            this.createVector(-10, 10, -10),
+            this.createVector(-10, 10, 10),
+            this.createVector(-10, -10, 10),
+            //now starting middle cross left
+            this.createVector(-10, -10, 0), this.createVector(-10, 10, 0),
+            this.createVector(-10, 10, 10), this.createVector(-10, 0, 10),
+            this.createVector(-10, 0, -10)
+
+        );
+        let lineMat = new THREE.LineBasicMaterial({color: 0x696969});
+        let line = new THREE.Line(lineGeo, lineMat);
+
+        //lines for indicating where the 0,0,0 point is and all starts
+        let startLines = new THREE.Geometry();
+        startLines.vertices.push(
+            //directed line for x-axis
+            this.createVector(-10,-10,-10), this.createVector(-5,-10,-10),
+            this.createVector(-5.5,-9.5,-10), this.createVector(-5,-10,-10),
+            this.createVector(-5.5,-10.5,-10), this.createVector(-5,-10,-10),
+            this.createVector(-10,-10,-10),
+            //directed line for y-axis
+            this.createVector(-10,-5,-10), this.createVector(-10.5,-5.5,-10),
+            this.createVector(-10,-5,-10), this.createVector(-9.5,-5.5,-10),
+            this.createVector(-10,-5,-10), this.createVector(-10,-10,-10),
+            //directed line for z-axis
+            this.createVector(-10,-10,-5), this.createVector(-9.5,-10,-5.5),
+            this.createVector(-10,-10,-5), this.createVector(-10.5,-10,-5.5),
+            this.createVector(-10,-10,-5), this.createVector(-10,-10,-10),
+        );
+        let lineMat2 = new THREE.LineBasicMaterial({color: 0x000000});
+        let line2 = new THREE.Line(startLines, lineMat2);
+
+        line.type = THREE.LineStrip;
+        lineObject.add(line,line2);
+
+        return lineObject;
+    }
 }
 
 export default Axis

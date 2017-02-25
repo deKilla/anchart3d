@@ -39,31 +39,40 @@ class LineChart {
         return max;
     }
 
+    createVector(x, y, z) {
+        return new THREE.Vector3(x, y, z);
+    }
 
     createLine(pointArray, max) {
 
-        let material = new THREE.LineBasicMaterial({
-            color: 0x696969 //black
+        let material = new THREE.MeshPhongMaterial({
+            color: 0x696969, //black
+            shading: THREE.SmoothShading,
+            shininess: 0.8,
         });
 
         let lineGeometry = new THREE.Geometry();
 
-        let vectorArray = [];
-
-        //so it doesnt divide by zero
+        //so it doesnt divide by zero if the maximum number is zero or numbers are negative
         if (max == 0) max = 1;
 
-        //create a set of Vectors and push it in an array
-        for (let x = 0; x < pointArray.length; x++) {
-            let z = (4.0 * pointArray[x]) / max;
-            let vector3 = new THREE.Vector3(0, 0, z);
-            vectorArray.push(vector3);
-        }
 
-        for (let i = 0; i < vectorArray.length; i++) {
-            lineGeometry.vertices.push(vectorArray[i]);
-        }
 
+        let cntr = pointArray.length;
+        console.log(cntr);
+        //10 is the span
+        //to get the correct distance between the points it has to be calculated
+        let span = 10;
+
+        let steps = 4;
+        let distance = 0;
+        for (let i = 0; i < pointArray.length; i++) {
+            console.log(-((10.0 * pointArray[i]) / max) +"  "+ distance);
+            lineGeometry.vertices.push(
+                this.createVector( distance,((10.0 * pointArray[i]) / max), -9)
+            );
+            distance+=steps;
+        }
         return new THREE.Line(lineGeometry, material);
     }
 
@@ -87,7 +96,8 @@ class LineChart {
 
         //Group together all pieces
         let lineChart = new THREE.Group();
-        let axisLines = new THREE.Group();
+        let axisLines = new THREE.Object3D();
+
         //let labels = new THREE.Group();
         let axisHelper = new Axis();
         lineChart.chartType = this.type;
@@ -99,12 +109,6 @@ class LineChart {
         for (let dataset = 0; dataset < calculatedData.length; dataset++) {
             let values = calculatedData[dataset].values;
             let line;
-            //let lastRowColor;
-
-            //sets the Label for the Row
-            //let labelRow = axisHelper.makeTextSprite2D(" " + calculatedData[dataset].name + " ");
-            //labelRow.position.set(lastBarStartX+2,-2,-1);
-            //labels.add(labelRow);
 
             //Initialize an array which will hold the points of the line
             let pointArray = [];
@@ -120,23 +124,19 @@ class LineChart {
             }
 
             line = this.createLine(pointArray, max);
-
+            //pls
             console.log(pointArray);
-
-               // this.legendMap.set(calculatedData[dataset].name, line.material.color.getHexString());
+            line.position.x = -10;
+            line.position.y = -10;
+            line.position.z = 0;
 
             lineChart.add(line);
         }
 
-        let axis = axisHelper.initAxis(0,0);
-        axisLines.add(axis);
-        //half the position and align the segments to the center
-        /*
-         lineChart.position.x = -(lastBarStartX / 2);
-         lineChart.position.z = -1.5;
-         lineChart.position.y = -2;
-         lineChart.rotation.x = -1.5;
-         */
+        axisHelper.lineAxisDrawer(axisLines);
+
+        lineChart.add(axisLines);
+
         return lineChart;
     }
 

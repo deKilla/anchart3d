@@ -56,7 +56,6 @@ class BarChart {
         return color;
     }
 
-
     create3DBarChart(jsonData = this.jsonData) {
         const calculatedData = jsonData.file;
         //Group together all pieces
@@ -108,7 +107,7 @@ class BarChart {
                 else {
                     segment.scale.z = (dataPercent / 10);
                 }
-
+                //peeps pls
                 if(value == 0) {
                     //adding elements to the legendMap
                     this.legendMap.set(calculatedData[dataset].name, segment.material.color.getHexString());
