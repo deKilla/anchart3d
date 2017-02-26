@@ -44,7 +44,7 @@ class LineChart {
     }
 
     createLine(pointArray, max) {
-        /*
+
         let material = new THREE.MeshPhongMaterial({
             color: 0x696969, //black
             shading: THREE.SmoothShading,
@@ -52,13 +52,13 @@ class LineChart {
         });
 
         let lineGeometry = new THREE.Geometry();
-         */
+
         //before the cylinder can be created the height has to be calculated
         //this works with pythagoras
-        let line = new THREE.Group();
+        //let line = new THREE.Group();
         let steps = 4;
         let distance = 0;
-        var material = new THREE.MeshBasicMaterial( {color: 0xffff00});
+        /*var material = new THREE.MeshBasicMaterial( {color: 0xffff00});
         if (max == 0) max = 1;
         for (let i = 0; i < pointArray.length-1; i++) {
             let ya =((10.0 * pointArray[i]) / max) ;
@@ -76,9 +76,9 @@ class LineChart {
             line.add(cyl);
         }
 
-        return line;
+        return line;*/
 
-        /*
+
         //so it doesnt divide by zero if the maximum number is zero or numbers are negative
 
 
@@ -103,7 +103,7 @@ class LineChart {
 
 
 
-        return new THREE.Line(lineGeometry, material);*/
+        return new THREE.Line(lineGeometry, material);
     }
 
 
