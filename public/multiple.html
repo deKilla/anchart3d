@@ -23,13 +23,13 @@
 <div class="right">
     
     <ul id="menu">
-    <li><a class="active" href="index.html">About</a></li>
+    <li><a href="index.html">About</a></li>
     <li>Demo
         <ul>
         <li><a href="pie.html">PieChart</a></li>
         <li><a href="bar.html">BarChart</a></li>
         <li><a href="scatter.html">ScatterChart</a>
-        <li><a href="multiple.html">Multiple</a>
+        <li><a class="active" href="multiple.html">Multiple</a>
         </ul>
     </li>
     <li><a href="usage.html">Usage</a></li>
@@ -42,9 +42,11 @@
     
     <h1>multiple</h1>
     <h3>displaying multiple charts on a single page</h3>
-    <p>Is halt nix da weil der Dreck bei mir net rennt :(</p>
+    <h3>PieChart</h3>
     <div id="pieChart"></div>
+    <h3>BarChart</h3>
     <div id="barChart"></div>
+    <h3>ScatterChart</h3>
     <div id="scatterChart"></div>
 
 </div>
@@ -244,9 +246,9 @@ var configuration_sc = {
 
 
  var pieChart = anchart3d.createChart("pieChart")
-    .setConfig(configuration_bc)
-    .barChart()
-    .data(jsonData2)
+    .setConfig(configuration_pc)
+    .pieChart()
+    .data(jsonData1)
     .draw();
 
 var barChart = anchart3d.createChart("barChart")
@@ -268,7 +270,7 @@ var scatterChart = anchart3d.createChart("scatterChart")
     };
 
     var swapBar = function () {
-        pieChart.data(jsonData2);
+        pieChart.data(jsonData1);
         pieChart.swapData();
     };
 

@@ -23,12 +23,12 @@
 <div class="right">
     
     <ul id="menu">
-    <li><a class="active" href="index.html">About</a></li>
+    <li><a href="index.html">About</a></li>
     <li>Demo
         <ul>
         <li><a href="pie.html">PieChart</a></li>
         <li><a href="bar.html">BarChart</a></li>
-        <li><a href="scatter.html">ScatterChart</a>
+        <li><a class="active" href="scatter.html">ScatterChart</a>
         <li><a href="multiple.html">Multiple</a>
         </ul>
     </li>
@@ -49,93 +49,6 @@
 
 <script>
 
-    var jsonData1 = [
-        {
-            "name":"Österreich",
-            "values": [
-                {"name":"Einwohner", "value":8747000},
-                {"name":"DSGehalt", "value":2670}
-            ]
-        },
-        {
-            "name":"Deutschland",
-            "values": [
-                {"name":"Einwohner", "value":80062000},
-                {"name":"DSGehalt", "value":2790}
-            ]
-        },
-        {
-            "name":"Italien",
-            "values": [
-                {"name":"Einwohner", "value":59083000},
-                {"name":"DSGehalt", "value":2390}
-            ]
-        },
-        {
-            "name":"Russland",
-            "values": [
-                {"name":"Einwohner", "value":143500000},
-                {"name":"DSGehalt", "value":1780}
-            ]
-        },
-        {
-            "name":"Schweiz",
-            "values": [
-                {"name":"Einwohner", "value":8081000},
-                {"name":"DSGehalt", "value":2880}
-            ]
-        },
-        {
-            "name":"Belgien",
-            "values": [
-                {"name":"Einwohner", "value":11200000},
-                {"name":"DSGehalt", "value":2470}
-            ]
-        },
-        {
-            "name":"Frankreich",
-            "values": [
-                {"name":"Einwohner", "value":66030000},
-                {"name":"DSGehalt", "value":2550}
-            ]
-        }
-    ];
-
-    var jsonData2 = [
-        {
-            "name":"IMA2014",
-            "values": [
-                {"name":"1.Semester", "value":55},
-                {"name":"2.Semester", "value":47},
-                {"name":"3.Semester", "value":39},
-                {"name":"4.Semester", "value":32},
-                {"name":"5.Semester", "value":27},
-                {"name":"6.Semester", "value":24}
-            ]
-        },
-        {
-            "name":"IMA2015",
-            "values": [
-                {"name":"1.Semester", "value":59},
-                {"name":"2.Semester", "value":44},
-                {"name":"3.Semester", "value":36},
-                {"name":"4.Semester", "value":33},
-                {"name":"5.Semester", "value":29},
-                {"name":"6.Semester", "value":28}
-            ]
-        },
-        {
-            "name":"IMA2016",
-            "values": [
-                {"name":"1.Semester", "value":59},
-                {"name":"2.Semester", "value":44},
-                {"name":"3.Semester", "value":38},
-                {"name":"4.Semester", "value":35},
-                {"name":"5.Semester", "value":33},
-                {"name":"6.Semester", "value":27}
-            ]
-        }
-    ];
 
     var jsonData3 = [
         {
@@ -202,30 +115,6 @@
 
 
 
-var configuration_pc = {
-    "details": true,
-    "tooltip": true,
-    "showOnScreenControls": true,
-    "legend": true,
-    "startAnimation": true,
-    "chartAnimation": true,
-    "transparency": true,
-    "antialias": true,
-    "fov": 45
-};
-
-var configuration_bc = {
-    "details": true,
-    "tooltip": true,
-    "showOnScreenControls": true,
-    "legend": true,
-    "startAnimation": true,
-    "chartAnimation": true,
-    "transparency": true,
-    "antialias": true,
-    "fov": 45
-};
-
 var configuration_sc = {
     "details": true,
     "tooltip": true,
@@ -239,17 +128,7 @@ var configuration_sc = {
 };
 
 
- var pieChart = anchart3d.createChart("pieChart")
-    .setConfig(configuration_bc)
-    .barChart()
-    .data(jsonData2)
-    .draw();
 
-var barChart = anchart3d.createChart("barChart")
-    .setConfig(configuration_bc)
-    .barChart()
-    .data(jsonData2)
-    .draw();
 
 var scatterChart = anchart3d.createChart("scatterChart")
     .setConfig(configuration_sc)
@@ -258,20 +137,11 @@ var scatterChart = anchart3d.createChart("scatterChart")
     .draw();
 
 
-    var swapPie = function () {
-        pieChart.data(jsonData1);
-        pieChart.swapData();
-    };
 
-    var swapBar = function () {
-        pieChart.data(jsonData2);
-        pieChart.swapData();
-    };
-
-    var swapScatter = function () {
-        scatterChart.data(jsonData3);
-        scatterChart.swapData();
-    };
+var swapScatter = function () {
+    scatterChart.data(jsonData3);
+    scatterChart.swapData();
+};
 
 </script>
 
