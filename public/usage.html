@@ -21,43 +21,47 @@
 <br class="clear" />
 
 <div class="right">
-    
+
     <ul id="menu">
-    <li><a href="index.html">About</a></li>
-    <li>Demo
-        <ul>
-        <li><a href="pie.html">PieChart</a></li>
-        <li><a href="bar.html">BarChart</a></li>
-        <li><a href="scatter.html">ScatterChart</a>
-        <li><a href="multiple.html">Multiple</a>
-        </ul>
-    </li>
-    <li><a class="active" href="usage.html">Usage</a></li>
-    <li><a href="configuration.html">Configuration</a></li>
-    <li><a href="developing.html">Developing</a></li>
+        <li><a href="index.html">About</a></li>
+        <hr>
+        <li><u>Demos:</u>
+            <ul>
+                <li><a href="pie.html">PieChart</a></li>
+                <li><a href="bar.html">BarChart</a></li>
+                <li><a href="scatter.html">ScatterChart</a>
+                <li><a href="multiple.html">Multiple</a>
+            </ul>
+        </li>
+        <hr>
+        <li><a class="active" href="usage.html">Usage</a></li>
+        <li><a href="configuration.html">Configuration</a></li>
+        <li><a href="developing.html">Developing</a></li>
     </ul>
 
 </div>
 <div class="content">
     
-    <h1>usage</h1>
-    <h3>how to get started using anchart3d</h3>
+    <h1>Usage</h1>
+    <h3>How to get started using anchart3d</h3>
     <p>
     These are the basic steps you need to go through - if you want more control please see the <a href="configuration.html">configuration</a>. 
     </p>
     <p>
-    Setting up anchart3d is really easy and straight forward. First, you need to download the <a href="https://github.com/deKilla/anchart3d/raw/dev/public/js/anchart3d.js">anchart3d.js</a> and place it your project folder - for example in a subfolder called "js". After that you simply need to include it in your html like this.
+    Setting up anchart3d is really simple and straightforward. First, you need to download the <a href="https://github.com/deKilla/anchart3d/raw/dev/public/js/anchart3d.js">anchart3d.js</a> and place it in your project folder - for example in a subfolder called "js".
+    After that you simply need to include it in your html like this:
     <span class="code">&lt;script type="text/javascript src="js/anchart3d.js"&gt;&lt;/script&gt;</span>
     </p>
     <p>
-    You do need to include anything else - all dependecies are already bundled into that one file and you're ready to go. Have a look at the <a href="configuration.html">configuration</a> to find out more.
+        You do <u>not</u> need to include anything else - all dependecies are already bundled into that one file and you're ready to go. Have a look at the <a href="configuration.html">configuration</a> to find out more.
     </p>
     <p>
-    Then you need to include a &lt;div&gt; somewhere on your page. this div needs to have an id but how you name it is your choice. Let's say you name it "chart".
+        Then you need to include a <b>&lt;div&gt;</b> somewhere on your page. The div has to have an id with a name of your liking.
+        For example, you could name it simply "chart":
     <span class="code">&lt;div id="chart"&gt;&lt;/div&gt;</span>
     </p>
     <p>
-    The last step would be to create a &lt;script&gt; tag as last element within the body (just before &lt;/body&gt;) andcall the actuall chart.
+    The last step would be to create a &lt;script&gt; tag as last element within the body (just before &lt;/body&gt;) and call the actuall chart.
     <pre class="code" style="text-align:left; padding-left:100px;">
     anchart3d.createChart("chart")
       .setConfig(configuration)
@@ -67,7 +71,13 @@
     </pre>
     </p>
     <p>
-    As you can see, calling the chart takes a couple of additional information. First you call createChart() and pass it the id of div we created earlier. Then you pass an array with your configuration to setConfig(). This is optional and descrbed <a href="configuration.html">here</a>. The configuration method takes an optional second parameter - a string that you can use to sort the data. That must  be an category of your dataset - e.g. "income". The third method defines, what kind of chart is to be created. In this example we want to create a pie chart so we call pieChart(). Another very importent "ingredient" to visualize data is data which is to be in the form of a json and passed to data(). The last method is draw() (which must always be last) and that leads to your chart getting created.
+    As you can see, calling the chart takes a couple of additional informations. First you call <b>createChart()</b>, and pass the <b>id</b> of the div, which we have created earlier, as an argument.
+    Then you pass an array with your configuration to <b>setConfig()</b>. This is optional and described <a href="configuration.html">here</a>.
+    The configuration method takes an optional second parameter - a string that you can use to sort the data. That must  be a category of your dataset - e.g. "income".
+    The third method defines what kind of chart should be created. In this example we want to create a pie chart, so we call <b>pieChart()</b>.
+    Another very important "ingredient" to visualize data, is the actual data you want to visualize. This specific data has to be stored in a JSON and then passed to the <b>data()</b> method.
+    In order to look up on how you have to structure the JSON for your data, visit the specific link of the chart you want to use. There you can find a description on how to define the data in the JSON.
+    The last method is called <b>draw()</b> (<u>which has to be called last in the fluent api chain</u>), which will initialize and generate the chart.
     </p>
 
 
