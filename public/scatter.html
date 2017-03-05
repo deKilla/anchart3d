@@ -45,6 +45,41 @@
     <h1>ScatterChart</h1>
     <div id="scatterChart"></div>
 
+    <p>
+        The scatter chart is visualizing data with up to five dimensions. One dataset can contains five data entries
+        (e.g. one data entry for each axis and one for the size as well as the shape of the dataset).
+        So it is possible to show data records with up to five data entries and visualize the data in the three dimensional space through the position, size and shape of one entity.
+
+    </p>
+    <p>
+        An example of a dataset (with five data entries) can be viewed underneath:
+    </p>
+    <pre class="code" style="text-align:left">
+    var jsonData = [
+        {
+            "name":"Dataset",
+            "values": [
+                {"name":"X", "value":0.5},
+                {"name":"Y", "value":0.7},
+                {"name":"Z", "value":0.3},
+                {"name":"size", "value":11},
+                {"name":"shape", "value":"sphere"}
+            ]
+        }
+    ]
+    </pre>
+    <p>
+        Each value in the "values" array has to <b><u>end</u></b> with the specific axis name or the value name "size" and "shape.
+        So if you plan on giving your axis a certain name, dont forget to append the name of the axis (e.g. "money<b>X</b>" or "timeaxis<b>Y</b>" or "age<b>Z</b>").
+        The fourth value should also end with the string "size", in order to also give the opportunity of setting indivdiual naming conventions. (e.g. "marketShare<b>Size</b>)
+        The fith data entry is optional. If no "shape" is set in the dataset, the "sphere" shape will be taken automatically. It is possible to set one of the following three shapes:
+        <ul>
+            <li>cone</li>
+            <li>diamond</li>
+            <li>sphere</li>
+        </ul>
+    </p>
+
 </div>
 <br class="clear" />
 </div>
