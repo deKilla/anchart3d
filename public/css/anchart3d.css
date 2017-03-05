@@ -9,23 +9,25 @@
 #pieChart {
       
       /* required */
-      width:858px;
-      height:280px;
+      width:757px;
+      height:400px;
 
     background:#aaa;
     border:1px solid #000;
     position: relative;
+    margin-top:10px;
 }
 
 #barChart {
     
       /* required */
-      width:858px;
-      height:480px;
+      width:757px;
+      height:400px;
 
     background:#aaa;
     position:relative;
     border:1px solid #000;
+    margin-top:10px;
 }
 
 /* ======================================================== */

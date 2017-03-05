@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>anchart3d</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/anchart3d.css">
+    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
+    <script type="text/javascript" src="../build/anchart3d.js"></script>
+</head>
+<body>
+
+<a href="https://github.com/deKilla/anchart3d"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+<div id="wrapper">
+<span id="title">anchart<b>3d</b></span>
+<a href="https://fh-joanneum.at/informationsmanagement/bachelor/" id="fhlogo">
+<img src="img/fh.png" alt="FH Joanneum" /></a>
+
+<br class="clear" />
+
+<div class="right">
+    
+    <ul id="menu">
+    <li><a href="index.html">About</a></li>
+    <li>Demo
+        <ul>
+        <li><a href="pie.html">PieChart</a></li>
+        <li><a href="bar.html">BarChart</a></li>
+        <li><a href="scatter.html">ScatterChart</a>
+        <li><a href="multiple.html">Multiple</a>
+        </ul>
+    </li>
+    <li><a class="active" href="usage.html">Usage</a></li>
+    <li><a href="configuration.html">Configuration</a></li>
+    <li><a href="developing.html">Developing</a></li>
+    </ul>
+
+</div>
+<div class="content">
+    
+    <h1>usage</h1>
+    <h3>how to get started using anchart3d</h3>
+    <p>
+    These are the basic steps you need to go through - if you want more control please see the <a href="configuration.html">configuration</a>. 
+    </p>
+    <p>
+    Setting up anchart3d is really easy and straight forward. First, you need to download the <a href="https://github.com/deKilla/anchart3d/raw/dev/public/js/anchart3d.js">anchart3d.js</a> and place it your project folder - for example in a subfolder called "js". After that you simply need to include it in your html like this.
+    <span class="code">&lt;script type="text/javascript src="js/anchart3d.js"&gt;&lt;/script&gt;</span>
+    </p>
+    <p>
+    You do need to include anything else - all dependecies are already bundled into that one file and you're ready to go. Have a look at the <a href="configuration.html">configuration</a> to find out more.
+    </p>
+    <p>
+    Then you need to include a &lt;div&gt; somewhere on your page. this div needs to have an id but how you name it is your choice. Let's say you name it "chart".
+    <span class="code">&lt;div id="chart"&gt;&lt;/div&gt;</span>
+    </p>
+    <p>
+    The last step would be to create a &lt;script&gt; tag as last element within the body (just before &lt;/body&gt;) andcall the actuall chart.
+    <pre class="code" style="text-align:left; padding-left:100px;">
+    anchart3d.createChart("chart")
+      .setConfig(configuration)
+      .pieChart()
+      .data(jsonData)
+      .draw();
+    </pre>
+    </p>
+    <p>
+    As you can see, calling the chart takes a couple of additional information. First you call createChart() and pass it the id of div we created earlier. Then you pass an array with your configuration to setConfig(). This is optional and descrbed <a href="configuration.html">here</a>. The configuration method takes an optional second parameter - a string that you can use to sort the data. That must  be an category of your dataset - e.g. "income". The third method defines, what kind of chart is to be created. In this example we want to create a pie chart so we call pieChart(). Another very importent "ingredient" to visualize data is data which is to be in the form of a json and passed to data(). The last method is draw() (which must always be last) and that leads to your chart getting created.
+    </p>
+
+
+</div>
+<br class="clear" />
+</div>
+</body>
+</html>

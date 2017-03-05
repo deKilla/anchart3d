@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>anchart3d</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/anchart3d.css">
+    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
+    <script type="text/javascript" src="../build/anchart3d.js"></script>
+</head>
+<body>
+
+<a href="https://github.com/deKilla/anchart3d"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
+<div id="wrapper">
+<span id="title">anchart<b>3d</b></span>
+<a href="https://fh-joanneum.at/informationsmanagement/bachelor/" id="fhlogo">
+<img src="img/fh.png" alt="FH Joanneum" /></a>
+
+<br class="clear" />
+
+<div class="right">
+    
+    <ul id="menu">
+    <li><a href="index.html">About</a></li>
+    <li>Demo
+        <ul>
+        <li><a href="pie.html">PieChart</a></li>
+        <li><a href="bar.html">BarChart</a></li>
+        <li><a href="scatter.html">ScatterChart</a>
+        <li><a href="multiple.html">Multiple</a>
+        </ul>
+    </li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a class="active" href="configuration.html">Configuration</a></li>
+    <li><a href="developing.html">Developing</a></li>
+    </ul>
+
+</div>
+<div class="content">
+    
+    <h1>configuration</h1>
+    <h3>how to configure anchart3d to your liking</h3>
+    <p>
+    Once you're done with the basic setup as described <a href="usage.html">here</a> you can start configuring using the fluid api based methods as described below.
+    </p>
+    <p>
+    You first need to create a so called configuration array that holds a set of configurations.
+    <span class="code">var config = {param1:value1, param2:value2}</span>
+    </p>
+    <p>
+    Of course this needs to placed inside the &lt;script&gt; tag we created as described under <a href="usage.html">usage</a>. Now let's have a look at the possible parameters and what changes they cause. The value is always a boolean.
+    </p>
+    <dl>
+    <dt>details</dt>
+    <dd>When a segement gets clicked, a detail pane is displayed.</dd>
+    <dt>tooltip</dt>
+    <dd>When the curser hovers above a segment, a tooltip is shown.</dd>
+    <dt>legend</dt>
+    <dd>Displays a legend.</dd>
+    <dt>showOnScreenControls</dt>
+    <dd>Usually the chart can be interacted with using the mouse. Enabling this will display a element that allows moving the chart without using drag &amp; drop functionality.</dd>
+    <dt>antialias</dt>
+    <dd>Smoother visuals but can cause problems on really old computers.</dd>
+    <dt>startAnimation</dt>
+    <dd>Wheter an animation should be used when the page is loaded. No animation means the chart is immediately displayed.</dd>
+    </dl>
+
+</div>
+
+<br class="clear" />
+</div>
+</body>
+</html>

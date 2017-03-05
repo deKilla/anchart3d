@@ -1,18 +1,63 @@
 
 body{
     margin: 0;
-    overflow: hidden;
-    font-family: "Raleway", sans-serif;
+    font-family: Arial, sans-serif;
+    /*font-family: "Raleway", sans-serif;*/
     
     background-color: #878987;
-	background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233c9836' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+	background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2384bb44' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-#wrapper { z-index:-1; min-height:100vh; height:100%; width:858px; margin:0 auto; padding:20px 50px; border-left:1px solid #000; border-right:1px solid #000; background:#fff; }
+.clear {clear:both;}
+
+#wrapper { z-index:-1; min-height:100vh; width:958px; margin:0 auto; border-left:1px solid #000; border-right:1px solid #000; background:#fff; }
+
+h1,h2,h3,h4,h5,p,li,a,dt,dd {
+	font-family: "Raleway", sans-serif;
+}
 
 h1 { margin:0;  }
 h2 { margin: 10px 0; }
 
 h2 + input { margin-right:0px; }
 
-a { text-decoration:none; }
+a { color:#777; }
+a:hover { color:#84bb44; }
+
+#title { font-size:100px; font-family: "Raleway", sans-serif; padding:20px;}
+
+#title b { color:#84bb44; }
+
+#fhlogo {float:right;}
+#fhlogo img {
+
+	height:150px;
+
+}
+
+.right {
+	width: 159px;
+	float:left;
+}
+
+.content {
+	width: 758px;
+	float:left;
+	padding:10px 20px;
+	border-left:1px solid #ddd;
+}
+
+#menu,
+#menu ul {list-style: none;}
+#menu ul {margin-left:5px; padding:0px;}
+#menu>li { font-weight:bold; }
+
+#menu a { color:#666; text-decoration:none; }
+#menu a:hover { color:#84bb44; text-decoration: underline; }
+
+#menu .active {color:#84bb44;}
+
+.code { font-weight:bold; font-family:"Courier New", Courier, monospace; display:block; padding:20px; border:1px solid #333; background:#cdc; text-align: center; margin:10px 50px; }
+
+dt {font-weight:bold; color:#84bb44; }
+dd { margin-bottom:10px; }
