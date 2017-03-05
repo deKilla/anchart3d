@@ -5,9 +5,7 @@
     <title>anchart3d</title>
 
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./css/anchart3d.css">
     <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
-    <script type="text/javascript" src="../build/anchart3d.js"></script>
 </head>
 <body>
 
@@ -47,6 +45,7 @@
     <p>
     These are the basic steps you need to go through - if you want more control please see the <a href="configuration.html">configuration</a>. 
     </p>
+    <h4>Including the script in the html file</h4>
     <p>
     Setting up anchart3d is really simple and straightforward. First, you need to download the <a href="https://github.com/deKilla/anchart3d/raw/dev/public/js/anchart3d.js">anchart3d.js</a> and place it in your project folder - for example in a subfolder called "js".
     After that you simply need to include it in your html like this:
@@ -60,6 +59,7 @@
         For example, you could name it simply "chart":
     <span class="code">&lt;div id="chart"&gt;&lt;/div&gt;</span>
     </p>
+    <h4>Generating a chart via the fluent api</h4>
     <p>
     The last step would be to create a &lt;script&gt; tag as last element within the body (just before &lt;/body&gt;) and call the actuall chart.
     <pre class="code" style="text-align:left; padding-left:100px;">
@@ -71,7 +71,8 @@
     </pre>
     </p>
     <p>
-    As you can see, calling the chart takes a couple of additional informations. First you call <b>createChart()</b>, and pass the <b>id</b> of the div, which we have created earlier, as an argument.
+    As you can see, calling the chart takes a couple of additional informations. First you call the <b>createChart()</b> method from the public <b>anchart3d</b> variable,
+    and pass the <b>id</b> of the div, which we have created earlier, as an argument.
     Then you pass an array with your configuration to <b>setConfig()</b>. This is optional and described <a href="configuration.html">here</a>.
     The configuration method takes an optional second parameter - a string that you can use to sort the data. That must  be a category of your dataset - e.g. "income".
     The third method defines what kind of chart should be created. In this example we want to create a pie chart, so we call <b>pieChart()</b>.

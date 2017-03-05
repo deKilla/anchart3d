@@ -5,9 +5,7 @@
     <title>anchart3d</title>
 
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./css/anchart3d.css">
     <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
-    <script type="text/javascript" src="../build/anchart3d.js"></script>
 </head>
 <body>
 
@@ -48,25 +46,45 @@
     Once you're done with the basic setup, as described <a href="usage.html">here</a>, you can start configuring using the fluent api based methods as described below.
     </p>
     <p>
-    You first need to create a so called configuration array that holds a set of configurations.
+    You first need to create a configuration object that holds a set of configurations.
     <span class="code">var config = {param1:value1, param2:value2}</span>
     </p>
     <p>
-    Of course this needs to placed inside the &lt;script&gt; tag we created as described under <a href="usage.html">usage</a>. Now let's have a look at the possible parameters and what changes they cause. The value is always a boolean.
+    The configuration object has to be passed to the <b>configuration()</b> method of the fluent api, as seen in the section <a href="configuration.html">usage</a>.
+    </p>
+    <p>Now let's have a look at the possible parameters and how they affect the chart in the canvas.<br>
+    <b><u>Hint:</u></b> The following options are all treated as booleans in the library (except the option "bgcolor"). Set them to <b>true</b> or <b>false</b> for either enabling or disabling the specific feature.
     </p>
     <dl>
+    <dt>antialias</dt>
+    <dd>Smoother visuals (e.g. smoothing out the edges on polygons) but can cause performance issues on old computers.</dd>
+    <dt>chartAnimation</dt>
+    <dd>Set this parameter to <b>true</b> in order to enable chart specific animations. (scatter chart is excluded!)</dd>
     <dt>details</dt>
-    <dd>When a segement gets clicked, a detail pane is displayed.</dd>
-    <dt>tooltip</dt>
-    <dd>When the curser hovers above a segment, a tooltip is shown.</dd>
+    <dd>When a segement/entity gets clicked, a detail pane is displayed.</dd>
+    <dt>fov</dt>
+    <dd>Set the field of view for the camera. The default fov is 45.</dd>
     <dt>legend</dt>
     <dd>Displays a legend.</dd>
     <dt>showOnScreenControls</dt>
-    <dd>Usually the chart can be interacted with using the mouse. Enabling this will display a element that allows moving the chart without using drag &amp; drop functionality.</dd>
-    <dt>antialias</dt>
-    <dd>Smoother visuals but can cause problems on really old computers.</dd>
+    <dd>Usually the chart can be interacted with using the mouse. Setting this option to <b>true</b> will display an element, that allows moving the chart with a HTML D-Pad.</dd>
     <dt>startAnimation</dt>
-    <dd>Wheter an animation should be used when the page is loaded. No animation means the chart is immediately displayed.</dd>
+    <dd>Wheter an entry animation should be used when the page is loaded or not. Setting this option to <b>false</b> means, that the chart will be immediately displayed without an entry animation.</dd>
+    <dt>tooltip</dt>
+    <dd>When the cursor hovers on a segment/entity, a tooltip is displayed.</dd>
+    <dt>transparency</dt>
+    <dd>Enable or disable the transparency of the canvas by setting this option to <b>true</b> or <b>false</b></dd>
+    <hr>
+    <dt>bgcolor</dt>
+    <dd>This option changes the background color of the canvas depending on the value set to the property itself.<br>It can take different color inputs:
+        <ul>
+            <li><b><u>Hexadecimal (recommended):</u></b> Set the color with a hexadecimal number (e.g. "0xff0000")</li>
+            <li><b><u>RGB string:</u></b> Set the color with a RGB string (e.g. "rgb(255, 0, 0)" or "rgb(100%, 0%, 0%)")</li>
+            <li><b><u>X11 color name:</u></b> Set the color with the X11 color name. All 140 colors are supported. (e.g. "red" or "skyblue")</li>
+            <li><b><u>HSL string:</u></b> Set the color with a HSL string. (e.g. "hsl(0, 100%, 50%)")</li>
+        </ul>
+    </dd>
+
     </dl>
 
 </div>
