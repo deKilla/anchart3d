@@ -84,7 +84,7 @@ var anchart3d =
 	
 	var _Chart2 = _interopRequireDefault(_Chart);
 	
-	var _JsonData = __webpack_require__(/*! ./JsonData */ 13);
+	var _JsonData = __webpack_require__(/*! ./JsonData */ 14);
 	
 	var _JsonData2 = _interopRequireDefault(_JsonData);
 	
@@ -124,6 +124,10 @@ var anchart3d =
 	            options.chartType = "barChart";
 	            return this;
 	        },
+	        scatterChart: function scatterChart() {
+	            options.chartType = "scatterChart";
+	            return this;
+	        },
 	        data: function data(jsonData, sortBy) {
 	            if (sortBy) {
 	                options.data = new _JsonData2.default(jsonData).sortData(sortBy);
@@ -151,6 +155,7 @@ var anchart3d =
 	                        //else use default sceneInit settings
 	                        scene = new _SceneInit2.default(chartName, domTarget, chartName, chart.legendMap);
 	                    }
+	
 	                    scene.initScene();
 	                    scene.animate();
 	                    scene.scene.add(chart.object);
@@ -168,18 +173,21 @@ var anchart3d =
 	                        data = options.data;
 	                        var camera = scene.camera;
 	                        var controls = scene.controls;
-	                        var newChart = new _Chart2.default(chartName, chartType, data, configJson).createChart();
-	                        var legend = new _Legend2.default(newChart.legendMap, configJson, document.getElementById(domTarget));
-	                        legend.removeLegend();
-	                        legend.generateLegend();
 	                        var oldChart = scene.scene.getObjectByName(chartName, true);
 	                        controls.enableZoom = false;
+	                        controls.enabled = false;
+	                        (0, _animation.resetChartPosition)(scene.scene, { x: oldChart.rotation.x, y: oldChart.rotation.y, z: oldChart.rotation.z }, 1000);
 	                        (0, _animation.resetCameraPosition)(camera, scene.cameraDefaultPos, 1000).onComplete(function () {
+	                            var newChart = new _Chart2.default(chartName, chartType, data, configJson).createChart();
+	                            var legend = new _Legend2.default(newChart.legendMap, configJson, document.getElementById(domTarget));
+	                            legend.removeLegend();
+	                            legend.generateLegend();
 	                            scene.scene.add(newChart.object);
-	                            newChart.object.position.set(50, 0, 0);
-	                            (0, _animation.dataSwapAnimation)(oldChart, { x: -50, y: 0, z: 0 }, newChart.object, 2500, 10).onComplete(function () {
+	                            newChart.object.position.set(50, newChart.object.position.y, newChart.object.position.z);
+	                            (0, _animation.dataSwapAnimation)(oldChart, { x: -50, y: newChart.object.position.y, z: newChart.object.position.z }, newChart.object, 3000, 10).onComplete(function () {
 	                                scene.scene.remove(scene.scene.getObjectById(oldChart.id));
 	                                controls.enableZoom = true;
+	                                controls.enabled = true;
 	                                swapActive = false;
 	                            });
 	                        });
@@ -281,7 +289,7 @@ var anchart3d =
 	        this.control = this.createDomElement("control");
 	        this.legend = this.createDomElement("legend");
 	        this.tooltip = null;
-	        this.cameraDefaultPos = { x: 0, y: -7, z: 1.5 }; //camera default pos
+	        this.cameraDefaultPos = { x: 0, y: 0, z: 7 }; //camera default pos
 	    }
 	
 	    _createClass(SceneInit, [{
@@ -313,21 +321,24 @@ var anchart3d =
 	            if (this.sceneConfig.transparency == true) {
 	                this.renderer.setClearColor(0xffffff, 0);
 	            } else {
-	                this.scene.background = new THREE.Color(this.sceneConfig.bgcolor || window.getComputedStyle(this.domNode).getPropertyValue("background-color") // ||
-	                //window.getComputedStyle(document.body).getPropertyValue("background-color") // pseudo transparency
-	                );
+	                this.scene.background = new THREE.Color(this.sceneConfig.bgcolor || window.getComputedStyle(this.domNode).getPropertyValue("background-color"));
 	            }
 	
 	            //ambient light which is for the whole scene
 	            var ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-	            ambientLight.castShadow = false;
+	            ambientLight.castShadow = true;
 	            this.scene.add(ambientLight);
 	
 	            //spot light which is illuminating the chart directly
-	            var spotLight = new THREE.SpotLight(0xffffff, 0.70);
-	            spotLight.castShadow = true;
-	            spotLight.position.set(0, 40, 10);
-	            this.scene.add(spotLight);
+	            var pointLight = new THREE.PointLight(0xffffff, 0.25);
+	            //attach point light to the camera in order to always look in the same direction as the camera
+	            this.camera.add(pointLight);
+	            this.scene.add(this.camera);
+	
+	            //special position for scatter chart
+	            if (this.chartName.includes("scatterChart")) {
+	                this.cameraDefaultPos.z = 40;
+	            }
 	
 	            if (this.sceneConfig.startAnimation) {
 	                this.camera.position.set(0, -10, 1100);
@@ -339,14 +350,12 @@ var anchart3d =
 	
 	            document.addEventListener('mousedown', this.onDocumentMouseAction.bind(this), false);
 	            document.addEventListener('mousemove', this.onDocumentMouseAction.bind(this), false);
-	            document.addEventListener('keydown', this.onDocumentKeyAction.bind(this), false);
-	            document.ondblclick = this.onDocumentDblClick.bind(this);
 	
 	            //if window resizes
 	            window.addEventListener('resize', this.onWindowResize.bind(this), false);
 	
 	            if (this.sceneConfig.showOnScreenControls) {
-	                this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.camera, this.cameraDefaultPos);
+	                this.showOnScreenControls(this.sceneConfig.controlMethod || "mouseover", this.scene, this.chartName, this.camera, this.cameraDefaultPos);
 	            }
 	
 	            var legend = new _Legend2.default(this.legendMap, this.sceneConfig, this.domNode);
@@ -384,26 +393,16 @@ var anchart3d =
 	            return raycaster.intersectObjects(this.scene.getObjectByName(this.chartName, true).children);
 	        }
 	    }, {
-	        key: "onDocumentKeyAction",
-	        value: function onDocumentKeyAction(event) {
-	            // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
-	            switch (event.keyCode) {
-	                case 82:
-	                    //R key
-	                    break;
-	                case 67:
-	                    //C key
-	                    break;
-	            }
-	        }
-	    }, {
 	        key: "showOnScreenControls",
 	        value: function showOnScreenControls() {
 	            var method = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "click";
-	            var currentChart = arguments[1];
-	            var camera = arguments[2];
-	            var defaultPos = arguments[3];
+	            var scene = arguments[1];
+	            var chartName = arguments[2];
+	            var camera = arguments[3];
+	            var defaultPos = arguments[4];
 	
+	            var defaultChartRot = { x: null, y: null, z: null };
+	            var currentChart = void 0;
 	            var repeater = void 0;
 	            var interval = void 0;
 	
@@ -420,8 +419,17 @@ var anchart3d =
 	            this.control.innerHTML += "<a class=\"btnright\">&rarr;</a>";
 	            this.control.innerHTML += "<a class=\"btndown\">&darr;</a>";
 	
+	            this.control.addEventListener("mouseover", function () {
+	                currentChart = scene.getObjectByName(chartName);
+	                if (defaultChartRot.x == null) {
+	                    defaultChartRot.x = currentChart.rotation.x;
+	                    defaultChartRot.y = currentChart.rotation.y;
+	                    defaultChartRot.z = currentChart.rotation.z;
+	                }
+	            });
+	
 	            this.domNode.querySelector(".btnreset").addEventListener("click", function () {
-	                (0, _animation.resetChartPosition)(currentChart, { x: 0, y: 0, z: 0 }, 4000);
+	                (0, _animation.resetChartPosition)(currentChart, { x: defaultChartRot.x, y: defaultChartRot.y, z: defaultChartRot.z }, 4000);
 	                (0, _animation.resetCameraPosition)(camera, defaultPos, 4000);
 	            });
 	            this.domNode.querySelector(".btnleft").addEventListener(method, function () {
@@ -493,7 +501,6 @@ var anchart3d =
 	            if (this.INTERSECTED && event.type == "mousemove") {
 	                this.showTooltip(true);
 	                this.INTERSECTED.material.emissive.setHex(this.colorLuminance(this.INTERSECTED.material.color.getHexString(), 0.03));
-	                //console.log(intersectedObjects[0]);           
 	            }
 	        }
 	    }, {
@@ -502,11 +509,10 @@ var anchart3d =
 	
 	            if (status && this.sceneConfig.details) {
 	                this.details.innerHTML = "<h2>" + this.INTERSECTED.name + "</h2>";
-	                if (this.INTERSECTED.hasOwnProperty("data1")) {
-	                    this.details.innerHTML += "<b>" + this.INTERSECTED.data1.name + ":</b> " + this.INTERSECTED.data1.percent.toFixed(2) + "% (" + this.INTERSECTED.data1.value + ")<br>";
-	                }
-	                if (this.INTERSECTED.hasOwnProperty("data2")) {
-	                    this.details.innerHTML += "<b>" + this.INTERSECTED.data2.name + ":</b> " + this.INTERSECTED.data2.percent.toFixed(2) + "% (" + this.INTERSECTED.data2.value + ")";
+	                for (var dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++) {
+	                    if (this.INTERSECTED.hasOwnProperty("data" + dataset)) {
+	                        this.details.innerHTML += "<b>" + this.INTERSECTED["data" + dataset].name + ":</b> " + this.INTERSECTED["data" + dataset].value + " \n                            " + (!isNaN(this.INTERSECTED["data" + dataset].value) ? "(" + this.INTERSECTED["data" + dataset].percent.toFixed(2) + "%)" : "") + "<br/>";
+	                    }
 	                }
 	                this.details.style.visibility = "visible";
 	            } else if (!status && this.details) {
@@ -529,19 +535,15 @@ var anchart3d =
 	
 	                tooltip.setAttribute("id", "tooltip");
 	
-	                //iterate over intersected to get all data ...
 	                tooltip.innerHTML = "<h4>" + this.INTERSECTED.name + "</h4>";
-	                if (this.INTERSECTED.hasOwnProperty("data1")) {
-	                    tooltip.innerHTML += "<b>" + this.INTERSECTED.data1.name + "</b>: " + this.INTERSECTED.data1.value + " (" + this.INTERSECTED.data1.percent.toFixed(2) + "%)<br/>";
-	                }
-	                if (this.INTERSECTED.hasOwnProperty("data2")) {
-	                    tooltip.innerHTML += "<b>" + this.INTERSECTED.data2.name + "</b>: " + this.INTERSECTED.data2.value + " (" + this.INTERSECTED.data2.percent.toFixed(2) + "%)";
+	                for (var dataset = 0; dataset < Object.keys(this.INTERSECTED).length; dataset++) {
+	                    if (this.INTERSECTED.hasOwnProperty("data" + dataset)) {
+	                        tooltip.innerHTML += "<b>" + this.INTERSECTED["data" + dataset].name + "</b>: " + this.INTERSECTED["data" + dataset].value + " \n                                            " + (!isNaN(this.INTERSECTED["data" + dataset].value) ? "(" + this.INTERSECTED["data" + dataset].percent.toFixed(2) + "%)" : "") + "<br/>";
+	                    }
 	                }
 	                tooltip.style.position = "absolute";
 	                tooltip.style.left = event.pageX + 'px';
 	                tooltip.style.top = event.pageY + 'px';
-	
-	                //console.log(tooltip);
 	
 	                document.body.appendChild(tooltip);
 	            } else if (!status && tooltip) {
@@ -571,9 +573,6 @@ var anchart3d =
 	            }
 	            return threeHex;
 	        }
-	    }, {
-	        key: "onDocumentDblClick",
-	        value: function onDocumentDblClick() {}
 	    }, {
 	        key: "createDomElement",
 	        value: function createDomElement(name) {
@@ -45205,6 +45204,10 @@ var anchart3d =
 	
 	var _BarChart2 = _interopRequireDefault(_BarChart);
 	
+	var _ScatterChart = __webpack_require__(/*! ./ScatterChart */ 13);
+	
+	var _ScatterChart2 = _interopRequireDefault(_ScatterChart);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45237,6 +45240,10 @@ var anchart3d =
 	                    break;
 	                case "barChart":
 	                    chart = new _BarChart2.default(name, chartType, data, config);
+	                    this.legendMap = chart.legendMap;
+	                    break;
+	                case "scatterChart":
+	                    chart = new _ScatterChart2.default(name, chartType, data, config);
 	                    this.legendMap = chart.legendMap;
 	                    break;
 	                default:
@@ -45383,6 +45390,7 @@ var anchart3d =
 	                            segment.scale.z = data2Percent / 10;
 	                        }
 	                    }
+	                    chart.rotation.x = -1.2;
 	                    //add new piece to the grouped pieChart
 	                    chart.add(segment);
 	                }
@@ -45447,8 +45455,8 @@ var anchart3d =
 	    }
 	
 	    _createClass(BarChart, [{
-	        key: 'createSegment',
-	        value: function createSegment(lastBarStartX, lastRowColor) {
+	        key: 'createBar',
+	        value: function createBar(lastBarStartX, lastRowColor) {
 	            var color = void 0;
 	            if (lastRowColor) {
 	                color = this.darkenCol(lastRowColor, 10).getHex();
@@ -45490,12 +45498,13 @@ var anchart3d =
 	            var barChart = new THREE.Group();
 	            var axisLines = new THREE.Group();
 	            var labels = new THREE.Group();
+	            var axisHelper = new _Axis2.default();
 	            barChart.chartType = this.type;
 	            barChart.name = this.name;
 	            //variable holds last position of the inserted segment of the barchart
 	            var lastBarStartX = 0.0;
 	            var yPostition = 0;
-	            var doOnce = 0;
+	
 	            //iterate over the jsonData and create for every data a new Bar
 	            //data = one object in the json which holds the props "amount","percent" in this case.
 	            for (var dataset = 0; dataset < calculatedData.length; dataset++) {
@@ -45504,7 +45513,7 @@ var anchart3d =
 	                var lastRowColor = void 0;
 	                var yPos = 0;
 	                //sets the Label for the Row
-	                var labelRow = new _Axis2.default().makeTextSprite(" " + calculatedData[dataset].name + " ");
+	                var labelRow = axisHelper.makeTextSprite2D(" " + calculatedData[dataset].name + " ");
 	                labelRow.position.set(lastBarStartX + 2, -2, -1);
 	                labels.add(labelRow);
 	
@@ -45514,11 +45523,11 @@ var anchart3d =
 	                    var dataValue = values[value].value;
 	                    var dataPercent = values[value].percent;
 	                    //call function which creates one segment at a time
-	                    segment = this.createSegment(lastBarStartX, lastRowColor);
+	                    segment = this.createBar(lastBarStartX, lastRowColor);
 	                    segment.position.y = yPos++; //set second dataset behind first one
 	                    lastRowColor = segment.material.color;
 	
-	                    var labelLine = new _Axis2.default().makeTextSprite(" " + values[value].name + " ");
+	                    var labelLine = axisHelper.makeTextSprite2D(" " + values[value].name + " ");
 	                    labelLine.position.set(0, segment.position.y, -1);
 	                    labels.add(labelLine);
 	
@@ -45548,18 +45557,16 @@ var anchart3d =
 	                }
 	                lastBarStartX = lastBarStartX + 0.7 + 0.2; //if only one dataset available, update barStart here
 	            }
-	            //half the position and align the segments to the center
-	            barChart.position.x = -(lastBarStartX / 2);
-	
-	            var axis = new _Axis2.default().initAxis(yPostition);
+	            var axis = axisHelper.initAxis(yPostition, lastBarStartX);
 	            axisLines.add(axis);
-	
-	            //let grid = new Axis().generateGridlines(yPostition);
-	            //gridLines.add(grid);
 	            barChart.add(labels);
 	            barChart.add(axisLines);
-	            //barChart.add(gridLines);
 	
+	            //half the position and align the segments to the center
+	            barChart.position.x = -(lastBarStartX / 2);
+	            barChart.position.z = -1.5;
+	            barChart.position.y = -2;
+	            barChart.rotation.x = -1.5;
 	
 	            return barChart;
 	        }
@@ -45580,16 +45587,13 @@ var anchart3d =
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	        value: true
+	    value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Timo on 29.01.2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Amar Bajric (https://github.com/amarbajric)
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Timo Hasenbichler (https://github.com/timoooo)
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-	/**
-	 * Created by Timo on 24.01.2017.
-	 */
-	
 	
 	var _three = __webpack_require__(/*! three */ 7);
 	
@@ -45600,111 +45604,345 @@ var anchart3d =
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Axis = function () {
-	        function Axis(sceneConfig) {
-	                _classCallCheck(this, Axis);
+	    function Axis(sceneConfig) {
+	        _classCallCheck(this, Axis);
 	
-	                this.sceneConfig = sceneConfig;
+	        this.sceneConfig = sceneConfig;
+	    }
+	
+	    _createClass(Axis, [{
+	        key: "createVector",
+	        value: function createVector(x, y, z) {
+	            return new THREE.Vector3(x, y, z);
+	        }
+	    }, {
+	        key: "roundRect",
+	        value: function roundRect(ctx, x, y, w, h, r) {
+	            ctx.beginPath();
+	            ctx.moveTo(x + r, y);
+	            ctx.lineTo(x + w - r, y);
+	            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+	            ctx.lineTo(x + w, y + h - r);
+	            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+	            ctx.lineTo(x + r, y + h);
+	            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+	            ctx.lineTo(x, y + r);
+	            ctx.quadraticCurveTo(x, y, x + r, y);
+	            ctx.closePath();
+	            ctx.fill();
+	            ctx.stroke();
+	        }
+	    }, {
+	        key: "makeTextSprite2D",
+	        value: function makeTextSprite2D(message, parameters) {
+	            if (parameters === undefined) parameters = {};
+	
+	            var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
+	
+	            var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 11;
+	
+	            var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 1;
+	
+	            var borderColor = parameters.hasOwnProperty("borderColor") ? parameters["borderColor"] : { r: 0, g: 0, b: 0, a: 1.0 };
+	
+	            var backgroundColor = parameters.hasOwnProperty("backgroundColor") ? parameters["backgroundColor"] : { r: 255, g: 255, b: 255, a: 1.0 };
+	
+	            var canvas = document.createElement('canvas');
+	            var context = canvas.getContext('2d');
+	            context.font = "Bold " + fontsize + "px " + fontface;
+	
+	            // get size data (height depends only on font size)
+	            var metrics = context.measureText(message);
+	            var textWidth = metrics.width;
+	
+	            // background color
+	            context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+	            // border color
+	            context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+	
+	            context.lineWidth = borderThickness;
+	            this.roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+	            // 1.4 is extra height factor for text below baseline: g,j,p,q.
+	
+	            // text color
+	            context.fillStyle = "rgba(0, 0, 0, 1.0)";
+	
+	            context.fillText(message, borderThickness, fontsize + borderThickness);
+	
+	            // canvas contents will be used for a texture
+	            var texture = new THREE.Texture(canvas);
+	
+	            texture.minFilter = THREE.LinearFilter;
+	            texture.needsUpdate = true;
+	
+	            var spriteMaterial = new THREE.SpriteMaterial({ map: texture, fog: true }); //,alignment: spriteAlignment
+	
+	
+	            var sprite = new THREE.Sprite(spriteMaterial);
+	            sprite.scale.set(5, 2.5, 1);
+	
+	            return sprite;
+	        }
+	    }, {
+	        key: "initAxis",
+	        value: function initAxis(y, x) {
+	            var material = new THREE.LineBasicMaterial({
+	                color: 0x696969 //black
+	            });
+	
+	            var geometry = new THREE.Geometry();
+	            geometry.vertices.push(
+	            //ebene 1
+	            this.createVector(-0.7, -2, 0), this.createVector(-0.7, y + 0.7, 0), this.createVector(x, y + 0.7, 0), this.createVector(-0.7, y + 0.7, 0), this.createVector(-0.7, y + 0.7, 1),
+	            //ebene 2
+	            this.createVector(-0.7, -2, 1), this.createVector(-0.7, y + 0.7, 1), this.createVector(x, y + 0.7, 1), this.createVector(-0.7, y + 0.7, 1), this.createVector(-0.7, y + 0.7, 2),
+	            //ebene 3
+	            this.createVector(-0.7, -2, 2), this.createVector(-0.7, y + 0.7, 2), this.createVector(x, y + 0.7, 2), this.createVector(-0.7, y + 0.7, 2), this.createVector(-0.7, y + 0.7, 3),
+	            //ebene 4
+	            this.createVector(-0.7, -2, 3), this.createVector(-0.7, y + 0.7, 3), this.createVector(x, y + 0.7, 3), this.createVector(-0.7, y + 0.7, 3), this.createVector(-0.7, y + 0.7, 4));
+	
+	            return new THREE.Line(geometry, material);
 	        }
 	
-	        _createClass(Axis, [{
-	                key: "roundRect",
-	                value: function roundRect(ctx, x, y, w, h, r) {
-	                        ctx.beginPath();
-	                        ctx.moveTo(x + r, y);
-	                        ctx.lineTo(x + w - r, y);
-	                        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-	                        ctx.lineTo(x + w, y + h - r);
-	                        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-	                        ctx.lineTo(x + r, y + h);
-	                        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-	                        ctx.lineTo(x, y + r);
-	                        ctx.quadraticCurveTo(x, y, x + r, y);
-	                        ctx.closePath();
-	                        ctx.fill();
-	                        ctx.stroke();
-	                }
-	        }, {
-	                key: "makeTextSprite",
-	                value: function makeTextSprite(message, parameters) {
-	                        if (parameters === undefined) parameters = {};
+	        //mesh text is static and does not move at all or follow the camera
 	
-	                        var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
+	    }, {
+	        key: "createMeshText2D",
+	        value: function createMeshText2D(text, fontsize, fontBold, height, width) {
+	            var canvas = document.createElement('canvas');
+	            var context1 = canvas.getContext('2d');
+	            context1.font = (fontBold ? "Bold " : "") + (String(fontsize).trim() || "12") + "px Arial";
+	            context1.fillStyle = "rgba(0, 0, 0, 1.0)";
+	            context1.fillText(text, 1, fontsize + 10);
 	
-	                        var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 11;
+	            // canvas contents will be used for a texture
+	            var texture = new THREE.Texture(canvas);
+	            texture.needsUpdate = true;
 	
-	                        var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 1;
+	            var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+	            material.transparent = true;
 	
-	                        var borderColor = parameters.hasOwnProperty("borderColor") ? parameters["borderColor"] : { r: 0, g: 0, b: 0, a: 1.0 };
+	            return new THREE.Mesh(new THREE.PlaneGeometry(canvas.width, canvas.height), material);
+	        }
+	    }, {
+	        key: "scatterAxisDrawer",
+	        value: function scatterAxisDrawer(scatterObject) {
 	
-	                        var backgroundColor = parameters.hasOwnProperty("backgroundColor") ? parameters["backgroundColor"] : { r: 255, g: 255, b: 255, a: 1.0 };
+	            var lineGeo = new THREE.Geometry();
+	            lineGeo.vertices.push(
 	
-	                        var canvas = document.createElement('canvas');
-	                        var context = canvas.getContext('2d');
-	                        context.font = "Bold " + fontsize + "px " + fontface;
+	            //bottom grid
+	            this.createVector(-10, -10, 10), this.createVector(10, -10, 10), this.createVector(10, -10, -10), this.createVector(-10, -10, -10), this.createVector(10, -10, -10), this.createVector(-10, -10, -10), this.createVector(-10, -10, 10),
+	            //now starting middle cross bottom
+	            this.createVector(0, -10, 10), this.createVector(0, -10, -10), this.createVector(-10, -10, -10), this.createVector(-10, -10, 0), this.createVector(10, -10, 0),
 	
-	                        // get size data (height depends only on font size)
-	                        var metrics = context.measureText(message);
-	                        var textWidth = metrics.width;
+	            //back grid
+	            this.createVector(10, -10, -10), this.createVector(10, 10, -10), this.createVector(-10, 10, -10), this.createVector(-10, -10, -10),
+	            //now starting middle cross back
+	            this.createVector(0, -10, -10), this.createVector(0, 10, -10), this.createVector(-10, 10, -10), this.createVector(-10, 0, -10), this.createVector(10, 0, -10), this.createVector(-10, 0, -10),
 	
-	                        // background color
-	                        context.fillStyle = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
-	                        // border color
-	                        context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+	            //left grid
+	            this.createVector(-10, 10, -10), this.createVector(-10, 10, 10), this.createVector(-10, -10, 10),
+	            //now starting middle cross left
+	            this.createVector(-10, -10, 0), this.createVector(-10, 10, 0), this.createVector(-10, 10, 10), this.createVector(-10, 0, 10), this.createVector(-10, 0, -10));
+	            var lineMat = new THREE.LineBasicMaterial({ color: 0x696969 });
+	            var line = new THREE.Line(lineGeo, lineMat);
 	
-	                        context.lineWidth = borderThickness;
-	                        this.roundRect(context, borderThickness / 2, borderThickness / 2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
-	                        // 1.4 is extra height factor for text below baseline: g,j,p,q.
+	            //lines for indicating where the 0,0,0 point is and all starts
+	            var startLines = new THREE.Geometry();
+	            startLines.vertices.push(
+	            //directed line for x-axis
+	            this.createVector(-10, -10, -10), this.createVector(-5, -10, -10), this.createVector(-5.5, -9.5, -10), this.createVector(-5, -10, -10), this.createVector(-5.5, -10.5, -10), this.createVector(-5, -10, -10), this.createVector(-10, -10, -10),
+	            //directed line for y-axis
+	            this.createVector(-10, -5, -10), this.createVector(-10.5, -5.5, -10), this.createVector(-10, -5, -10), this.createVector(-9.5, -5.5, -10), this.createVector(-10, -5, -10), this.createVector(-10, -10, -10),
+	            //directed line for z-axis
+	            this.createVector(-10, -10, -5), this.createVector(-9.5, -10, -5.5), this.createVector(-10, -10, -5), this.createVector(-10.5, -10, -5.5), this.createVector(-10, -10, -5), this.createVector(-10, -10, -10));
+	            var lineMat2 = new THREE.LineBasicMaterial({ color: 0x000000 });
+	            var line2 = new THREE.Line(startLines, lineMat2);
 	
-	                        // text color
-	                        context.fillStyle = "rgba(0, 0, 0, 1.0)";
+	            line.type = THREE.LineStrip;
+	            scatterObject.add(line, line2);
 	
-	                        context.fillText(message, borderThickness, fontsize + borderThickness);
+	            return scatterObject;
+	        }
+	    }]);
 	
-	                        // canvas contents will be used for a texture
-	                        var texture = new THREE.Texture(canvas);
-	
-	                        texture.minFilter = THREE.LinearFilter;
-	                        texture.needsUpdate = true;
-	
-	                        var spriteMaterial = new THREE.SpriteMaterial({ map: texture, fog: true }); //,alignment: spriteAlignment
-	
-	                        var sprite = new THREE.Sprite(spriteMaterial);
-	                        sprite.scale.set(5, 2.5, 1);
-	
-	                        sprite.position.normalize();
-	                        return sprite;
-	                }
-	        }, {
-	                key: "initAxis",
-	                value: function initAxis(y) {
-	                        var material = new THREE.LineBasicMaterial({
-	                                color: 0x000000 //black
-	                        });
-	
-	                        var geometry = new THREE.Geometry();
-	                        geometry.vertices.push(
-	                        //ebene 1
-	                        new THREE.Vector3(-0.7, -2, 0), new THREE.Vector3(-0.7, y + 0.7, 0), new THREE.Vector3(3, y + 0.7, 0), new THREE.Vector3(-0.7, y + 0.7, 0), new THREE.Vector3(-0.7, y + 0.7, 1),
-	                        //ebene 2
-	                        new THREE.Vector3(-0.7, -2, 1), new THREE.Vector3(-0.7, y + 0.7, 1), new THREE.Vector3(3, y + 0.7, 1), new THREE.Vector3(-0.7, y + 0.7, 1), new THREE.Vector3(-0.7, y + 0.7, 2),
-	                        //ebene 3
-	                        new THREE.Vector3(-0.7, -2, 2), new THREE.Vector3(-0.7, y + 0.7, 2), new THREE.Vector3(3, y + 0.7, 2), new THREE.Vector3(-0.7, y + 0.7, 2), new THREE.Vector3(-0.7, y + 0.7, 3),
-	                        //ebene 4
-	                        new THREE.Vector3(-0.7, -2, 3), new THREE.Vector3(-0.7, y + 0.7, 3), new THREE.Vector3(3, y + 0.7, 3), new THREE.Vector3(-0.7, y + 0.7, 3), new THREE.Vector3(-0.7, y + 0.7, 4));
-	
-	                        var line = new THREE.Line(geometry, material);
-	
-	                        return line;
-	                }
-	        }]);
-	
-	        return Axis;
+	    return Axis;
 	}();
 	
 	exports.default = Axis;
 
 /***/ },
 /* 13 */
+/*!*****************************!*\
+  !*** ./src/ScatterChart.js ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Amar Bajric (https://github.com/amarbajric)
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Michael Fuchs (https://github.com/deKilla)
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Timo Hasenbichler (https://github.com/timoooo)
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	
+	var _Chart = __webpack_require__(/*! ./Chart */ 9);
+	
+	var _Chart2 = _interopRequireDefault(_Chart);
+	
+	var _Axis = __webpack_require__(/*! ./utils/Axis */ 12);
+	
+	var _Axis2 = _interopRequireDefault(_Axis);
+	
+	var _animation = __webpack_require__(/*! ./utils/animation */ 5);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var THREE = __webpack_require__(/*! three */ 7);
+	THREE.orbitControls = __webpack_require__(/*! three-orbit-controls */ 8)(THREE);
+	
+	var ScatterChart = function () {
+	    function ScatterChart(name, type, jsonData, sceneConfig) {
+	        _classCallCheck(this, ScatterChart);
+	
+	        this.name = name;
+	        this.type = type;
+	        this.jsonData = jsonData;
+	        this.sceneConfig = sceneConfig;
+	        this.legendMap = new Map();
+	        this.object = this.create3DScatterChart();
+	    }
+	
+	    //get max value for scaling later on...
+	
+	
+	    _createClass(ScatterChart, [{
+	        key: 'getMax',
+	        value: function getMax(propertyEnding) {
+	            return Math.max.apply(Math, this.jsonData.file.map(function (dataSet) {
+	                for (var i = 0; i < dataSet.values.length; i++) {
+	                    if (dataSet.values[i].name.toLowerCase().endsWith(propertyEnding)) {
+	                        return dataSet.values[i].value;
+	                    }
+	                }
+	            }));
+	        }
+	    }, {
+	        key: 'scaleNum',
+	        value: function scaleNum(value) {
+	            var decimalScale = value.toString().substr(1).length;
+	            if (decimalScale < 1 || value < 1) {
+	                return 1;
+	            } else return Number("1" + "0".repeat(decimalScale));
+	        }
+	    }, {
+	        key: 'createEntity',
+	        value: function createEntity(x, y, z, size, xMax, yMax, zMax, sizeMax, shape) {
+	            var geometry = void 0;
+	            if (shape === "sphere" || typeof shape === "undefined") {
+	                geometry = new THREE.SphereGeometry(size / this.scaleNum(sizeMax), 32, 32, 3.3);
+	            } else if (shape == "cone") {
+	                geometry = new THREE.ConeGeometry(size / this.scaleNum(sizeMax), size / this.scaleNum(sizeMax) * 2, 32, 32, false, 0, 6.3);
+	            } else if (shape == "diamond") {
+	                geometry = new THREE.SphereGeometry(size / this.scaleNum(sizeMax), 7, 2, 0, 6.3, 0, 3.1);
+	            }
+	            var material = new THREE.MeshPhongMaterial({
+	                color: Math.random() * 0xffffff,
+	                shading: THREE.SmoothShading,
+	                shininess: 0.8
+	            });
+	
+	            var sphere = new THREE.Mesh(geometry, material);
+	            //calculating where to position the entities, given on scaling of axis and maximum values
+	            //dynamically resizing and scaling of whole grid and values
+	            sphere.position.x = -10 + 20 * (x / (Math.ceil(xMax / (xMax <= 10 ? 1 : 10)) * (xMax <= 10 ? 1 : 10)));
+	            sphere.position.y = -10 + 20 * (y / (Math.ceil(yMax / (yMax <= 10 ? 1 : 10)) * (yMax <= 10 ? 1 : 10)));
+	            sphere.position.z = -10 + 20 * (z / (Math.ceil(zMax / (zMax <= 10 ? 1 : 10)) * (zMax <= 10 ? 1 : 10)));
+	
+	            return sphere;
+	        }
+	    }, {
+	        key: 'create3DScatterChart',
+	        value: function create3DScatterChart() {
+	            var jsonData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.jsonData;
+	
+	            var calculatedData = jsonData.file;
+	            //calculate max values
+	            var xMax = this.getMax("x");
+	            var yMax = this.getMax("y");
+	            var zMax = this.getMax("z");
+	            var sizeMax = this.getMax("size");
+	
+	            //Group together all pieces
+	            var scatterChart = new THREE.Group();
+	            var axisLines = new THREE.Object3D();
+	            var labels = new THREE.Group();
+	            var axisHelper = new _Axis2.default();
+	            scatterChart.chartType = this.type;
+	            scatterChart.name = this.name;
+	
+	            //iterate over the jsonData and create for every data a new entity
+	            //data = one object in the json which holds the props "amount","percent" in this case.
+	            for (var dataset = 0; dataset < calculatedData.length; dataset++) {
+	                var values = calculatedData[dataset].values;
+	                var entity = void 0;
+	                var posX = void 0,
+	                    posY = void 0,
+	                    posZ = void 0,
+	                    size = void 0,
+	                    shape = void 0;
+	
+	                for (var value = 0; value < values.length; value++) {
+	                    if (values[value].name.toLowerCase().endsWith("x")) posX = values[value].value;
+	                    if (values[value].name.toLowerCase().endsWith("y")) posY = values[value].value;
+	                    if (values[value].name.toLowerCase().endsWith("z")) posZ = values[value].value;
+	                    if (values[value].name.toLowerCase().endsWith("size")) size = values[value].value;
+	                    if (values[value].name.toLowerCase().endsWith("shape")) shape = values[value].value;
+	                }
+	
+	                entity = this.createEntity(posX, posY, posZ, size, xMax, yMax, zMax, sizeMax, shape);
+	                entity.name = calculatedData[dataset].name;
+	                this.legendMap.set(calculatedData[dataset].name, entity.material.color.getHexString());
+	
+	                for (var _value = 0; _value < values.length; _value++) {
+	                    entity["data" + _value] = {};
+	                    entity["data" + _value].name = values[_value].name;
+	                    entity["data" + _value].value = values[_value].value;
+	                    entity["data" + _value].percent = values[_value].percent;
+	                }
+	
+	                scatterChart.add(entity);
+	            }
+	            //create new grid for scatter chart
+	            axisHelper.scatterAxisDrawer(axisLines);
+	            var xAxis = axisHelper.makeTextSprite2D(" X (" + Math.ceil(xMax / (xMax <= 10 ? 1 : 10)) * (xMax <= 10 ? 1 : 10) + ") ", { fontsize: 42 });
+	            xAxis.position.set(12, -10, 12);
+	            var yAxis = axisHelper.makeTextSprite2D(" Y (" + Math.ceil(yMax / (yMax <= 10 ? 1 : 10)) * (yMax <= 10 ? 1 : 10) + ") ", { fontsize: 42 });
+	            yAxis.position.set(-10, 9, 10);
+	            var zAxis = axisHelper.makeTextSprite2D(" Z (" + Math.ceil(zMax / (zMax <= 10 ? 1 : 10)) * (zMax <= 10 ? 1 : 10) + ") ", { fontsize: 42 });
+	            zAxis.position.set(13, 9, -10);
+	            labels.add(xAxis, yAxis, zAxis);
+	
+	            scatterChart.add(axisLines);
+	            scatterChart.add(labels);
+	            return scatterChart;
+	        }
+	    }]);
+	
+	    return ScatterChart;
+	}();
+	
+	exports.default = ScatterChart;
+
+/***/ },
+/* 14 */
 /*!*******************************!*\
   !*** ./src/utils/JsonData.js ***!
   \*******************************/
