@@ -44,21 +44,26 @@
     <h1>Data Swapping</h1>
     <h3>How to swap the data of a chart during runtime</h3>
     <p>
-    If you want to change the data a chart is based on, you can easily create a function that does that and trigger that function by using a button for example. First you need to create said function
+        To make use of the swapping data feature, the chart has to first be initialized under a variable. You can find a guideline in the section <a href="usage.html">usage</a> on how to initialize and generate a chart.
+        In this example we will initialize the chart under the variable "myChart", in order to later swap the data on the fly:
+        <span class="code">var myChart = anchart3d.createChart() [...]</span>
+    </p>
+    <p>
+    If you now want to change the data of a chart, you can use the <b>swapData()</b> method of the fluent api.
+    Before you can apply the method, you have to first define the new data, which should be exchanged with the "old" data.
+    Therefore, you simply use the <b>data()</b> method again, and pass the JSON - which contains your new data - as an argument.
+    Finally, you can use <b>swapData()</b> to visualize the "new" data during runtime.
     <pre class="code" style="text-align:left; padding-left:100px;">
-var swap = function () {
-    chart.data(newdata);
-    chart.swapData();
+var swapOldData = function () {
+    myChart.data(myNewData);
+    myChart.swapData();
 };
     </pre>
     </p>
     <p>
-    The make use of that function, the chart need to have a variable assigned to it. The chart has to be created like shown under <a href="usage.html">usage</a> but given a name
-    <span class="code">var chart = anchart3d.createChart() [...]</span>
-    </p>
-    <p>
-    The chart is then accessed via the swapfunction and - in this case - the data method is called again in order to change the data source. The last step would be - as mentioned before - to trigger that function using a button or link or via callback
-    <span class="code">&lt;a href="javascript:;" onClick="swapPie()"&gt;swap data&lt;/a&gt;</span>
+    The function <b>swapOldData</b>, which can be seen in the second code snippet, can now be used in different ways. One example could be the usage of a button:
+    <span class="code">&lt;button onclick="swapOldData()">Swap data&lt;/button&gt;</span>
+    As you can see, we have added an "onClick" event to the button, which will call our function from the first figure!
     </p>
 
 </div>
