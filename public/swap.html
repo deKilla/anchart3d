@@ -34,31 +34,36 @@
         <hr>
         <li><a href="usage.html">Usage</a></li>
         <li><a href="configuration.html">Configuration</a></li>
-        <li><a href="swap.html">Data Swapping</a></li>
-        <li><a class="active" href="developing.html">Developing</a></li>
+        <li><a class="active" href="swap.html">Data Swapping</a></li>
+        <li><a href="developing.html">Developing</a></li>
     </ul>
 
 </div>
 <div class="content">
     
-    <h1>Developing</h1>
-    <h3>How you can contribute to this project</h3>
+    <h1>Data Swapping</h1>
+    <h3>How to swap the data of a chart during runtime</h3>
     <p>
-    Feel free to <a href="https://github.com/deKilla/anchart3d" target="blank">fork</a> this project and participate in it's development.
+    If you want to change the data a chart is based on, you can easily create a function that does that and trigger that function by using a button for example. First you need to create said function
+    <pre class="code">
+    var swap = function () {
+        chart.data(newdata);
+        chart.swapData();
+    };
+    </pre>
     </p>
     <p>
-    You will need <a href="https://nodejs.org/en/" target="blank">node.js</a> and <a href="https://www.npmjs.com/" target="blank">npm</a> in order to run it.
+    The make use of that function, the chart need to have a variable assigned to it. The chart has to be created like shown under <a href="usage.html">usage</a> but given a name
+    <span class="code">var chart = anchart3d.createChart() [...]</span>
     </p>
-    <h4>Step 1:</h4>
-    &gt; npm install
-    <h4>Step 2:</h4>
-    &gt; npm start <i class="fhgreen">webpack watcher</i><br/>
-    &gt; npm build <i class="fhgreen">quickly build the project</i><br/>
-    &gt; npm minify <i class="fhgreen">minify using uglify</i><br/>
-    &gt; npm test <i class="fhgreen">testing via jest</i><br/>
+    <p>
+    The chart is then accessed via the swapfunction and - in this case - the data method is called again in order to change the data source. The last step would be - as mentioned before - to trigger that function using a button or link or via callback
+    <span class="code">&lt;a href="javascript:;" onClick="swapPie()"&gt;swap data&lt;/a&gt;</span>
+    </p>
 
 </div>
 
+<br class="clear" />
 </div>
 </body>
 </html>
