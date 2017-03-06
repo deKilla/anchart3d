@@ -59,7 +59,7 @@ a:hover { color:#84bb44; }
 
 .fhgreen {color:#84bb44;}
 
-.code { font-weight:bold; font-family:"Courier New", Courier, monospace; display:block; padding:20px; border:1px solid #333; background:#cdc; text-align: center; }
+.code { font-weight:bold; font-family:"Courier New", Courier, monospace; display:block; padding:20px; border:1px solid #333; background:#cdc; text-align: center; margin:10px 0;}
 
 dt {font-weight:bold; color:#84bb44; }
 dd { margin-bottom:10px; }
