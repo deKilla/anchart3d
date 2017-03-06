@@ -74,9 +74,8 @@
     As you can see, calling the chart takes a couple of additional informations. First you call the <b>createChart()</b> method from the public <b>anchart3d</b> variable,
     and pass the <b>id</b> of the div, which we have created earlier, as an argument.
     Then you pass an array with your configuration to <b>setConfig()</b>. This is optional and described <a href="configuration.html">here</a>.
-    The configuration method takes an optional second parameter - a string that you can use to sort the data. That must  be a category of your dataset - e.g. "income".
     The third method defines what kind of chart should be created. In this example we want to create a pie chart, so we call <b>pieChart()</b>.
-    Another very important "ingredient" to visualize data, is the actual data you want to visualize. This specific data has to be stored in a JSON and then passed to the <b>data()</b> method.
+    Another very important "ingredient" to visualize data, is the actual data you want to visualize. This specific data has to be stored in a JSON and then passed to the <b>data()</b> method. The data() method takes an optional second parameter - a string that you can use to sort the data. That must be a category of your dataset - e.g. "income".
     In order to look up on how you have to structure the JSON for your data, visit the specific link of the chart you want to use. There you can find a description on how to define the data in the JSON.
     The last method is called <b>draw()</b> (<u>which has to be called last in the fluent api chain</u>), which will initialize and generate the chart.
     </p>
