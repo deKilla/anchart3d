@@ -8,9 +8,6 @@
 - Michael Fuchs ([deKilla](https://github.com/deKilla))
 - Timo Hasenbichler ([timoooo](https://github.com/timoooo))
 
-## Table of contents
-[TOC]
-
 #Preface
 
 This project has been developed by three ambitious students, who are studying at the university "FH Joanneum" in Graz, Austria. 
@@ -48,16 +45,8 @@ createChart("anchart3d") points to a <div> in the document having the id="anchar
 For an explanation of the the configuration parameters and and overview, refer to the according chapter.
 
 
-#### <i class="icon-pencil"></i> Editing behind the scenes
+#### Further reading
 
-    > npm install
-    > npm start
+Feel free to have a look at the project website to find out about all the possiblities and how to use them:
 
- - **start:** webpack watcher
- - **build:** quick build
- - **minify:** uglify.js
- - **test:** test using jest
-
-#### Configuartion
-
-The anchart3d library 
+https://dekilla.github.io/anchart3d
