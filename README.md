@@ -17,9 +17,7 @@ It offers an intuitive configuration and is overall very comprehensible due to t
 
 #### Installation
 
-In order to easily use anchart3d in your project, just use
-    npm install anchart3d
-and you're good to go.
+In order to easily use anchart3d in your project, just use ```npm install anchart3d``` and you're good to go.
 
 #### Getting started
 
